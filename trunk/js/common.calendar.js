@@ -41,8 +41,8 @@
             /* инициализируем Datetimepicker */
 			$.datepicker.regional['ru'] = {
 				closeText: 'Закрыть',
-				prevText: '<Пред',
-				nextText: 'След>',
+				prevText: 'Пред',
+				nextText: 'След',
 				currentText: 'Сегодня',
 				monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
 				monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],
@@ -105,8 +105,8 @@
                 dayNames: ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],
                 dayNamesShort: ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
                 buttonText: {
-                    prev: "&nbsp;&#9668;&nbsp;",
-                    next: "&nbsp;&#9658;&nbsp;",
+                    prev: "",
+                    next: "",
                     prevYear: "&nbsp;&lt;&lt;&nbsp;",
                     nextYear: "&nbsp;&gt;&gt;&nbsp;",
                     today: "Сегодня",
