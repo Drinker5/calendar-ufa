@@ -104,7 +104,6 @@
 							$.ajax({
 								type: "POST",
 								url: "/jquery-status",
-								dataType: "json",
 								data: {status:status},
 								async: false,
 								success: function(data)
@@ -117,6 +116,15 @@
 						else
 							alert("STATUS: НЕ БОЛЕЕ 70 СИМВОЛОВ");
 					}
+
+					jQuery(function($){
+						$("#status-input").keypress(function(event){
+							if(event.which == '13'){
+								myStatus();
+								return false;
+							}
+						});
+					});
 				</script>
 
                 <div class="profile-info toggle-stop">
