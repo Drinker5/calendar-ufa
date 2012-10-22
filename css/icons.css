@@ -1,0 +1,734 @@
+/* Маленькие иконки 15х15 */
+.small-icon {
+	display: -moz-inline-stack;
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	line-height: 15px;
+	vertical-align: top;
+	background-image: url("../pic/ICONS_1.png");
+	background-position: 15px 15px;
+	background-repeat: no-repeat;
+}
+/* Первый ряд */
+.icon-gift, .icon-5 {
+ background-position: 0 0;
+}
+
+.icon-gift.active, .icon-5.active {
+ background-position: -15px 0;
+}
+
+.icon-address {
+ background-position: 0 -15px;
+}
+
+.icon-address.active {
+ background-position: -15px -15px;
+}
+
+.icon-certificate, .icon-6{
+ background-position: 0 -30px;
+}
+
+.icon-certificate.active, .icon-6.active {
+ background-position: -15px -30px;
+}
+
+.icon-sale {
+ background-position: 0 -45px;
+}
+
+.icon-sale.active {
+ background-position: -15px -45px;
+}
+
+.icon-calendar {
+ background-position: 0 -60px;
+}
+
+.icon-calendar.active {
+ background-position: -15px -60px;
+}
+
+.icon-photoalbum {
+ background-position: 0 -75px;
+}
+
+.icon-photoalbum.active {
+ background-position: -15px -75px;
+}
+
+.icon-review {
+ background-position: 0 -90px;
+}
+
+.icon-review.active {
+ background-position: -15px -90px;
+}
+
+.icon-wish {
+ background-position: 0 -105px;
+}
+
+.icon-wish.active {
+ background-position: -15px -105px;
+}
+
+.icon-add-wish {
+ background-position: 0 -120px;
+}
+
+.icon-add-wish.active {
+ background-position: -15px -120px;
+}
+
+.icon-location {
+ background-position: 0 -135px;
+}
+
+.icon-location.active {
+ background-position: -15px -135px;
+}
+
+.icon-subscription {
+ background-position: 0 -150px;
+}
+
+.icon-subscription.active {
+ background-position: -15px -150px;
+}
+
+.icon-whos-near, .icon-man-near {
+ background-position: 0 -165px;
+}
+
+.icon-whos-near.active, .icon-man-near.active {
+ background-position: -15px -165px;
+}
+
+.icon-delete-friend {
+ background-position: 0 -180px;
+}
+
+.icon-delete-friend.active {
+ background-position: -15px -180px;
+}
+
+.icon-add-friend {
+ background-position: 0 -195px;
+}
+
+.icon-add-friend.active {
+ background-position: -15px -195px;
+}
+
+.icon-search-friend {
+ background-position: 0 -210px;
+}
+
+.icon-search-friend.active {
+ background-position: -15px -210px;
+}
+
+.icon-avatar {
+ background-position: 0 -225px;
+}
+
+.icon-avatar.active {
+ background-position: -15px -225px;
+}
+
+.icon-mark {
+ background-position: 0 -240px;
+}
+
+.icon-mark.active {
+ background-position: -15px -240px;
+}
+
+.icon-delete {
+ background-position: 0 -255px;
+}
+
+.icon-delete.active {
+ background-position: -15px -255px;
+}
+
+.icon-notice {
+ background-position: 0 -270px;
+}
+
+.icon-notice.active {
+ background-position: -15px -270px;
+}
+
+.icon-check-in {
+ background-position: 0 -285px;
+}
+
+.icon-check-in.active {
+ background-position: -15px -285px;
+}
+
+.icon-like {
+ background-position: 0 -300px;
+}
+
+.icon-like.active {
+ background-position: -15px -300px;
+}
+
+.icon-chat {
+ background-position: 0 -315px;
+}
+
+.icon-chat.active {
+ background-position: -15px -315px;
+}
+
+.icon-photo {
+ background-position: 0 -330px;
+}
+
+.icon-photo.active {
+ background-position: -15px -330px;
+}
+
+.icon-add-photo {
+ background-position: 0 -345px;
+}
+
+.icon-add-photo.active {
+ background-position: -15px -345px;
+}
+
+.icon-settings {
+ background-position: 0 -360px;
+}
+
+.icon-settings.active {
+ background-position: -15px -360px;
+}
+
+.icon-invite {
+ background-position: 0 -375px;
+}
+
+.icon-invite.active {
+ background-position: -15px -375px;
+}
+
+.icon-comments {
+ background-position: 0 -390px;
+}
+
+.icon-comments.active {
+ background-position: -15px -390px;
+}
+
+.icon-shop-page {
+ background-position: 0 -405px;
+}
+
+.icon-shop-page.active {
+ background-position: -15px -405px;
+}
+
+.icon-edit {
+ background-position: 0 -420px;
+}
+
+.icon-edit.active {
+ background-position: -15px -420px;
+}
+
+.icon-wish-list {
+ background-position: 0 -435px;
+}
+
+.icon-wish-list.active {
+ background-position: -15px -435px;
+}
+
+.icon-idol-journal {
+ background-position: 0 -450px;
+}
+
+.icon-idol-journal.active {
+ background-position: -15px -450px;
+}
+
+.icon-favorite-place {
+ background-position: 0 -465px;
+}
+
+.icon-favorite-place.active {
+ background-position: -15px -465px;
+}
+
+.icon-watch {
+ background-position: 0 -480px;
+}
+
+.icon-watch.active {
+ background-position: -15px -480px;
+}
+
+.icon-download {
+ background-position: 0 -495px;
+}
+
+.icon-download.active {
+ background-position: -15px -495px;
+}
+
+.icon-email {
+ background-position: 0 -510px;
+}
+
+.icon-email.active {
+ background-position: -15px -510px;
+}
+
+.icon-disc {
+ background-position: 0 -525px;
+}
+
+.icon-disc.active {
+ background-position: -15px -525px;
+}
+
+.icon-video {
+ background-position: 0 -540px;
+}
+
+.icon-video.active {
+ background-position: -15px -540px;
+}
+
+.icon-smile {
+ background-position: 0 -555px;
+}
+
+.icon-smile.active {
+ background-position: -15px -555px;
+}
+
+.icon-to-me {
+ background-position: 0 -570px;
+}
+
+.icon-to-me.active {
+ background-position: -15px -570px;
+}
+
+.icon-action {
+ background-position: 0 -585px;
+}
+
+.icon-action.active {
+ background-position: -15px -585px;
+}
+
+.icon-save {
+ background-position: 0 -600px;
+}
+
+.icon-save.active {
+ background-position: -15px -600px;
+}
+
+.icon-info {
+ background-position: 0 -615px;
+}
+
+.icon-info.active {
+ background-position: -15px -615px;
+}
+
+.icon-close {
+ background-position: 0 -630px;
+}
+
+.icon-close.active {
+ background-position: -15px -630px;
+}
+
+.icon-grey-arrow {
+ background-position: 0 -645px;
+}
+
+.icon-grey-arrow.active {
+ background-position: -15px -645px;
+}
+
+.icon-green-plus {
+ background-position: 0 -660px;
+}
+
+.icon-green-plus.active {
+ background-position: 0 -660px;
+}
+
+.icon-search {
+ background-position: 0 -675px;
+}
+
+.icon-search.active {
+ background-position: 0 -675px;
+}
+
+.icon-white-plus {
+ background-position: 0 -690px;
+}
+
+.icon-white-plus.active {
+ background-position: 0 -690px;
+}
+
+.icon-white-arrow {
+ background-position: 0 -705px;
+}
+
+.icon-white-arrow.active {
+ background-position: 0 -705px;
+}
+
+.icon-green-arrow {
+ background-position: 0 -720px;
+}
+
+.icon-green-arrow.active {
+ background-position: 0 -720px;
+}
+
+.icon-green-arrow-down {
+ background-position: 0 -735px;
+}
+
+.icon-green-arrow-down.active {
+ background-position: 0 -735px;
+}
+
+.icon-status {
+ background-position: 0 -750px;
+}
+
+.icon-status.active {
+ background-position: -15px -750px;
+}
+/* Большие иконки */
+.big-icon {
+ display: block;
+ width: 20px;
+ height: 20px;
+ background-image: url("../pic/knopki_menu_big.png");
+ background-position: 15px 15px;
+ background-repeat: no-repeat;
+ margin-top: 6px;
+ margin-right: 10px;
+}
+
+.gift-icon {
+ background-position: -40px 0;
+}
+
+.idol-icon {
+ background-position: -20px 0;
+}
+
+.sale-icon {
+ background-position: 0 0;
+}
+
+/* Иконки статуса */
+.status-icon {
+ display: -moz-inline-stack;
+ display: inline-block;
+ width: 10px;
+ height: 12px;
+ line-height: 12px;
+ vertical-align: top;
+ background-image: url("../pic/status-icons.png");
+ background-position: 10px 12px;
+ background-repeat: no-repeat;
+}
+
+.icon-online {
+ background-position: 0 0;
+}
+
+.icon-eezzy {
+ background-position: 0 -12px;
+}
+
+.icon-disturb {
+ background-position: 0 -24px;
+}
+
+.icon-offline {
+ background-position: 0 -36px;
+}
+
+.icon-check {
+ background-position: 0 -48px;
+}
+
+/* Иконки статуса маленькие */
+.status-icon-small {
+ display: -moz-inline-stack;
+ display: inline-block;
+ width: 6px;
+ height: 6px;
+ line-height: 6px;
+ vertical-align: top;
+ background-image: url("../pic/statusi.png");
+ background-position: 6px 6px;
+ background-repeat: no-repeat;
+}
+
+.icon-online-small {
+ background-position: 0 0;
+}
+
+.icon-eezzy-small {
+ background-position: 0 -6px;
+}
+
+.icon-offline-small {
+ background-position: 0 -12px;
+}
+
+.icon-disturb-small {
+ background-position: 0 -18px;
+}
+
+/* Иконки кружки */
+/*.big-circle-icon {
+ display: -moz-inline-stack;
+ display: inline-block;
+ width: 42px;
+ height: 42px;
+ line-height: 42px;
+ vertical-align: top;
+ background-image: url("../pic/krugi.png");
+ background-position: 0 0;
+ background-repeat: no-repeat;
+}
+
+.big-circle-icon:hover {
+ background-position: 0 -42px;
+}
+
+.big-circle-icon .small-icon {
+ display: block;
+ margin-top: 12px;
+ margin-left: 13px;
+
+}*/
+
+.big-circle-icon {
+ display: -moz-inline-stack;
+ display: inline-block;
+ width: 42px;
+ height: 42px;
+ line-height: 42px;
+ vertical-align: top;
+ background-image: url("../pic/krugi.png");
+ background-position: -42px -42px;
+ background-repeat: no-repeat;
+ cursor: pointer;
+}
+
+.big-circle-icon:hover {
+
+}
+
+.circle-icon-check-in {
+ background-position: 0 0;
+}
+
+.circle-icon-check-in.active, .circle-icon-check-in:hover {
+ background-position: -42px 0;
+}
+
+.circle-icon-whos-near {
+ background-position: 0 -42px;
+}
+
+.circle-icon-whos-near.active, .circle-icon-whos-near:hover {
+ background-position: -42px -42px;
+}
+
+.circle-icon-where-to-go {
+ background-position: 0 -84px;
+}
+
+.circle-icon-where-to-go.active, .circle-icon-where-to-go:hover {
+ background-position: -42px -84px;
+}
+
+.circle-icon-make-gift {
+ background-position: 0 -126px;
+}
+
+.circle-icon-make-gift.active, .circle-icon-make-gift:hover {
+ background-position: -42px -126px;
+}
+
+.circle-icon-invite {
+ background-position: 0 -168px;
+}
+
+.circle-icon-invite.active, .circle-icon-invite:hover {
+ background-position: -42px -168px;
+}
+
+.circle-icon-chat {
+ background-position: 0 -210px;
+}
+
+.circle-icon-chat.active, .circle-icon-chat:hover {
+ background-position: -42px -210px;
+}
+
+.circle-icon-subscribe {
+ background-position: 0 -252px;
+}
+
+.circle-icon-subscribe.active, .circle-icon-subscribe:hover {
+ background-position: -42px -252px;
+}
+
+.circle-icon-favorite {
+ background-position: 0 -294px;
+}
+
+.circle-icon-favorite.active, .circle-icon-favorite:hover {
+ background-position: -42px -294px;
+}
+
+.circle-icon-play {
+ background-position: 0 -336px;
+}
+
+.circle-icon-play.active, .circle-icon-play:hover {
+ background-position: -42px -336px;
+}
+
+.circle-icon-pause {
+ background-position: 0 -378px;
+}
+
+.circle-icon-pause.active, .circle-icon-pause:hover {
+ background-position: -42px -378px;
+}
+
+
+
+
+/**
+ * Категории
+ */
+.big-category-icon {
+ display: -moz-inline-stack;
+ display: inline-block;
+ width: 42px;
+ height: 42px;
+ line-height: 42px;
+ vertical-align: top;
+ background-image: url("../pic/kategorii_new.png");
+ background-repeat: no-repeat;
+ background-position: -42px -42px;
+}
+
+.category-icon-eat {
+	background-position: 0 0;
+}
+.category-icon-eat:hover {
+	background-position: -42px 0;
+}
+.category-icon-eat.active {
+	background-position: -84px 0;
+}
+
+.category-icon-bar {
+ background-position: 0 -42px;
+}
+.category-icon-bar:hover {
+ background-position: -42px -42px;
+}
+.category-icon-bar.active {
+ background-position: -84px -42px;
+}
+
+.category-icon-pizza {
+ background-position: 0 -84px;
+}
+.category-icon-pizza:hover {
+ background-position: -42px -84px;
+}
+.category-icon-pizza.active {
+ background-position: -84px -84px;
+}
+
+.category-icon-yoga {
+ background-position: 0 -126px;
+}
+.category-icon-yoga:hover {
+ background-position: -42px -126px;
+}
+.category-icon-yoga.active {
+ background-position: -84px -126px;
+}
+
+.category-icon-skates {
+ background-position: 0 -168px;
+}
+.category-icon-skates:hover {
+ background-position: -42px -168px;
+}
+.category-icon-skates.active {
+ background-position: -84px -168px;
+}
+
+.category-icon-painting {
+ background-position: 0 -210px;
+}
+.category-icon-painting:hover {
+ background-position: -42px -210px;
+}
+.category-icon-painting.active {
+ background-position: -84px -210px;
+}
+
+.category-icon-flower {
+ background-position: 0 -252px;
+}
+.category-icon-flower:hover {
+ background-position: -42px -252px;
+}
+.category-icon-flower.active {
+ background-position: -84px -252px;
+}
+
+.category-icon-perfume {
+ background-position: 0 -294px;
+}
+.category-icon-perfume:hover {
+ background-position: -42px -294px;
+}
+.category-icon-perfume.active {
+ background-position: -84px -294px;
+}
+
+.category-icon-people {
+ background-position: 0 -336px;
+}
+.category-icon-people:hover {
+ background-position: -42px -336px;
+}
+.category-icon-people.active {
+ background-position: -84px -336px;
+}

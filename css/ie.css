@@ -1,0 +1,39 @@
+.sidebar-inner, .profile-bottom, .main-nav, .profile-actions .circle, .profile-actions .circle-inner, .top-menu li:first-child a, .bubble, .btn {
+	behavior: url(PIE.htc);
+}
+
+/* очищающийся контейнер для плавающих элементов */
+
+* html .group { /* IE6 */
+	height: 1%;
+}
+
+*:first-child+html .group { /* IE7 */
+	min-height: 1px;
+}
+
+.bubble, .y_counter .c_name, .y_counter .c_digit, .feed-box, .event_l, .event_r,.gift-preview, .map-mini, #menu .tools input[type=search]  {
+	zoom: 1;
+    *display: inline;
+}
+
+#menu .tools input[type=search] {
+ line-height: 26px;
+}
+
+#menu ul li:hover {
+ background-color: #2d95cc;
+}
+
+#menu ul li:active, #menu ul li.active {
+ background-color: #1c84bb;
+}
+
+.month { width: 103px;  margin-right: 19px;}
+.month .chzn-single { width: 91px !important; }
+.month .chzn-drop { width: 103px !important; }
+
+.ie-r {
+ position: relative;
+ left: 3px;
+}

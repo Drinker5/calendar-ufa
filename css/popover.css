@@ -1,0 +1,131 @@
+/**
+ * jQuery.popover example stylesheet.
+ * By Davey IJzermans
+ * http://daveyyzermans.nl
+ * 
+ * License: public domain
+ */
+
+.popover {
+	position: absolute;
+	top: 0;
+	left: 0;
+/*	max-height: 240px;
+	width: 220px;*/
+	display: none;
+}
+.popover.wider {
+	width: 340px;
+}
+.popover.large {
+	width: 470px;
+	max-height: 350px;
+}
+/* Верхняя стрелка */
+.popover .arrow, .popover .top-arrow {
+	position: absolute;
+	top: 0; left: 50%;
+	margin: -9px 0 0 -3px;
+	width: 0; height: 0;
+	border-top: 5px solid transparent;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid #f8f9f9;
+	z-index: 2;
+}
+
+.popover .big-arrow, .popover .big-top-arrow {
+	position: absolute;
+	top: 0; left: 50%;
+	margin: -11px 0 0 -4px;
+	width: 0; height: 0;
+	border-top: 6px solid transparent;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	border-bottom: 6px solid #bfbfbf;
+	z-index: 1;
+}
+/* Нижняя стрелка */
+.popover .bottom-arrow {
+	top: 100%; left: 50%;
+	margin: -1px 0 0 -3px;
+	border-top: 5px solid #f8f9f9;
+	border-bottom: 5px solid transparent;
+}
+
+.popover .big-bottom-arrow {
+	top: 100%; left: 50%;
+	margin: -1px 0 0 -4px;
+	border-top: 6px solid #bfbfbf;
+	border-bottom: 6px solid transparent;
+}
+
+/* Левая стрелка*/
+.popover .left-arrow {
+	top: 50%; left: -10px;
+	margin: -3px 0 0 1px;
+	border-right: 5px solid #f8f9f9;
+	border-bottom: 5px solid transparent;
+}
+
+.popover .big-left-arrow {
+	top: 50%; left: -10px;
+	margin: -4px 0 0 -1px;
+	border-right: 6px solid #bfbfbf;
+	border-bottom: 6px solid transparent;
+}
+
+/* Правая стрелка */
+.popover .right-arrow {
+	top: 50%; left: 100%;
+	margin: -3px 0 0 -2px;
+	border-left: 5px solid #f8f9f9;
+	border-bottom: 5px solid transparent;
+}
+
+.popover .big-right-arrow {
+	top: 50%; left: 100%;
+	margin: -4px 0 0 -2px;
+	border-left: 6px solid #bfbfbf;
+	border-bottom: 6px solid transparent;
+}
+
+.popover .wrap {
+    border: 1px solid #bfbfbf;
+    background-color: #f9fafa;
+    padding: 2px;
+    -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+         -o-border-radius: 2px;
+            border-radius: 2px;
+
+    z-index:3;
+}
+.popover .title {
+	background: #121212 url(popover_gradient.png) repeat-x;
+	color: white;
+	font-size: 1.3em;
+	text-align: center;
+	padding: 8px 0 0 0;
+	height: 27px;
+}
+
+.friend-action-popover .arrow {
+	margin: -9px 0 0 -3px;
+	top: 0;
+	left: 90% !important;
+}
+
+.friend-action-popover .big-arrow {
+	margin: -11px 0 0 -4px;
+	top: 0;
+	left: 90% !important;
+}
+
+.personal-info-popover .arrow {
+	top: 10% !important;
+}
+
+.personal-info-popover .big-arrow {
+	top: 10% !important;
+}

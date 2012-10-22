@@ -1,0 +1,38 @@
+Order allow,deny
+Allow from all
+
+<Files .ht*>
+   deny from all
+</Files>
+
+#<Files index.php>
+#  AuthUserFile  /var/www-tooeezzy.com/www/.htpasswd
+#  AuthType Basic  
+#  AuthName "MMG"  
+#  Require valid-user
+#  Order allow,deny
+#  Allow from 192.168.0.0
+#  Allow from 83.222.114.26
+#  Allow from 83.222.116.206
+#  Allow from 83.222.116.202
+#  Satisfy any
+#</Files>
+
+AddDefaultCharset UTF-8
+DirectoryIndex index.php
+
+LimitRequestBody 10000000
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_input_time 500
+#SecFilterEngine Off
+
+
+Options -Indexes
+Options +FollowSymLinks
+
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /index.php?q=$1 [L,QSA]

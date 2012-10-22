@@ -1,0 +1,182 @@
+************************************************************************************
+Time:            11:42:04 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/my-calendar 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
+************************************************************************************
+Time:            16:46:57 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/my-friends 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
+************************************************************************************
+Time:            16:56:34 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/my-calendar 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
+************************************************************************************
+Time:            16:57:16 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes?t=performed 
+REFERER:         http://tooezzy.ru/my-wishes 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+t=performed
+
+************************************************************************************
+
+************************************************************************************
+Time:            16:57:17 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/my-wishes 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
+************************************************************************************
+Time:            16:57:18 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes?t=performed 
+REFERER:         http://tooezzy.ru/my-wishes 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+t=performed
+
+************************************************************************************
+
+************************************************************************************
+Time:            17:09:48 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/my-calendar 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
+************************************************************************************
+Time:            17:15:15 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/my-photoalbums 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
+************************************************************************************
+Time:            21:36:23 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/my-calendar 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
