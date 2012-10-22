@@ -1,34 +1,43 @@
-<div id="center">
-	<h1><?=$TITLE?></h1>
-	<div class="album-edit group">
-		<div class="desire-photo">
-				<img src="pic/album.png" id="logo" width="113" height="95">
-			<span></span>
-		</div>
-		<div class="album-edit-controls">
-			<h4>Название</h4>
-			<input type="text" id="title">
-			<h4>Описание</h4>
-			<textarea rows="3" id="albopis"></textarea>
-			<div class="but-container">
-			    <div id="add-photo-but">
-				 <a href="#" class="green-plus-but-small group">
-					<div id="plus"></div>
-					<span>Добавить фото</span>
-					<sup></sup>
-				 </a>
-			    </div>
-				<div id="save-photo-changes" class="clr-but clr-but-blue-nb group">
-					<sub></sub>
-					<a href="#" onClick="return false;">Создать фотоальбом</a>
-					<sup></sup>
-				</div>
-			</div>
-		</div>
+<?php
+require_once('jquery/jq_myphotoalbums.php');
+$rows      =20;
+if($_URLP[0]=='my')$user_wp=$_SESSION['WP_USER']['user_wp'];
+else               $user_wp=(int)$_URLP[0];
+$subs_count=$USER->CountPhotoAlbums($user_wp);
+?>
+<div class="title margin tx_r">
+	<!--h2 class="tx_l">Фотоальбомы <span class="title-count">(</?=$subs_count?>)</span></h2-->
+	<h3 class="tx_l"> Добавить фотоальбом</h3>
+	<div class="separator"></div>
+</div>
+<div class="photoalbum group">
+	<div class="bordered medium-avatar fl_l">
+		<img id="logo" alt="" src="pic/camera.jpg">
 	</div>
-    
-	<h4>Альбом смогут видеть</h4>
-	<table id="chks">
+	<div class="add-album-description wrapped">
+		<table>
+			<thead></thead>
+			<tbody>
+				<tr>
+					<td>Альбом:</td>
+					<td>
+						<input id="title" class="bordered" type="text" placeholder="Название альбома..." name="header">
+					</td>
+				</tr>
+				<tr>
+					<td>Описание:</td>
+					<td>
+						<textarea id="albopis" class="bordered" placeholder="Введите описание альбома" name="opis"></textarea>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="tx_r">
+			<span class="popover-btn actions opacity_link">
+				Разрешить просмотр альбома
+				<i class="small-icon icon-grey-arrow"></i>
+			</span>
+			<table id="chks">
 	 <tr>
 		<td style="vertical-align:top;">
 		<?php
@@ -36,10 +45,12 @@
 	     if($_SESSION['WP_USER']['zvezda'] == 1) $where = " AND krug_id <> 9 "; else $where = " AND krug_id <> 10 ";
             $result = $MYSQL->query("SELECT krug_id, name_".LANG_SITE." name FROM pfx_krugi WHERE krug_id <> 1 $where ORDER BY sort");
             $pravo  = $MYSQL->query("SELECT IFNULL(pravo,'') security FROM pfx_users WHERE user_wp = ".varr_int($_SESSION['WP_USER']['user_wp']));
-            $pravo  = @$pravo[0]['security'];
+		    $pravo  = @$pravo[0]['security'];
             if(strlen($pravo) > 0) {$pravo = unserialize($pravo);} else {$pravo[] = array('krug_id'=>0);} // По умолчанию страница доступна всем
             $checked = "";
             if(is_array($result)){
+				echo "<p><label><input type=\"checkbox\" name=\"circle1\" value=\"0\" id=\"chk_all\" class=\"frnchck\"". str_replace('0','checked',@$pravo[0]['krug_id']).">Все</label></p>";
+				echo "<p><label><input type=\"checkbox\" name=\"circle1\" value=\"0\" id=\"chk_all\" class=\"frnchck\"". str_replace('1','checked',@$pravo[0]['krug_id']).">Только Я</label></p>";
             	foreach($result as $key=>$value){
             		if(is_array($pravo))
             		foreach($pravo as $key2=>$value2)
@@ -49,25 +60,46 @@
             	  echo "<p><label><input type=\"checkbox\" name=\"circle1\" value=\"".$value['krug_id']."\" class=\"frnchck\" $checked>".$value['name']."</label></p>";
             	}
             }
+			
 		?>
 		</td>
 		<td style="vertical-align:top; padding-left:60px; background:url('pic/bonus-table-th.png') no-repeat 20px -20px;">
-			<p><label><input type="checkbox" name="circle1" value="0" id="chk_all" class="frnchck" <?=str_replace('0','checked',@$pravo[0]['krug_id'])?>>Все</label></p>
-			<p><label><input type="checkbox" name="circle1" value="1" id="chk_i" class="frnchck" <?=str_replace('1','checked',@$pravo[0]['krug_id'])?>>Только Я</label></p>
 		</td>
 	 </tr>
     </table>
-    <p>&nbsp;</p>
-	<h4>Добавленные фотографии</h4>
+				<span class="popover-btn actions opacity_link">
+				Разрешить комментировать альбом
+				<i class="small-icon icon-grey-arrow"></i>
+			</span>
+		</div>
+	</div>
+</div>
+
+
+<div class="title margin group">
+	<div class="separator clear"></div>
+	<h3>Добавить фотографии</h3>
+	<?php if($_URLP[0]=='my')echo '<a href="#" id="add-photo-but" class="btn btn-green" style="position: absolute; right: 0; top: 6px;"><i class="small-icon icon-white-plus"></i>Добавить фото</a>
+	<input multiple="multiple" type="file" name="file" style="position: absolute; right: 10px; top: 6px; margin: 0px; padding: 0px; cursor: pointer; opacity: 0; ">';?>
+</div>
+
+<div class="photoalbum group">
 	<div id="files"></div>
 	<div id="photos"></div>
+	<?php $USER->ShowPhotosIsAlbum($rows);?>
+	<div class="tx_r">
+		<button type="submit" class="btn btn-green" name="add" id="save-photo-changes">Сохранить</button>
+	</div>
 </div>
-<script src="js/fileuploader.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="js/fileuploader.js"></script>
+<script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
 <script type="text/javascript">
+
  var j=0;
  $('input.frnchck').checkbox({cls:'jquery-safari-checkbox-box'});
  function createUploader(){
-   var uploader = new webimg.FileUploader({
+   var uploader = new webimg.FileUploader({ 
        element: document.getElementById('files'),
        button:  document.getElementById('add-photo-but'),
        action: '/jquery-upload.php?type=photoalbum',
@@ -76,29 +108,24 @@
        maxConnections: 2,
        multiple: true,
        onComplete: function(id, fileName, responseJSON){
-       	  //$('.webimg-upload-list').html('');
-       	  if(responseJSON.success){
-       	  	$('#photos').append('<div class="album-foto-edit group" id="div'+j+'"><div class="desire-photo"><img class="photo" src="'+responseJSON.photo+'" width="'+responseJSON.w+'" height="'+responseJSON.h+'"><span></span></div><div class="album-foto-description"><h4>Описание</h4><textarea rows="5" class="opis"></textarea></div><ul class="album-foto-actions"><li><a href="#" class="delete" rel="'+j+'" onClick="return false;"><img src="pic/delete-icon.png">Удалить</a></li><li><label><input type="radio" name="make-cover" class="checkbox" safari="1" onClick="$(\'#logo\').attr(\'src\',\''+responseJSON.photo+'\')"> Сделать обложкой</label></li></ul></div>');
-       	  	j++;
-		  }
-		else alert(responseJSON.error);
+			//$('.webimg-upload-list').html('');
+			if(responseJSON.success){
+				//$('#photos').append('<div class="photoalbum-elem" id="div'+j+'"><div class="desire-photo"><img class="photo" src="'+responseJSON.photo+'" width="'+responseJSON.w+'" height="'+responseJSON.h+'"><span></span></div><div class="album-foto-description"><h4>Описание</h4><textarea rows="5" class="opis"></textarea></div><ul class="album-foto-actions"><li><a href="#" class="delete" rel="'+j+'" onClick="return false;"><img src="pic/delete-icon.png">Удалить</a></li><li><label><input type="radio" name="make-cover" class="checkbox" safari="1" onClick="$(\'#logo\').attr(\'src\',\''+responseJSON.photo+'\')"> Сделать обложкой</label></li></ul></div>');
+				$('#photos').prepend('<div class="photoalbum-elem" id="div'+j+'"><a id="delete" class="fl_r opacity_link" href="#" rel="'+j+'" onClick="return false;"><i class="small-icon"><img src="pic/delete.png"></i><strong>Удалить фотографию</strong></a><div class="bordered big-avatar fl_l"><img class="photo" alt="" src="'+responseJSON.photo+'"></div><div class="add-album-description wrapped"><table><thead></thead><tbody><tr><td>Описание:</td><td><textarea id="opis" class="bordered" placeholder="Введите описание фотографии"></textarea></td></tr><tr><td>Альбом:</td><td><select class="selectBox" name="" style="display: none;"><option value="1">Название альбома...</option></select><a class="selectBox selectBox-dropdown" style="width: 283px; display: inline-block; -moz-user-select: none;" title="" tabindex="0"><span class="selectBox-label" style="width: 260px;">Название альбома...</span><span class="selectBox-arrow"></span></a></td></tr><tr><td></td><td><label><input type="radio" class="checkbox" name="make-cover"  onClick="$(\'#logo\').attr(\'src\',\''+responseJSON.photo+'\')">Сделать обложкой</label></div></div>');
+				//$('.photoalbum input[type=radio]').checkbox({cls:'jquery-safari-checkbox-box'});
+				j++;
+			}
+			
+			else alert(responseJSON.error);
       }
+	  
     });
  }
  window.onload = createUploader;
  
- $(document).ready(function(){
- 	$('input.frnchck').change(function(){
-		if($(this).attr('id') != undefined){
-		   var allCheckboxes = $("#chks input:checkbox:enabled");
-		   allCheckboxes.removeAttr('checked');
-		   $(this).attr('checked','checked');
-		} else {
-		   $('#chk_all').removeAttr('checked');
-		   $('#chk_i').removeAttr('checked');
-		}
-	});
-    $('.delete').live('click',function(){
+ //$(document).ready(function(){
+
+    $('#delete').live('click',function(){
  		if(confirm('Удалить выбранную Вами фотографию из альбома?')){
  		   var id = parseInt($(this).attr('rel'));
  		   $('#div'+id).remove();
@@ -112,7 +139,7 @@
  		
  	    if(photos.length > 0){
  	  	  var i=0;
- 	  	  $('textarea.opis').each(function(key,input){
+ 	  	  $('textarea#opis').each(function(key,input){
 	          photos[i] = {'img':photos[i],'opis':input.value};
 	          i++;
 	      });
@@ -141,6 +168,7 @@
 	         }
 	      });
  	    }
+		else{alert ('Нет ни одной фотографии');}
  	});
- });
+ //});
 </script>
