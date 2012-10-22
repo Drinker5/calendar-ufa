@@ -83,12 +83,6 @@ jQuery(document).ready(function($) {
         .popover('setClasses', 'friend-action-popover');
 
     $(".friend-item .my-friend-actions")
-        .popover({
-          trigger: 'none',
-          autoReposition: false,
-          stopChildrenPropagation: false,
-          hideOnHTMLClick: true
-        })
         .popover('content', $('#my-friend-action-template').html(), true)
         .popover('setOption', 'position', 'bottom')
         .popover('setOption', 'horizontalOffset', -31)
@@ -222,14 +216,6 @@ jQuery(document).ready(function($) {
         }
     });
 
-    $('body').on('click', '.popover strong', function (e) {
-        console.log('OK STRONG!');
-    });
-
-    // $('.friend-actions input[type=checkbox]').checkbox({cls:'jquery-safari-checkbox-box'});
-    // $('#content input[type=checkbox]').checkbox({cls:'jquery-safari-checkbox-box'});
-    // $('#uved input[type=checkbox]').checkbox({cls:'jquery-safari-checkbox-box'});
-    // $('.wrap input[type=checkbox]').checkbox({cls:'jquery-safari-checkbox-box'});
     $("input:checkbox").uniform();
 
     var rAmount = $("#rangeAmount");

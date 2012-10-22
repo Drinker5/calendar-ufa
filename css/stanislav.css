@@ -531,11 +531,30 @@
     opacity: 1;   
 }
     
-
-
-
-
-
-
-
-
+/**
+ * Check-in
+ * behavior: url(../PIE.htc);
+ */
+.edit-places-container .places-list .place.checkin {
+    position: relative;
+}
+.edit-places-container .places-list .place.checkin .info {
+    max-width: 210px;
+}
+.edit-places-container .places-list .place.checkin .action {
+    position: absolute;
+    margin-left: 0;
+    margin-top: -21px;
+    top: 50%;
+    right: 0;
+}
+.edit-places-container .places-list .place.checkin .fav-place {
+    color: #95c11f;
+    margin: 4px 0 0 1px;
+    display: inline-block;
+}
+.edit-places-container .places-list .place.checkin .to-fav-place {
+    color: #75849c;
+    margin: 4px 0 0 0;
+    display: inline-block;
+}

@@ -31,6 +31,9 @@
 	display: inline-block;
 	white-space: nowrap;
 	overflow: hidden;
+	font-weight: bold;
+	font-size: 12px;
+	color: #4f72ab;
 }
 
 .selectBox-dropdown .selectBox-arrow {
@@ -96,6 +99,7 @@
 	overflow: hidden;
 	background: 6px center no-repeat;
 	text-decoration:none;
+	font-size: 11px;
 }
 
 .selectBox-options LI.selectBox-hover A {
@@ -112,6 +116,7 @@
 .selectBox-options LI.selectBox-selected A {
 	background-color: #C8DEF4;
 	text-decoration:none;
+	font-weight: bold;
 }
 
 .selectBox-options .selectBox-optgroup {

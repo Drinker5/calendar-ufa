@@ -484,7 +484,7 @@ h4:before {
 }*/
 
 /*.place-info ul li {
-	padding: none;
+ padding: none;
 }*/
 
 
@@ -598,20 +598,6 @@ h4:before {
 {
 0%   {-o-transform: rotate(0deg);}
 100% {-o-transform: rotate(180deg);}
-}
-*/
-
-
-/*
-#menu:before {
- content: "";
- background: url(../pic/howto-menu.png);
- width: 745px;
- height: 43px;
- position: absolute;
- top: -1px;
- right: 0px;
- opacity: 0.1;
 }
 */
 
@@ -758,3 +744,251 @@ input[type="search"]::-webkit-search-results-decoration {
 .timeline-elem:last-child {
  border-bottom: none;
 }*/
+
+.h2 {
+ margin: 10px 0;
+}
+
+.arrow-back {
+ background: #8cb7e3;
+ color: #fff;
+ text-shadow: 0px 1px 0px rgba(0,0,0,.2);
+ font: bold 11px Helvetica, Arial, sans-serif;
+ text-decoration: none;
+ padding: 0 7px;
+ line-height: 25px;
+ height: 25px;
+ display: inline-block;
+ border-radius: 0 3px 3px 0;
+ position: relative;
+ margin: 7px 0 12px 7px;
+}
+
+.arrow-back:before {
+ position: absolute;
+ content: "";
+ width: 7px;
+ height: 25px;
+ top: 0px;
+ left: -7px;
+ background: url(../pic/blue-arrow_l.png) no-repeat 0 0;
+}
+
+#gift_info {
+ border-top: 1px solid #e7e8ed;
+ border-bottom: 1px solid #e7e8ed;
+ background: #f3f9fd;
+ display: table;
+ width: 100%;
+}
+
+#gift_info .gi_l {
+ float: left;
+ width: 191px;
+ padding: 25px 20px 10px 20px;
+}
+
+#gift_info .gi_r {
+ display: block;
+ padding: 23px 0 10px 0;
+}
+
+.gift_l {
+
+}
+
+.gift_img {
+ border: 2px solid #fff;
+ box-shadow: 0px 0px 0px 1px #b2b7ba;
+ border-radius: 2px;
+ width: 185px;
+ position: relative;
+}
+
+.gift_l .sale_circle {
+ background: #98c21d;
+ width: 30px;
+ height: 30px;
+ text-align: center;
+ line-height: 30px;
+ color: #fff;
+ border-radius: 30px;
+ border: solid 2px #fff;
+ position: absolute;
+ right: -10px;
+ top: -10px;
+}
+
+.gift_l .gift_price {
+ background: #8ab0d7;
+ position: absolute;
+ bottom: 0px;
+ color: #fff;
+ padding: 6px 0;
+ text-align: center;
+ font: bold 12px Helvetica, Arial, sans-serif;
+ width: 100%;
+}
+
+.currency {
+ font-size: 11px;
+ text-transform: uppercase;
+ color: #9a9a9a;
+ text-align: center;
+}
+
+.currency li {
+ display: inline-block;
+ margin: 8px 7px 10px 0px;
+ cursor: pointer;
+}
+
+.currency .active {
+ font-weight: bold;
+ text-decoration: underline;
+ color: #4f72ab;
+}
+
+.wish_add {
+ background: #98c21d url(../pic/wish_add.png) no-repeat 10px center;
+ font-family: Tahoma, sans-serif;
+ color: #fff;
+ height: 21px;
+ line-height: 21px;
+ display: block;
+ padding-left: 35px;
+ border: 1px solid #bfbfbf;
+ border-radius: 3px;
+}
+
+/*
+.howto {
+ content: "";
+ background: url(../pic/howto.jpg);
+ width: 1020px;
+ height: 850px;
+ position: absolute;
+ top: 0px;
+ left: 50%;
+ opacity: 0.4;
+ z-index: 999;
+}
+*/
+
+.gift_block {
+ display: table;
+ padding-left: 5px;
+ margin-top: 8px;
+ width: 520px;
+}
+
+.gift_block hr {
+ border: none;
+ border-top: 1px solid #dee4ec;
+ border-bottom: #f7fbfe;
+ margin-bottom: 10px;
+ clear: both;
+}
+
+.gb_title {
+ float: left;
+ width: 65px;
+ text-align: right;
+ font: normal 12px Helvetica, Arial, sans-serif;
+ color: #75849b;
+ margin-right: 17px;
+ text-shadow: 0px 1px 0px #fff;
+}
+
+.gb_content {
+ float: left;
+ width: 430px;
+}
+
+.gb_content p {
+ color: #75849b;
+ font: normal 12px Helvetica, Arial, sans-serif;
+}
+
+.gift_name {
+ font: bold 13px Helvetica, Arial, sans-serif;
+ color: #0d86d5;
+}
+
+.gift_title {
+ font: bold 12px Helvetica, Arial, sans-serif !important;
+ color: #0d86d5 !important;
+}
+
+.gb_content a {
+ text-decoration: underline;
+ color: #75849b;
+ font-size: 12px;
+}
+
+.progress {
+ display: block;
+ width: 155px;
+ height: 5px;
+ position: relative;
+ top: 5px;
+ border-radius: 5px;
+ background-color: #d7d7d7;
+ -webkit-box-shadow: 0 1px rgba(255,255,255,.65), inset 0 1px 2px rgba(0,0,0,.15);
+ -moz-box-shadow: 0 1px rgba(255,255,255,.65), inset 0 1px 2px rgba(0,0,0,.15);
+ box-shadow: 0 1px rgba(255,255,255,.65), inset 0 1px 2px rgba(0,0,0,.15);
+}
+
+.available {
+ display: block;
+ position: relative;
+ left: 1px;
+ height: 3px;
+ border-radius: 5px;
+ background-color: #7cb6e1;
+ -webkit-box-shadow: inset 0 1px rgba(255,255,255,.33);
+ -moz-box-shadow: inset 0 1px rgba(255,255,255,.33);
+ box-shadow: inset 0 1px rgba(255,255,255,.33);
+ background: #77b3e0;
+ border: 1px solid #409ade;
+}
+
+.gb_icon {
+ background: url('../pic/gift-sprite.png');
+ display: block;
+ float: left;
+ margin-right: 10px;
+ position: relative;
+}
+
+.gb_paypal {
+ background-position: 0 -6px;
+ width: 51px;
+ height: 14px;
+}
+
+.gb_cp {
+ background-position: -61px -7px;
+ width: 45px;
+ height: 11px;
+}
+
+.gb_visa {
+ background-position: -118px -1px;
+ width: 28px;
+ height: 19px;
+ bottom: 6px;
+}
+
+.gb_maestro {
+ background-position: -160px 0;
+ width: 31px;
+ height: 20px;
+ bottom: 7px;
+}
+
+.gb_webmoney {
+ background-position: -204px -4px;
+ width: 55px;
+ height: 14px;
+}

@@ -1442,9 +1442,9 @@ ul#actions li:last-child a:hover {
     background-color: #8BB8EA;
     color: #fff;
     font-weight: bold;
-    font-size: 12px;
-    padding: 5px 0 5px 3px;
-    width: 140px;
+    font-size: 11px;
+    padding: 5px 0 5px 7px;
+    width: 130px;
 }
 
 .col1 .arrow-box:after {
@@ -1517,6 +1517,67 @@ ul#actions li:last-child a:hover {
     font-weight: bold;
     color: #8CB7E2;
     margin-right: 10px;
+}
+
+.gift-list-item {
+    width: 106px;
+    padding: 18px 25px 0 25px;
+}
+
+.gift-list-item:hover {
+    background-color: #f4f5f5;
+    padding: 18px 24px 0 24px;
+    border-right: 1px solid #edeeee;
+    border-left: 1px solid #edeeee;
+    border-top: 2px solid #dedfde;
+    margin-top: -2px;
+}
+
+.gift-list-item .discount {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    border-radius: 50%;
+    background: #fff;
+    padding: 2px;
+}
+
+.gift-list-item:hover .discount {
+    right: 9px;
+}
+
+.gift-list-item .discount-inner {
+    border-radius: 50%;
+    background-color: rgba(149, 193, 30, .95);
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 2px;
+}
+
+.gift-list-item .price {
+    position: absolute;
+    left: 2px;
+    bottom: 2px;
+    width: 96px;
+    background-color: rgba(140, 183, 227, .95);
+    padding: 4px 2px;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+}
+
+.gift-list-item.action .price {
+    background-color: rgba(149, 193, 30, .95);
+}
+
+.gift-list-item .name {
+    font-size: 12px;
+    padding-top: 4px;
+}
+
+.gift-list-item .shop {
+    padding-bottom: 4px;
 }
 /* misc
 ---------------------*/
