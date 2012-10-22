@@ -19,9 +19,9 @@
 		</div>
 	</div>
 
-	<br><br><br>
+	<br>
 	
-	<div class="whead"><h5 style="height:0px;">Календарь</h5><div class="clear"></div></div>
+	<div class="whead"><h5>Календарь</h5><div class="clear"></div></div>
 	<div id="calendar"></div>
 	<!-- Форма для эвентов  -->
 	<div id="dialog-form" title="Событие" >
@@ -31,8 +31,8 @@
 			<input type="text" id="event_type" name="event_type" placeholder="Событие...">
 			<input type="text" id="event_place" name="event_place" placeholder="Место...">
 
-			c <input type="text" name="event_start" id="event_start"/>
-			по <input type="text" name="event_end" id="event_end"/>
+			<label for="event_start" id="lbl">c</label> <input type="text" name="event_start" id="event_start"/>
+			<label for="event_start" id="lbl">по</label> <input type="text" name="event_end" id="event_end"/>
 			
 			<hr/> <!-- -------------------------------- -->
 			
@@ -61,7 +61,7 @@
 											<option value="in_notif">В уведомлениях</option>
 											</select>
 				
-			<p style="margin-top:-10px">
+			<p style="margin-top:10px">
 			После даты: <input type="text" name="event_after" id="event_after"/>
 			</p>
 			<hr/> <!-- -------------------------------- -->
@@ -73,7 +73,6 @@
 			Показать событие определенным друзьям: 
 			<br>
 			<input type="text" id="privacy_friends" name="privacy_friends" placeholder="Потом...">
-			<br>
 			<textarea name="event_note" id="event_note" placeholder="Заметки..."></textarea>
 			<input type="hidden" name="event_id" id="event_id" value="">
 		</form>

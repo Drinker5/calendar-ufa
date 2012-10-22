@@ -5,9 +5,9 @@ html .fc, .fc table { font-size: 1em; }
 .fc-header { position: relative; }
 .fc-header td { white-space: nowrap; }
 .fc-header-left { text-align: left; width: 100%; }	
-.fc-header-center { text-align: center; position: absolute; top: 0; width: 80%; left: 10%; line-height: 18px; }
+/*1*/.fc-header-center { text-align: center; position: absolute; top: 0; width: 80%; left: 10%; line-height: 38px; }
 .fc-header-left .fc-button-inner { border: none; }
-.fc-header-right { text-align: right; position: absolute; top: -58px; right: 0; }
+/*1*/.fc-header-right { text-align: right; position: absolute; top: -68px; right: 0; }
 .fc-header-right .fc-button-agendaDay .fc-button-inner { -webkit-border-top-right-radius: 3px; 
 -moz-border-radius-topright: 3px; }
 .fc-header-title { display: inline-block; vertical-align: top; }	
