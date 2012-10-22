@@ -65,13 +65,28 @@
 		//echo $distance.' м, zoom='.$zoom;
 	}
 	else
+	{
 		$myPos=true;
+		//$zoom=3;
+		$lat=0;
+		$lon=0;
+
+		if(function_exists('geoip_record_by_name'))
+		{
+			$rec=geoip_record_by_name($_SERVER['REMOTE_ADDR']);
+			if($rec)
+			{
+				$lat=$rec['latitude'];
+				$lon=$rec['longitude'];
+			}
+		}
+	}
 ?>
 	<div id='pointselector-text'></div>
 
 	<script>
 <?php if($myPos){ ?>
-    var map=mapbox.map('map').zoom(<?=$zoom?>).center({lat: 0, lon: 0});
+    var map=mapbox.map('map').zoom(<?=$zoom?>).center({lat: <?=$lat?>, lon: <?=$lon?>});
     map.addLayer(mapbox.layer().id('jam-media.map-tckxnm3s'));
     map.ui.zoomer.add();
 
@@ -166,7 +181,7 @@
 				$('.place').removeClass('active');
 				$('.place[rel='+f.properties.id+']').fadeOut(function(){
 					setTimeout(function(){
-						$('.place[rel='+f.properties.id+']').prependTo('.places-list').fadeIn(function(){
+						$('.place[rel='+f.properties.id+']').prependTo('#search-content').fadeIn(function(){
 							setTimeout(function(){
 								$('.place[rel='+f.properties.id+']').addClass('active');
 							},
@@ -200,30 +215,118 @@
 			that.removeClass('active');
 			$('#'+id).attr({'src':mrk[id]['img']});
 		});
+
+		function placeSearch(){
+			var html,
+				name = $("#search-input").val();
+
+			$.ajax({
+				type: "POST",
+				url: "/jquery-myplaces",
+				data: {type:'search',name:name},
+				async: false,
+				//dataType: 'json',
+				success: function(data){
+					html = $.parseJSON(data);
+
+					//Обновляем карту
+					map.removeLayer('markers');
+
+					mrkSearch=new Object();
+
+					var markersLayer=mapbox.markers.layer().features(html.map).factory(function(f){
+						var img=document.createElement('img');
+						img.className='marker-image';
+						img.setAttribute('src', f.properties.image);
+						img.setAttribute('id', f.properties.id);
+
+						mrkSearch[f.properties.id]=new Object();
+						mrkSearch[f.properties.id]['lat']=f.geometry.coordinates[1];
+						mrkSearch[f.properties.id]['lon']=f.geometry.coordinates[0];
+						mrkSearch[f.properties.id]['img']=f.properties.image;
+
+						//Смещение к координатам маркера
+						MM.addEvent(img, 'click', function(e){
+							map.ease.location({
+								lat:f.geometry.coordinates[1],
+								lon:f.geometry.coordinates[0]
+							}).zoom(map.zoom()).optimal();
+							$('.marker-image').attr({src:f.properties.image});
+							img.setAttribute('src', 'https://dl.dropbox.com/u/23467346/pic/alien.png');
+							$('.place').removeClass('active');
+							$('.place[rel='+f.properties.id+']').fadeOut(function(){
+								setTimeout(function(){
+									$('.place[rel='+f.properties.id+']').prependTo('#search-content').fadeIn(function(){
+										setTimeout(function(){
+											$('.place[rel='+f.properties.id+']').addClass('active');
+										},
+										1);
+									});
+								},
+								300);
+							});
+						});
+						return img;
+					});
+					map.addLayer(markersLayer);
+					mapbox.markers.interaction(markersLayer).formatter(function(feature){
+						var o='<b>'+feature.properties.name+'</b><br />'+feature.properties.address;
+						return o;
+					});
+
+					//Обновляем боковое меню
+					$("#search-content").html(html.html);
+				}
+			});	
+		}
+
+		jQuery(function($){
+			$("#search-submit").click(function(){
+				placeSearch();
+			});
+			$("#search-input").keypress(function(event){
+				if(event.which == '13'){
+					placeSearch();
+					return false;
+				}
+			});
+		});
 <?php } ?>
 	</script>
 
 	<div class="places-list fl_r">
+		<div class="search-block">
+			<div class="search-block-bottom">
+				<!-- <form> -->
+					<input type="text" id="search-input" class="search-field" placeholder="Поиск...">
+					<input type="submit" id="search-submit" class="search-button" value="">
+				<!-- </form> -->
+			</div>
+		</div>
+		<div id="search-content">
 <?php
 	if(is_array($places)){
 		for($i=0; $i<$count; $i++){
 			$logo=ShowLogo(array($places[$i]['shop_id']),70,70);
 			$logo=$logo[0]['logo'];
 ?>
-		<div class="place group" rel="pin<?=$i?>">
-			<div class="preview fl_l">
-				<a href="/shop-<?=$places[$i]['shop_id']?>"><img src="<?=$logo?>" alt="" width="70"></a>
-			</div>
-			<div class="info fl_l">
-				<a href="/shop-<?=$places[$i]['shop_id']?>"><?=$places[$i]['name']?></a>
-				<p><?=str_replace('::', ', ', $places[$i]['adress'])?></p>
-			</div>
-			<div class="action fl_r">
-				<a href="" class="small-icon icon-delete"></a>
-			</div>
-		</div> <!-- /.place -->
+			<div class="place group" rel="pin<?=$i?>">
+				<div class="preview fl_l">
+					<a href="/shop-<?=$places[$i]['shop_id']?>"><img src="<?=$logo?>" alt="" width="70"></a>
+				</div>
+				<div class="info fl_l">
+					<a href="/shop-<?=$places[$i]['shop_id']?>"><?=$places[$i]['name']?></a>
+					<p><?=str_replace('::', ', ', $places[$i]['adress'])?></p>
+				</div>
+				<div class="action fl_r">
+					<a href="" class="small-icon icon-delete"></a>
+				</div>
+			</div> <!-- /.place -->
 <?php
 		}
+?>
+		</div>
+<?php
 	}
 	else
 	{

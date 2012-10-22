@@ -369,7 +369,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /* ===== UI Slider ===== */
 
 .ui-slider { position: relative; text-align: left; }
-.ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 16px; height: 16px; cursor: default; background: url(../pic/handle.png) no-repeat; border: none; cursor: pointer; }
+.ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 16px; height: 16px; cursor: default; background: url(../pic/elements/ui/handle.png) no-repeat; border: none; cursor: pointer; }
 .ui-slider .ui-slider-handle:hover { background-position: 0 -16px; }
 .ui-slider .ui-slider-handle:active { background-position: 0 -32px; }
 

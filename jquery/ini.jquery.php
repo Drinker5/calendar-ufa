@@ -117,6 +117,11 @@ switch($_URLP[1]){
 	    require_once(path_root."jquery/jq_mywishes.php");
 	break;
 
+    case 'myplaces': // Любимые места
+	    if(isset($_SESSION['WP_USER']))
+	    require_once(path_root."jquery/jq_myplaces.php");
+	break;
+
 	case 'profile': // Сохранения инфо. профиля
 		if(isset($_SESSION['WP_USER']))
 		require_once(path_root."jquery/jq_profile_update.php");
