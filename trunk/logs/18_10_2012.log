@@ -1,0 +1,40 @@
+************************************************************************************
+Time:            22:12:29 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/10053 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+
+************************************************************************************
+Time:            22:49:04 
+IP:              127.0.0.1 
+HOST:            GPK 
+Method:          GET 
+REQUEST:         /my-wishes 
+REFERER:         http://tooezzy.ru/10053 
+SCRIPT_FILENAME: Z:/home/tooezzy.ru/www/index.php
+PHP FILE:        Z:\home\tooezzy.ru\www\include\ini.users.php
+FUNCTION:        ShowIHochu
+************************************************************************************
+MySQL kod: 1054 
+Message:   Unknown column 'discount_users_hochu.reason' in 'field list' 
+************************************************************************************
+VARR: 
+
+q=my-wishes
+
+************************************************************************************
+

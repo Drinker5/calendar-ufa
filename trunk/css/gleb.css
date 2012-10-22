@@ -1,0 +1,133 @@
+#show_combobox {
+	font-size: 12px;
+	float:right;
+	color: #8CB7E3;
+}
+
+.search-events {
+    margin-bottom: 20px;
+}
+
+.search-events input[type=text] {
+    width: 300px;
+    padding-right: 25px !important;
+}
+
+.search-events .icon-search {
+    position: absolute;
+    top: 9px;
+    right: 5px;
+}
+
+form{
+	color:grey;
+}
+#dialog-form {
+	padding: 10px; 
+}
+
+#event_type{
+	margin-top:10px;
+	padding-left:10px;
+	color:grey;
+	width: 590px;
+	height: 20px;
+}
+
+#event_place {
+	padding-left:10px;
+	margin-top:15px;
+	margin-bottom:10px;
+	color:grey;
+	width: 590px;
+	height: 20px;
+	background-image: url("../pic/info.png"); 
+	background-position: right 2px;
+ 	background-repeat: no-repeat;
+}
+#event_start{
+	font-weight: bold;
+	color:#888888;
+	margin-left:30px;
+	margin-right:10px;
+	border: none;
+}
+#event_end  {
+	font-weight: bold;
+	color:#888888;
+	margin-left:30px;
+	border: none;
+}
+
+hr{ /* √оризонтальна€ лини€ */
+	margin-left: -10px; 
+	margin-right: -10px;
+    color: #a0afaf; /*дл€ IE */
+    background-color: #a0afaf; /*дл€ Firefox, Opera, Safari*/
+    border:0px none;
+    height:1px; /* высота 1px IE, Firefox, Opera, Safari */
+   
+}
+
+.section{
+margin-left:93.5px;
+margin-right:85.5px;
+}
+#event_repeat {
+padding-left:10px;
+	color:grey;
+	margin-right:15px;
+	width: 190px;
+	height:30px;
+}
+#event_complete{
+padding-left:10px;
+	color:grey;
+	margin-left:0px;
+	margin-right:15px;
+	width: 190px;
+	height:30px;
+}
+#event_reminder{
+padding-left:10px;
+	color:grey;
+	margin-left:0px;
+	width: 190px;
+	height:30px;
+	margin-bottom:10px;
+}
+
+#event_after{
+	font-weight: bold;
+	color:#888;
+	margin-left:5px;
+	border: none;
+}
+
+#privacy_all{
+	margin-top:5px;
+	margin-bottom:10px;
+}
+
+#privacy_nobody{
+	margin-top:5px;/
+	margin-bottom:10px;
+	margin-left:20px;
+}
+#privacy_friends{
+	padding-left:10px;
+	margin-bottom:15px;
+	color:grey;
+	width: 590px;
+	height: 20px;
+	background-image: url("../pic/info.png"); 
+	background-position: right 2px;
+ 	background-repeat: no-repeat;
+}
+#event_note{
+	padding-left:10px;
+	outline: none; /*удал€ет обводку*/
+	resize: none; /*запрещает измен€ть размер*/
+	width:605px;
+	height:60px;
+}

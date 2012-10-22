@@ -1,0 +1,58 @@
+@charset "utf-8";
+/* CSS Document */
+.title h4 {
+    color: #0D86D5;
+    font-size: 12px;
+    font-weight: bold;
+	margin-top:10px;
+	}
+#new_alb span {	
+		padding-left:10px;
+		font-size:11px;
+		vertical-align:top;
+	}
+#new_alb input[type="text"] {
+	padding: 0 0 0 5px;
+	color:#bcbcbc;
+	width:270px;
+	height:22px;
+	font-size:11px;
+	}
+.probel {
+	margin-top:10px;
+	}
+#new_alb textarea {
+	width:270px;
+	height:65px;
+	font-size:11px;
+	padding: 5px 0 0 5px;
+	color:#bcbcbc;
+    font-family: Helvetica, Arial, sans-serif;
+}
+#prosmotr {
+	font-size:11px;
+	text-align:right;
+	padding-left:174px;
+	}
+#komment {
+	font-size:11px;
+	text-align:right;
+	padding-left:114px;
+	}
+.prava {
+	padding-top:15px;
+	}
+.oblozh {
+		padding: 13px 0 0 70px;
+		color:#bcbcbc;
+		font-size:11px;
+	}
+.delete_photo {
+	margin-left:200px;
+	font-size:10px;
+	font-weight:bold;
+	color:#5b6880;
+	}
+#save_photo {
+	padding-left:590px;
+	}

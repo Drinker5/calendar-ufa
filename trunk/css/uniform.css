@@ -1,0 +1,38 @@
+.checker {
+	width: 13px;
+	height: 13px;
+	position: relative;
+	display: -moz-inline-stack;
+	display: inline-block;
+	vertical-align: text-top;
+	*display: inline;
+	zoom: 1;
+	margin-right: 5px;
+	box-shadow: 0 1px 0 white;
+	-webkit-box-shadow: 0 1px 0 white;
+	-moz-box-shadow: 0 1px 0 #fff;
+}
+
+
+.checker span {
+	background: url(../pic/checkboxes.png) no-repeat 0 0;
+	height: 13px;
+	width: 13px;
+	display: -moz-inline-box;
+	display: inline-block;
+	text-align: center;
+}
+
+.checker span.checked {
+	background-position: 0 -14px;
+}
+
+.checker input {
+	width: 13px;
+	height: 13px;
+	opacity: 0;
+	filter: alpha(opacity:0);
+	display: inline-block;
+	background: none;
+	cursor: pointer;
+}

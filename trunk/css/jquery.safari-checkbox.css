@@ -1,0 +1,44 @@
+.jquery-safari-checkbox, .jquery-safari-checkbox-mini, .jquery-safari-checkbox-box {
+	display: inline-block;
+    *display: inline;
+	font-size: 12px;
+	width: 13px;
+	height: 12px;
+	line-height: 12px;
+	cursor: pointer;
+	zoom: 1;
+	margin-right: 4px;
+	vertical-align: text-top;
+}
+.jquery-safari-checkbox .mark, .jquery-safari-checkbox-mini .mark, .jquery-safari-checkbox-box .mark{display: inline-block; width: 13px; height: 12px; font-size: 12px; line-height: 12px;}
+
+.jquery-safari-checkbox img, .jquery-safari-checkbox-mini img{vertical-align: middle; width: 13px; height: 12px;}
+.jquery-safari-checkbox-box img{vertical-align: middle; width: 13px; height: 12px;}
+
+.jquery-safari-checkbox img{background: transparent url('../pic/checkbox.png') no-repeat;}
+.jquery-safari-checkbox-mini img{background: transparent url('../pic/safari-checkbox-mini.png') no-repeat;}
+.jquery-safari-checkbox-box img{background: transparent url('../pic/checkbox.png') no-repeat;}
+
+.jquery-safari-checkbox img,
+.jquery-safari-checkbox-mini img,
+.jquery-safari-checkbox-box img{background-position: 0px 0px;}
+
+/*.jquery-safari-checkbox-hover img,
+.jquery-safari-checkbox-mini-hover img{background-position: -12px 0px;}
+.jquery-safari-checkbox-box-hover img{zbackground-position: -14px 0px;}*/
+
+.jquery-safari-checkbox-checked img,
+.jquery-safari-checkbox-mini-checked img{background-position: 0px -12px;}
+.jquery-safari-checkbox-box-checked img{background-position: 0px -12px;}
+
+/*.jquery-safari-checkbox-checked .jquery-safari-checkbox-hover img,
+.jquery-safari-checkbox-mini-checked .jquery-safari-checkbox-mini-hover img{background-position: -12px -12px;}
+.jquery-safari-checkbox-box-checked .jquery-safari-checkbox-box-hover img{background-position: -14px -14px;}*/
+
+.jquery-safari-checkbox-disabled img,
+.jquery-safari-checkbox-mini-disabled img{background-position: 0px -24px;}
+.jquery-safari-checkbox-box-disabled img{background-position: 0px -28px;}
+
+.jquery-safari-checkbox-checked .jquery-safari-checkbox-disabled img,
+.jquery-safari-checkbox-mini-checked .jquery-safari-checkbox-mini-disabled img{background-position: 0px -36px;}
+.jquery-safari-checkbox-box-checked .jquery-safari-checkbox-box-disabled img{background-position: 0px -42px;}
