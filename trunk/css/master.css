@@ -1481,6 +1481,11 @@ ul#actions li:last-child a:hover {
     margin-left: 0;
 }
 
+.gift-search-block .category-icons.active {
+    font-weight: bold;
+    color: #4f72ab;
+}
+
 .gift-search-block .uRange {
     margin-top: 4px;
 }

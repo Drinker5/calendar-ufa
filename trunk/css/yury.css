@@ -792,6 +792,7 @@ input[type="search"]::-webkit-search-results-decoration {
 #gift_info .gi_r {
  display: block;
  padding: 23px 0 10px 0;
+ position: relative;
 }
 
 .gift_img {
@@ -1050,6 +1051,10 @@ input[type="search"]::-webkit-search-results-decoration {
  font-size: 13px;
 }
 
+.px11 {
+ font-size: 11px !important;
+}
+
 .h3 {
  margin: 15px 0;
 }
@@ -1143,4 +1148,55 @@ input[type="search"]::-webkit-search-results-decoration {
  color: #fff;
  text-shadow: 0px 1px 0px rgba(0,0,0,.2);
  margin-top: 10px;
+}
+
+.gi_r .map {
+ position: absolute;
+ background: #eee;
+ width: 550px;
+ right: 0px;
+ height: 100%;
+ z-index: 10;
+ top: 0px;
+ display: none;
+}
+
+.gi_r .closebutton {
+ position: absolute;
+ width: 30px;
+ height: 30px;
+ background: #ccc;
+ right: 0px;
+ top: 0px;
+ cursor: pointer;
+}
+
+.show_info {
+ clear: both;
+}
+
+.show_info a {
+ position: relative;
+ top: 2px;
+}
+
+.g_if {
+ width: 400px;
+ z-index: 9;
+ padding: 1px 20px !important;
+}
+
+.g_if .gift_title {
+ margin: 10px 0;
+}
+
+.g_if p {
+ margin-bottom: 10px;
+ line-height: 16px;
+ font-size: 11px;
+ color: #75849c;
+}
+
+.nm {
+ margin: 0 !important;
 }

@@ -1228,3 +1228,56 @@ error
 .name_avatar .name a:hover {
     text-decoration: underline;
 }
+
+.grid50.gift-header
+{
+    margin: 5px 0px;
+}
+
+.friend-item-gift
+{
+    width: 47%;
+    float: left;
+    margin-right: 1%;
+    padding: 20px 10px 20px 0px;
+    background: #fff;
+    -webkit-transition: background-color 0.3s ease;
+    -moz-transition: background-color 0.3s ease;
+    -o-transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease;
+}
+
+.friend-item-gift:hover
+{
+    background: #f3f9fd;
+}
+
+.friend-item-gift .name
+{
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: bold;
+}
+.friend-item-gift .place
+{
+    font-size: 12px;
+    line-height: 13px;
+    font-weight: bold;
+    color: #0d86d5;
+}
+.friend-item-gift .text
+{
+    color: #75849c;
+    margin-top: -6px;
+    padding-left: 21px;
+}
+
+.friend-item-gift i
+{
+    margin-right: 3px;
+}
+
+ .friend-item-gift .group
+ {
+    margin-bottom: 7px;
+ }

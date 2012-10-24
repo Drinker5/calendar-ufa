@@ -1,15 +1,21 @@
 <?php
+	if($_URLP['0']=='my'){
+		$user_wp=(int)$_SESSION['WP_USER']['user_wp'];
+		$my='my';
+	}
+	else $user_wp=$my=(int)$_URLP['0'];
+
 	require_once('jquery/jq_myfriends.php');
-	$friends_all=$subs_count=$USER->CountFriends();
+	$friends_all=$subs_count=$USER->CountFriends(0, $user_wp);
 	$rows=30; $t=''; $c=''; $online=0; $circle=1;
 
 	if(isset($_REQUEST['t'])){
 		$t='t='.$_REQUEST['t'].'&';
 		if($_REQUEST['t']=='online'){
 			$online=1;
-			$subs_count=$USER->CountFriends(0,0,1);
+			$subs_count=$USER->CountFriends(0, $user_wp, 1);
 		}
-		else $subs_count=$USER->CountFriends(1);
+		else $subs_count=$USER->CountFriends(1, $user_wp);
 	}
 
 	if(isset($_REQUEST['c'])){
@@ -36,9 +42,15 @@
 ?>
 
 	<ul class="fl_l left">
-		<li<?php if(!isset($_REQUEST['t']) && !isset($_REQUEST['c']))  echo ' class="active"' ?>><a href="/my-friends">Все <span class="black" id="fr-all">(<?=$friends_all?>)</span></a></li>
-		<li<?php if(isset($_REQUEST['t']) && $_REQUEST['t']=='online') echo ' class="active"' ?>><a href="/my-friends?t=online">Друзья онлайн <span class="black">(<?=$USER->CountFriends(0,0,1)?>)</span></a></li>
-		<li<?php if(isset($_REQUEST['t']) && $_REQUEST['t']=='request')echo ' class="active"' ?>><a href="/my-friends?t=request">Заявки в друзья <span class="black" id="fr-requests">(<?=$USER->CountFriends(1)?>)</span></a></li>
+		<li<?php if(!isset($_REQUEST['t']) && !isset($_REQUEST['c']))  echo ' class="active"' ?>><a href="/<?=$my?>-friends">Все <span class="black" id="fr-all">(<?=$friends_all?>)</span></a></li>
+		<li<?php if(isset($_REQUEST['t']) && $_REQUEST['t']=='online') echo ' class="active"' ?>><a href="/<?=$my?>-friends?t=online">Друзья онлайн <span class="black">(<?=$USER->CountFriends(0, $user_wp, 1)?>)</span></a></li>
+<?php
+	if($_URLP['0']=='my'){
+		echo '<li';
+		if(isset($_REQUEST['t']) && $_REQUEST['t']=='request')echo ' class="active"';
+		echo '><a href="/'.$my.'-friends?t=request">Заявки в друзья <span class="black" id="fr-requests">('.$USER->CountFriends(1, $user_wp).')</span></a></li>';
+	}
+?>
 	</ul>
 
 <?php
@@ -49,7 +61,7 @@
 			foreach($circles as $key=>$value){
 				echo '<li';
 				if($_REQUEST['c']==$value['krug_id'])echo ' class="active"';
-				echo '><a href="/my-friends?c='.$value['krug_id'].'">'.$value['name'].'</a></li>';
+				echo '><a href="/'.$my.'-friends?c='.$value['krug_id'].'">'.$value['name'].'</a></li>';
 			}
 			echo '</ul>';
 		}
@@ -59,7 +71,7 @@
 
 <?php
 //!Заявки в друзья
-	if(@$_REQUEST['t']=='request'){
+	if(@$_REQUEST['t']=='request' && $_URLP['0']=='my'){
 		echo '<div class="friend-container wider group">';
 		$result=$USER->ShowNewFriends();
 		if(is_array($result)){
@@ -87,7 +99,7 @@
 	else{
 ?>
 <div class="friend-container group" id="idLenta" style="overflow: hidden;">
-	<?=ShowPeopleList($rows,0,$online,$circle)?>
+	<?=ShowPeopleList($user_wp, $rows, 0, $online, $circle)?>
 </div>
 <div id="loadmoreajaxloader" style="display:none; text-align:center;"><img src="/pic/loader.gif" alt="loader" width="32" height="32" /></div>
 <?php
@@ -95,9 +107,8 @@
 	//for($i=1016; $i<1021; $i++)$USER->AddHochu($i);
 
 	//Если друзей 6 и меньше показываем случайных людей
-	if($subs_count<7){
+	if($subs_count<7 && $_URLP[0]=='my'){
 		if(isset($_SESSION['WP_USER']['user_wp'])){
-			$user_wp=(int)$_SESSION['WP_USER']['user_wp'];
 			$result =$MYSQL->query("
 				SELECT `u`.`user_wp`
 				FROM `discount_users` `u`
@@ -117,7 +128,7 @@
 					);
 					$stamp=time();
 					$new_usr=$USER->Info_min($v['user_wp'],70,70);
-					echo ShowFriendBlock($new_usr['photo'],$new_usr, $stamp, $cart);
+					echo ShowFriendBlock($user_wp, $new_usr['photo'], $new_usr, $stamp, $cart);
 				}
 			}
 		}
@@ -150,7 +161,7 @@
 			//console.log(fio);
 
 			$.ajax({
-				url:'/jquery-showmyfriends', type:'POST', data:{list:begin, items:rows, circle:circle, online:'<?=$online?>', fio:fio}, cache:false,
+				url:'/jquery-showmyfriends', type:'POST', data:{user_wp:<?=$user_wp?>, list:begin, items:rows, circle:circle, online:'<?=$online?>', fio:fio}, cache:false,
 				success:function(data){
 					//alert(fio);
 					var html, idLenta=$('#idLenta'), newElems;
@@ -159,6 +170,7 @@
 							$('div#loadmoreajaxloader').hide();
 							html =jQuery.parseJSON(data);
 							idLenta.append(html.html);
+<?php if($_URLP=='my'){ ?>
 							idLenta.find('[rel="'+html.uid+'"]')
 								.popover({
 									trigger: 'none',
@@ -171,6 +183,20 @@
 								.popover('setOption', 'horizontalOffset', -31)
 								.popover('setClasses', 'friend-action-popover');
 							$(".popover input:checkbox").uniform();
+<?php } else{ ?>
+							idLenta.find('[rel="'+html.uid+'"]')
+								.popover({
+									trigger: 'none',
+									autoReposition: false,
+									stopChildrenPropagation: false,
+									hideOnHTMLClick: true
+								})
+        .popover('content', $('#subscriber-action-template').html(), true)
+        .popover('setOption', 'position', 'bottom')
+        .popover('setOption', 'horizontalOffset', -31)
+        .popover('setClasses', 'friend-action-popover');
+							$(".popover input:checkbox").uniform();
+<?php } ?>
 							page =page+1;
 							begin=begin+rows;
 						}

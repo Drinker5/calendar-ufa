@@ -129,6 +129,12 @@ jQuery(document).ready(function($) {
         .popover('setOption', 'horizontalOffset', -2)
         .popover('setOption', 'verticalOffset', 0)
         .popover('setOption', 'position', 'bottom');
+        
+    $('.show_info')
+        .popover('content', $('#gift_information').html(), true)
+        .popover('setOption', 'horizontalOffset', -285)
+        .popover('setOption', 'verticalOffset', -1)
+        .popover('setOption', 'position', 'right');
 
     $('body').on('click', '.popover-btn', function(e) {
         var $this = $(this);

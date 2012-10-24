@@ -164,18 +164,8 @@
 <?php
 	}
 
-	if(@$_URLP[0]=='my' && @$_URLP[1]=='friends'){
+	if(@$_URLP[1]=='friends'){
 ?>
-		<script id="friend-action-template" type="text/template">
-			<div>
-				<ul class="friend-actions">
-					<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
-					<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
-					<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
-				</ul>
-			</div>
-		</script>
-
 		<script id="subscriber-action-template" type="text/template">
 			<div>
 				<ul class="friend-actions">
@@ -183,6 +173,25 @@
 					<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
 					<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
 					<li><a href="#"><i class="small-icon icon-add-friend"></i>Пригласить в друзья</a></li>
+				</ul>
+			</div>
+		</script>
+		
+		<script id="find-friend-action-template" type="text/template">
+			<ul class="friend-actions">
+				<li><a href="#"><i class="small-icon icon-add-friend"></i>Добавить в друзья</a></li>
+				<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
+				<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
+				<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
+			</ul>
+		</script>
+<?php if(@$_URLP[0]=='my'){ ?>
+		<script id="friend-action-template" type="text/template">
+			<div>
+				<ul class="friend-actions">
+					<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
+					<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
+					<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
 				</ul>
 			</div>
 		</script>
@@ -202,5 +211,6 @@
 			</div>
 		</script>
 <?php
+		}
 	}
 ?>
