@@ -30,7 +30,7 @@
 						$file='bloks/my_calendar.php';
 						$TITLE='Мой календарь';
 						$scripts.="<script type=\"text/javascript\" src=\"js/common.calendar.js\"></script>
-								   <script type=\"text/javascript\" src=\"js/plugins/others/fullcalendar.min.js\"></script>
+								   <script type=\"text/javascript\" src=\"js/plugins/others/jquery.fullcalendar.js\"></script>
 								   <script type=\"text/javascript\" src=\"js/plugins/others/jquery-ui-timepicker-addon.js\"></script>
 								   ";
 					break;

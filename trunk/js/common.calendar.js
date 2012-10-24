@@ -12,6 +12,36 @@
 			var format_month = "MM";
 			var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 			var format_year = "yyyy";
+	
+			/* Источники данных */
+			var fcSources = { 
+				akcia: { 
+					type: 'POST',
+					url: '/jquery-calendar',cache:false, 
+					data: {	op: 'source',	type: 'akcia' },
+					error: function(){ alert('Ошибка соединения, акции'); }
+				},
+				birthdays : {
+					type: 'POST',
+					url: '/jquery-calendar',cache:false, 
+					data: {	op: 'source',	type: 'birthday' },
+					error: function(){ alert('Ошибка соединения, дни рождения'); }
+				}
+			};
+			/* Обработчик фильтра эвентов*/
+			$('#show_combobox').live('change', function () {
+                if ($('#show_combobox :selected').val() == 'show_birthdays') {
+					calendar.fullCalendar( 'removeEventSources' );
+					calendar.fullCalendar( 'removeEvents' );
+					calendar.fullCalendar( 'addEventSource', fcSources.birthdays );
+				}
+                if ($('#show_combobox :selected').val() == 'show_all'){
+					calendar.fullCalendar( 'removeEventSources' );
+                    calendar.fullCalendar( 'removeEvents' );
+					calendar.fullCalendar( 'addEventSource', fcSources.birthdays );
+					calendar.fullCalendar( 'addEventSource', fcSources.akcia );
+                }
+            });
 			
             /* функция очистки формы */
             function emptyForm() {
@@ -84,7 +114,7 @@
 				allDaySlot: false,
 				ignoreTimezone: true,
                  /* формат времени выводимый перед названием события */
-                timeFormat: 'H:mm',
+				timeFormat: '',
 				
 				selectable: true,
 				selectHelper: true,
@@ -129,6 +159,7 @@
 				
                 /* обработчик кликов по событию */
                 eventClick: function(event, jsEvent, view) {
+					if(event.editable == false) return;
 					var DateStart = $.fullCalendar.formatDate(event.start, format);
 					var DateEnd = $.fullCalendar.formatDate(event.end, format);
                     event_id.val(event.id);
@@ -141,20 +172,24 @@
                 },
 				/* событие мышка навелась на эвент */
 				eventMouseover: function(event, jsEvent, view) {
-
-				     var layer = '<div id="events-layer"  style="position:absolute; width:100%; height:100%; top:-1px; text-align:right; z-index:100"><a><img src="../pic/edit.png" title="edit" width="14" id="edbut'+event.id+'" border="0" style="padding-right:5px; padding-top:5px;" /></a></div>';
-				     $(this).append(layer);
-				     $("#edbut"+event.id).hide();
-				     $("#edbut"+event.id).fadeIn(300);
-				     $("#edbut"+event.id).click(function() {
-				      //var title = alert('Молодец');
-			     	});
+					if(event.editable == false) return;
+					
+					var layer = '<div id="events-layer"  style="position:absolute; width:100%; height:100%; top:-1px; text-align:right; z-index:100"><a><img src="../pic/edit.png" title="edit" width="14" id="edbut'+event.id+'" border="0" style="padding-right:5px; padding-top:5px;" /></a></div>';
+					
+					 $(this).append(layer);
+					 $("#edbut"+event.id).hide();
+					 $("#edbut"+event.id).fadeIn(300);
+					 $("#edbut"+event.id).click(function() {
+					  //var title = alert('Молодец');
+					});
+					
 			    },   
 			   
 			    /* событие мышка ушла из эвента */
 			    eventMouseout : function( event, jsEvent, view ) 
 			    {  
-				     $('#events-layer').remove();
+					if(event.editable == false) return;
+					$('#events-layer').remove();
 			    },
 				/* событие начала перетаскивания */
 				eventDragStart: function( event, jsEvent, ui, view ) 
@@ -180,6 +215,7 @@
                     });
 				},
 				
+				/* индикатор загрузки (под календарём)*/
 				loading: function(bool) {
 					if (bool) calendar.after('<div id="loading" style="padding-top:30px; text-align: center;"><img src="/pic/loader_clock.gif"></div>');
 					else $('#loading').hide();
@@ -209,26 +245,20 @@
                     });
 				},
 
-                /* источник записей */
-
-                eventSources: [{
-						type: 'POST',
-						url: '/jquery-calendar',cache:false, 
-						data: {
-							op: 'source'
-						},
-						error: function() {
-							alert('Ошибка соединения с источником данных!');
-						}
-				}],
-	
+				
+                /* источник записей, изначальные события которые будут отображаться в календаре */
+                eventSources: [
+					fcSources.akcia, 
+					fcSources.birthdays
+				],
 				
 				viewDisplay: function(view) {
-					
-
+				
 			    },
 
             });
+			
+			/* отображение + в дне при наведении */
 			var layer = '<div id="days-layer" style="position:relative; text-align:right; width:100%; height:100%; bottom:0;">'+
 								'<div title="add" class="small-icon icon-green-plus" id="qwer" style="" </div></div></div>';
 			$(".fc-widget-content").hover(
@@ -243,7 +273,6 @@
 			);
 	
             /* обработчик формы добавления */
-
             form.dialog({ 
 				draggable: false,
 				resizable: false,

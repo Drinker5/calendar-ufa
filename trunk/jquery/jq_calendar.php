@@ -44,39 +44,59 @@ switch ($op) {
 		}
 		break;
 	case 'source':
-		$sql = 'SELECT * FROM discount_akcia';
-		$result = mysql_query($sql);
-		$json = Array();
-		
-		while ($row = mysql_fetch_assoc($result)) {
-		
-	//	foreach($result as $row){
-						
-		//****************************************************
-		//********************** цвета ***********************
-			switch($row['idtype'])
-			{
-				case 1:	$color = '#79CDCD';break;//аква
-				case 2:	$color = '#8B4513';break;//шоколад
-				case 3:	$color = '#469ad7';break;//синий
-				case 4:	$color = '#d3111f';break;//красный
-				case 5:	$color = '#9a46d7';break;//фиолетовый
-				default:$color = '#94d11f';break;//зеленый	
-			}
-			/*
-			if($b%2==1) $color = '#94d11f'; //зелененький
-			else $color = '#469ad7'; //сининький
-			$b++;*/
-		//****************************************************
-			$json[] = array(
-				'id' => $row['id'],
-				'title' => $row['header'],
-				'start' => $row['DiscData1'],
-				'end' => $row['DiscData2'],
-				'color' => $color,
-				'textColor' => 'white',
-				'allDay' => false,
-			);
+		switch($type){
+			case 'akcia':
+				$sql = 'SELECT * FROM discount_akcia';
+				$result = mysql_query($sql);
+				$json = Array();
+				
+				while ($row = mysql_fetch_assoc($result)) {
+				//********************** цвета ***********************
+					switch($row['idtype'])
+					{
+						case 1:	$color = '#79CDCD';break;//аква
+						case 2:	$color = '#8B4513';break;//шоколад
+						case 3:	$color = '#469ad7';break;//синий
+						case 4:	$color = '#d3111f';break;//красный
+						case 5:	$color = '#9a46d7';break;//фиолетовый
+						default:$color = '#94d11f';break;//зеленый	
+					}
+					/*
+					if($b%2==1) $color = '#94d11f'; //зелененький
+					else $color = '#469ad7'; //сининький
+					$b++;*/
+				//****************************************************
+					$json[] = array(
+						'id' => $row['id'],
+						'title' => $row['header'],
+						'start' => $row['DiscData1'],
+						'end' => $row['DiscData2'],
+						'color' => $color,
+						'textColor' => 'white',
+						'allDay' => false,
+					);
+				}
+			break;
+			case 'birthday':
+				$sql = 'SELECT * FROM discount_users';
+				$result = mysql_query($sql);
+				$json = Array();
+				while ($row = mysql_fetch_assoc($result)) {
+					if(!isset($row['birthday'])) continue;
+					$year = '2012'; 
+					$month = substr($row['birthday'],5,2);
+					$day = substr($row['birthday'],8,2);
+					$json[] = array(
+						//'id' => $row['id'],
+						'title' => $row['firstname'].' '.$row['lastname'].' празднует день рождения!',
+						'start' => $year.'-'.$month.'-'.$day,
+						'color' => '#ddd',
+						'textColor' => 'black',
+						'allDay' => false,
+						'editable' => false,
+					);
+				}
+			break;
 		}
 		echo json_encode($json);
 		break;
