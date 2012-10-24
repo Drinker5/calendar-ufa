@@ -5,6 +5,7 @@
 
 	<div id="show_combobox">Показать:&nbsp&nbsp
 		<select>
+			<option value="show_all" selected>все</option>
 			<option value="show_idols">кумиры</option>
 			<option value="show_birthdays">дни рождения</option>
 			<option value="show_meetings">встречи</option>
