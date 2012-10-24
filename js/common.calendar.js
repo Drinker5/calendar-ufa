@@ -224,24 +224,24 @@
 	
 				
 				viewDisplay: function(view) {
-					var layer = '<div id="days-layer" style="position:relative; text-align:right; width:100%; height:100%; bottom:0;">'+
-								'<div title="add" class="small-icon icon-green-plus" id="qwer" style="" </div></div></div>';
-					$(".fc-widget-content").hover(
-						function(){
-							$(this).children("div").children(".fc-day-content").children("div").append(layer);
-							$("#qwer").hide();
-							$("#qwer").fadeIn(300);
-						},
-						function(){
-							$('#days-layer').remove();
-						}
-					);
+					
 
 			    },
 
             });
-
-			
+			var layer = '<div id="days-layer" style="position:relative; text-align:right; width:100%; height:100%; bottom:0;">'+
+								'<div title="add" class="small-icon icon-green-plus" id="qwer" style="" </div></div></div>';
+			$(".fc-widget-content").hover(
+				function(){
+					$(this).children("div").children(".fc-day-content").children("div").append(layer);
+					$("#qwer").hide();
+					$("#qwer").fadeIn(300);
+				},
+				function(){
+					$('#days-layer').remove();
+				}
+			);
+	
             /* обработчик формы добавления */
 
             form.dialog({ 
