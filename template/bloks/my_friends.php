@@ -159,14 +159,18 @@
 							$('div#loadmoreajaxloader').hide();
 							html =jQuery.parseJSON(data);
 							idLenta.append(html.html);
-							idLenta.find('[rel="'+html.uid+'"]').popover({
-								trigger: 'none',
-								autoReposition: false
+							idLenta.find('[rel="'+html.uid+'"]')
+								.popover({
+									trigger: 'none',
+									autoReposition: false,
+									stopChildrenPropagation: false,
+									hideOnHTMLClick: true
 								})
 								.popover('content', $('#my-friend-action-template').html(), true)
 								.popover('setOption', 'position', 'bottom')
 								.popover('setOption', 'horizontalOffset', -31)
 								.popover('setClasses', 'friend-action-popover');
+							$(".popover input:checkbox").uniform();
 							page =page+1;
 							begin=begin+rows;
 						}

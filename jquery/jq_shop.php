@@ -12,5 +12,16 @@ switch(@$_POST['type']){
  			echo json_encode(array('status'=>'success'));
  		}
 	break;
+	case'toogle':
+		if(isset($_POST['id']) && $_POST['id'] > 0){
+			if($SHOP->isFavorite(array($_POST['id']))){
+				$SHOP->DeleteFromFav(varr_int($_POST['id']));
+				echo json_encode(array('delete'));
+			}else{
+				$SHOP->AddToFav(varr_int($_POST['id']));
+				echo json_encode(array('add'));
+			}
+		}
+	break;
 }
 ?>

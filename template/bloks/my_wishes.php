@@ -74,6 +74,7 @@
                         if(data){
                           if(max>page){
                             $('div#loadmoreajaxloader').hide();
+                              console.log(data);
                               html = jQuery.parseJSON(data);
                               idItems.append(html.html);
                               idItems.find('[rel="'+html.uid+'"]').popover({

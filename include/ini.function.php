@@ -418,22 +418,37 @@ function ShowFotoAkcia($akcia_id=array(),$w,$h,$count=1){
 
 	  if(is_array($akcia_id)){
 	     foreach($akcia_id as $key=>$value){
-	  	   $photos = $MYSQL->query("SELECT id, shop_id, foto, domen FROM $tbimg WHERE akcia_id = ".(int)$value." ORDER BY id $count");
-	  	   if(is_array($photos)){
-	  	   	   //$domen = $photos[0]['domen'];
-	  	   	   $domen = upload_url;
-	  		   foreach($photos as $key2=>$value2){
-	  			   $arrAkcias[] = array(
-	  			      'id'       => $value2['id'],
-	  			      'akcia_id' => $value,
-	  			      'photo'    => $value2['foto'],
-	  			      'shop_id'  => $value2['shop_id'],
-	  			      'w'        => $w,
-	  			      'h'        => $h,
-	  			      'center'   => true,
-	  			   );
-	  		   }
-	  	   }
+           if ($value != 0){
+    	  	   $photos = $MYSQL->query("SELECT id, shop_id, foto, domen FROM $tbimg WHERE akcia_id = ".(int)$value." ORDER BY id $count");
+    	  	   if(is_array($photos)){
+    	  	   	   //$domen = $photos[0]['domen'];
+    	  	   	   $domen = upload_url;
+    	  		   foreach($photos as $key2=>$value2){
+    	  			   $arrAkcias[] = array(
+    	  			      'id'       => $value2['id'],
+    	  			      'akcia_id' => $value,
+    	  			      'photo'    => $value2['foto'],
+    	  			      'shop_id'  => $value2['shop_id'],
+    	  			      'w'        => $w,
+    	  			      'h'        => $h,
+    	  			      'center'   => true,
+    	  			   );
+    	  		   }
+    	  	   }
+           }
+           else {
+             $arrAkcias[] = array(
+    	  			      'id'       => 0,
+    	  			      'akcia_id' => 0,
+    	  			      'photo'    => '\pic\wishlist.png',
+    	  			      'shop_id'  => 0,
+    	  			      'w'        => $w,
+    	  			      'h'        => $h,
+    	  			      'center'   => true,
+    	  			   );
+           }
+
+
 	     }
 
 	     if(isset($arrAkcias) && is_array($arrAkcias)){
@@ -454,14 +469,40 @@ function ShowFotoAkcia($akcia_id=array(),$w,$h,$count=1){
 		      } else {
 		        curl_close($ch);
 
-		        if(is_array($result))
-		        foreach($result as $key=>$value)
-		          $array[] = array(
-				    'id'       => $value['id'],
-				    'akcia_id' => $value['akcia_id'],
-				    'file'     => $value['file'],
-				    'foto'     => $value['photo'],
-				  );
+                $flag = 0;
+                $cur_id = '';
+                $cur_akcia_id = '';
+                $cur_file = '';
+                $cur_foto = '';
+
+		        if(is_array($result)){
+		            for ($i=0; $i<count($akcia_id);$i++){
+	                    foreach($result as $key=>$value){
+	                      if ($akcia_id[$i] == $value['akcia_id']){
+	                        $flag = 1;
+                            $cur_id = $value['id'];
+                            $cur_akcia_id = $value['akcia_id'];
+                            $cur_file = $value['file'];
+                            $cur_foto = $value['photo'];
+                          }
+	                    }
+
+                        if ($flag == 1){
+                          $flag=0;
+                          $array[$i]['id'] = $cur_id;
+                          $array[$i]['akcia_id'] = $cur_akcia_id;
+                          $array[$i]['file'] = $cur_file;
+                          $array[$i]['foto'] = $cur_foto;
+                        }
+                        else {
+                          $array[$i]['id'] = 0;
+                          $array[$i]['akcia_id'] = 0;
+                          $array[$i]['file'] = 0;
+                          $array[$i]['foto'] = '/pic/wishlist.png';
+                        }
+
+		            }
+                }
 		      }
 	     }
 	  }

@@ -171,7 +171,8 @@
 	}
 
 	//!Смена кругов для уже находящигося в друзьях пользователя
-	elseif(isset($_POST['friend']) && isset($_POST['circles']) && is_array($_POST['circles'])){
+	/*
+	elseif(isset($_POST['friend']) && isset($_POST['circles'])){
 		if($USER->IsFriend($_POST['friend'])){
 			$friend_wp=varr_int($_POST['friend']);
 			$circles  =$_POST['circles'];
@@ -191,6 +192,18 @@
 			}
 		}
 	}
+	*/
+	elseif(isset($_POST['friend']) && isset($_POST['circle']) &&  isset($_POST['action'])){
+		$MYSQL->query("DELETE FROM `pfx_users_krugi` WHERE `friends_id`=".varr_int($_POST['friend'])." AND `krug_id`=".varr_int($_POST['circle'])."");
+		if($_POST['action']=='checked'){
+			$MYSQL->query("INSERT INTO `pfx_users_krugi` (`friends_id`, `krug_id`) VALUES (".varr_int($_POST['friend']).", ".varr_int($_POST['circle']).")");
+			echo 'added!';
+		}
+		else{
+			echo 'deleted!';
+		}
+	}
+
 
 	//!Приглашаем пользователя дружить
 	elseif(isset($_POST['friend_add']) && $_POST['friend_add']>=10000){

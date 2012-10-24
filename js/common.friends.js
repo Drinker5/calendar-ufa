@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		delfriend($(this), false);
 	});
-	
+
 	//!Добавление друга
 	$('.add_new_friend').live('click', function(e){
 		e.preventDefault();
@@ -49,7 +49,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 	});
-	
+
 	//!Подтверждение дружбы
 	$('.save_new_friend').live('click', function(e){
 		e.preventDefault();
@@ -68,12 +68,21 @@ jQuery(document).ready(function($) {
 			}
 		});
 	});
-	
+
 	//Редактирование кругов
-	console.log('Количество объектов с классом .crcledt: '+$('.crcledt').length);
+	//console.log('Количество объектов с классом .crcledt: '+$('.crcledt').length);
 
-	$('.popover').on('click', 'label.crcledt', function () {
-		console.log('ok!');
+	$('body').on('click', 'label.crcledt input', function(){
+		that=$(this), circle=that.val(), friend=that.parents('.friend-id').attr('data-id'), chk=that.attr('checked')||'unchecked';;
+		//console.log('Значение в инпуте: '+circle+'. Друг: '+friend+'. Чекан: '+chk+'.');
+		$.ajax({
+			type: "POST",
+			url: "/jquery-friendaction",
+			data:{circle:circle, friend:friend, action:chk},
+			cache: false,
+			success: function(data){
+				console.log('Значение в инпуте: '+circle+'. Друг: '+friend+'. Чекан: '+chk+'. Пришли данные: '+data);
+			}
+		});
 	});
-
 });

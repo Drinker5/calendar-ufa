@@ -2013,6 +2013,7 @@ class T_USERS {
 		$tbpodpiska       = "pfx_podpiska";
 		$tbcountry        = "pfx_country";
 		$tbshops          = "pfx_shops";
+		$tbshopadres      = "pfx_shops_adress";
 		$tbusers          = "pfx_users";
 		$tbhistorypay     = "pfx_historypay";
 		$tbakcia          = "pfx_akcia";
@@ -2255,13 +2256,17 @@ class T_USERS {
 	    			break;*/
 
 	    			case 8: // Я здесь
-	    				$shop = $this->IHere($value['user_wp']);
+	    				$shop=$MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbshopadres.adress, $tbshopadres.id adress_id
+		                              FROM $tbshopadres
+		                             INNER JOIN $tbshops ON $tbshops.id = $tbshopadres.shop_id
+		                            WHERE $tbshopadres.id = ".varr_int($value['id_deystvie']));
+
 	    				if(is_array($shop)){
-	    				 $shop['adress'] = explode("::",$shop['adress']);
+	    				 $shop[0]['adress'] = explode("::",$shop[0]['adress']);
 	                       $adressa = array(
-		                     'street' => @$shop['adress'][0],
-		                     'house'  => @$shop['adress'][1],
-		                     'town'   => @$shop['adress'][2],
+		                     'street' => @$shop[0]['adress'][0],
+		                     'house'  => @$shop[0]['adress'][1],
+		                     'town'   => @$shop[0]['adress'][2],
 		                   );
 
 	    				$array[] = array(
@@ -2269,8 +2274,8 @@ class T_USERS {
 	    			    'deystvie'     => 8,
 	    			    'data'         => $value['data_add'], //MyDataTime($value['data_add'],'date'),
 	    			    'user'         => $this->Info_min($value['user_wp'],40,40),
-	    			    'shop_id'      => $shop['shop_id'],
-	    			    'shop_name'    => htmlspecialchars(stripslashes(trim($shop['shop_name']))),
+	    			    'shop_id'      => $shop[0]['shop_id'],
+	    			    'shop_name'    => htmlspecialchars(stripslashes(trim($shop[0]['shop_name']))),
 	    			    'shop_adress'  => $adressa,
 	    			    );
 	    				} else {
@@ -2881,7 +2886,7 @@ class T_USERS {
 
         $result = $MYSQL->query("SELECT $tbhochu.status, COUNT($tbhochu.status) AS num_wishes
 		                  FROM $tbhochu
-                          WHERE $tbhochu.user_wp = $user_wp
+                          WHERE $tbhochu.user_wp = $user_wp AND $tbhochu.akcia_id <> 0
                           GROUP BY $tbhochu.status");
 
         for($i=0; $i < count($result); $i++){
@@ -2899,9 +2904,89 @@ class T_USERS {
 		return @$wish_array;
 	}
 
+//Список жеданий+вишлист
+function FindWLPosition($user_wp, $rows=21,$begin=0){
+        global $MYSQL;
+        $GLOBALS['PHP_FILE'] = __FILE__;
+	    $GLOBALS['FUNCTION'] = __FUNCTION__;
+
+        $user_wp = varr_int($user_wp);
+        $rows    = varr_int($rows);
+		$begin   = varr_int($begin);
+        $tbhochu = "pfx_users_hochu";
+        $count = 0;
+        $i = $begin;
+        $array_num = '';
+
+        $result = $MYSQL->query("SELECT $tbhochu.akcia_id, $tbhochu.id
+    	                         FROM $tbhochu
+ 	                             WHERE $tbhochu.user_wp = $user_wp
+    		                     ORDER BY $tbhochu.adddata DESC
+                                 LIMIT $begin,$rows
+    	");
+
+        if(is_array($result) && count($result)) {
+            for ($j=0; $j<count($result);$j++){
+                if ($result[$j]['akcia_id'] == 0){
+                    $array_num[$count]['num'] = $i;
+                    $array_num[$count]['id'] = $result[$j]['id'];
+                    $count++;
+                    //echo $i."<br />";
+                }
+                $i++;
+            }
+            return $array_num;
+        }
+        else return false;
+}
+
+function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
+    global $MYSQL, $USER;
+
+    $GLOBALS['PHP_FILE'] = __FILE__;
+    $GLOBALS['FUNCTION'] = __FUNCTION__;
+
+    $tbhochu    = "pfx_users_hochu";
+	$tbakcia    = "pfx_akcia";
+	$tbcurrency = "pfx_currency";
+
+    if ($type == 'wishes'){
+        if ($par == 'performed'){
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+        		                FROM $tbhochu
+        		                INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
+        		                INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
+        		                WHERE $tbhochu.user_wp = $user_wp AND $tbhochu.status = 1
+        		                ORDER BY $tbhochu.adddata DESC
+        		                LIMIT $begin,$rows";
+        }
+        else{
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+        		                FROM $tbhochu
+        		                INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
+        		                INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
+        		                WHERE $tbhochu.user_wp = $user_wp
+        		                ORDER BY $tbhochu.adddata DESC
+        		                LIMIT $begin,$rows";
+        }
+    }
+    elseif ($type == 'wlist'){
+        if ($par == 'performed'){
+            $sql = "SELECT * FROM $tbhochu WHERE id=$id AND user_wp=$user_wp AND status=1";
+        }
+        else{
+            $sql = "SELECT * FROM $tbhochu WHERE id=$id AND user_wp=$user_wp";
+        }
+    }
+    //echo $sql."<br />";
+    $result = $MYSQL->query($sql);
+    return $result;
+
+}
+
 //!Желания — список желаний
 	function ShowIHochu($user_wp,$rows=21,$begin=0, $par=''){
-		global $MYSQL;
+		global $MYSQL, $USER;
 
 		$wish_array = $this->CountIHochu($user_wp);
 		$_SESSION['count_all'] = $wish_array['all'];
@@ -2916,40 +3001,154 @@ class T_USERS {
 		$tbhochu    = "pfx_users_hochu";
 		$tbakcia    = "pfx_akcia";
 		$tbcurrency = "pfx_currency";
+        $pre_pos    = -1;
+        $sql        = '';
+        $user_wp    = (int)@$_SESSION['WP_USER']['user_wp'];
+        $count      = 0;
 
-        if ($par == 'performed')
-            $result = $MYSQL->query("SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
-    		                             FROM $tbhochu
-    		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
-    		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
-    		                            WHERE $tbhochu.user_wp = $user_wp AND $tbhochu.status = 1
-    		                            ORDER BY $tbhochu.adddata DESC
-    		                            LIMIT $begin,$rows");
-        else
-    		$result = $MYSQL->query("SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
-    		                             FROM $tbhochu
-    		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
-    		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
-    		                            WHERE $tbhochu.user_wp = $user_wp
-    		                            ORDER BY $tbhochu.adddata DESC
-    		                            LIMIT $begin,$rows");
+        $wl_array = $USER->FindWLPosition($user_wp, $rows, $begin);
 
-		if(is_array($result) && count($result)){
-        foreach($result as $key=>$value){
-        	$array[] = array(
-        	   'akcia_id' => $value['akcia_id'],
-        	   'hochu_id' => $value['id'],
-               'status'   => $value['status'],
-               'reason'   => $value['reason'],
-               'adddata'  => $value['adddata'],
-        	   'header'   => htmlspecialchars(stripslashes(trim($value['header']))),
-        	   'amount'   => $value['amount'],
-        	   'mtext'    => htmlspecialchars(stripslashes(trim($value['mtext']))),
-        	   'currency' => $value['mask'],
-        	);
+        if (is_array($wl_array) && count($wl_array)>0){
+            for ($i=0; $i<count($wl_array);$i++){
+                if ($wl_array[$i]['num'] == $begin){
+                    //echo "1--><br />";
+                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                    for ($j=0; $j<count($res_array);$j++){
+                        $total_array[$count] = $res_array[$j];
+                        $count++;
+                    }
+
+                    if (count($wl_array) == 1){
+                        $limit = $rows - ($wl_array[$i]['num']+1);
+                        $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');
+                        for ($j=0; $j<count($res_array);$j++){
+                            $total_array[$count] = $res_array[$j];
+                            $count++;
+                        }
+                    }
+                    $pre_pos = $wl_array[$i]['num'];
+                }
+                elseif (($wl_array[$i]['num'] > $begin) && ($wl_array[$i]['num'] < ($begin + $rows))){
+                  //echo "2--><br />";
+                  if ($pre_pos == -1){
+                    $limit = $wl_array[$i]['num'] - $begin;
+                    $res_array = $USER->LoadWishes($user_wp, 0, $begin, $limit, 'wishes');
+                    for ($j=0; $j<count($res_array);$j++){
+                        $total_array[$count] = $res_array[$j];
+                        $count++;
+                    }
+
+                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                    for ($j=0; $j<count($res_array);$j++){
+                        $total_array[$count] = $res_array[$j];
+                        $count++;
+                    }
+
+                    if (count($wl_array) == 1){
+                        $limit = $rows - ($wl_array[$i]['num']+1);
+                        $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1),$limit, 'wishes');
+                        for ($j=0; $j<count($res_array);$j++){
+                            $total_array[$count] = $res_array[$j];
+                            $count++;
+                        }
+                    }
+                    $pre_pos = $wl_array[$i]['num'];
+                  }
+                  else {
+                    if ($wl_array[$i]['num'] == ($pre_pos + 1)){
+                        $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                        for ($j=0; $j<count($res_array);$j++){
+                            $total_array[$count] = $res_array[$j];
+                            $count++;
+                        }
+                        $pre_pos = $wl_array[$i]['num'];
+                    }
+                    else {
+                        $limit = $wl_array[$i]['num'] - ($pre_pos + 1);
+                        $res_array = $USER->LoadWishes($user_wp, 0, ($pre_pos+1),$limit, 'wishes');
+                        for ($j=0; $j<count($res_array);$j++){
+                            $total_array[$count] = $res_array[$j];
+                            $count++;
+                        }
+
+                        $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                        for ($j=0; $j<count($res_array);$j++){
+                            $total_array[$count] = $res_array[$j];
+                            $count++;
+                        }
+
+                        $pre_pos = $wl_array[$i]['num'];
+                        if (count($wl_array) == ($i+1)){
+                            $limit = $rows - ($wl_array[$i]['num']+1);
+                            $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1),$limit, 'wishes');
+                            for ($j=0; $j<count($res_array);$j++){
+                                $total_array[$count] = $res_array[$j];
+                                $count++;
+                            }
+                        }
+                    }
+                  }
+                }
+                elseif ($wl_array[$i]['num'] == ($begin + $rows)){
+                    //echo "3--><br />";
+                    $limit = $rows - 1;
+                    $res_array = $USER->LoadWishes($user_wp, 0, $begin,$limit, 'wishes');
+                    for ($j=0; $j<count($res_array);$j++){
+                        $total_array[$count] = $res_array[$j];
+                        $count++;
+                    }
+
+                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                    for ($j=0; $j<count($res_array);$j++){
+                        $total_array[$count] = $res_array[$j];
+                        $count++;
+                    }
+                }
+                else {
+                  echo "xxx";
+                }
+
+            }
+
         }
-		}
-        return @$array;
+        else{
+            if ($par == 'performed')
+                $result = $MYSQL->query("SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+        		                             FROM $tbhochu
+        		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
+        		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
+        		                            WHERE $tbhochu.user_wp = $user_wp AND $tbhochu.status = 1
+        		                            ORDER BY $tbhochu.adddata DESC
+        		                            LIMIT $begin,$rows");
+            else
+        		$result = $MYSQL->query("SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.wlist_name, $tbhochu.wishes_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+        		                             FROM $tbhochu
+        		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
+        		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
+        		                            WHERE $tbhochu.user_wp = $user_wp
+        		                            ORDER BY $tbhochu.adddata DESC
+        		                            LIMIT $begin,$rows");
+
+    		if(is_array($result) && count($result)){
+            foreach($result as $key=>$value){
+            	$total_array[] = array(
+            	   'akcia_id'    => $value['akcia_id'],
+            	   'hochu_id'    => $value['id'],
+                   'status'      => $value['status'],
+                   'reason'      => $value['reason'],
+                   'adddata'     => $value['adddata'],
+            	   'header'      => htmlspecialchars(stripslashes(trim($value['header']))),
+            	   'amount'      => $value['amount'],
+            	   'mtext'       => htmlspecialchars(stripslashes(trim($value['mtext']))),
+            	   'currency'    => $value['mask'],
+            	);
+            }
+    		}
+
+        }
+
+        return @$total_array;
+        return true;
 	}
 
     function ShowPlace($akcia_id){

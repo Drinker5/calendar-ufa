@@ -188,7 +188,7 @@
 		</script>
 
 		<script id="my-friend-action-template" type="text/template">
-			<div id="f{{{friend-id}}}">
+			<div data-id="{{{friend-id}}}" class="friend-id">
 				<ul class="friend-actions">
 					<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
 					<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>

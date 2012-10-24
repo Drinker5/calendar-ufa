@@ -104,7 +104,7 @@
 						<div class="separator"></div>
 						<ul class="profile-actions group">
 							<li>
-								<a href="#" class="big-circle-icon circle-icon-check-in"></a><br>Check-in
+								<a href="/my-checkin" class="big-circle-icon circle-icon-check-in"></a><br>Check-in
 							</li>
 							<li>
 								<a href="#" class="big-circle-icon circle-icon-whos-near"></a><br>Кто рядом
