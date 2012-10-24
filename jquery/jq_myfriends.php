@@ -1,6 +1,6 @@
 <?php
 //Блок с информацие о друге
-	function ShowFriendBlock($avatar, $friend, $stamp, $cart){
+	function ShowFriendBlock($user_wp, $avatar, $friend, $stamp, $cart){
 		$html='
 		<div class="friend-item fl_l">
 			<a class="bordered medium-avatar fl_l" href="/'.$friend['user_wp'].'"><img src="'.$avatar.'" alt="" /></a>
@@ -9,7 +9,10 @@
 				<br />
 				<span class="place">'.$friend['country_name'].', '.$friend['town_name'].'</span>
 			</div>
-			<span class="popover-btn my-friend-actions opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'">
+			<span class="popover-btn ';
+		if($user_wp==$_SESSION['WP_USER']['user_wp'])$html.='my-friend-actions';
+		else                                         $html.='find-friend-actions';
+		$html.=' opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'">
 				<i class="small-icon icon-action"></i> Действия <i class="small-icon icon-grey-arrow"></i>
 			</span>
 		</div>';
@@ -17,14 +20,14 @@
 	}
 
 //Список людей
-	function ShowPeopleList($rows=30,$begin=0,$online=0,$circle=0,$what=''){
+	function ShowPeopleList($user_wp,$rows=30,$begin=0,$online=0,$circle=0,$what=''){
 		global $USER, $MYSQL;
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
 		$html='';
 		$stamp=time();
 
-		$friends=$USER->ShowMyFriends(0,$rows,'fio_up',$online,$begin,$circle);
+		$friends=$USER->ShowMyFriends($user_wp,$rows,'fio_up',$online,$begin,$circle);
 		if(is_array($friends)){
 			$html=''; $cart='';
 			$friends_wp=array();//Формируем масив для запроса аватарок
@@ -46,7 +49,7 @@
 					"friend-krugi"=>$krugi,
 					"friend-name" =>$v['firstname'].' '.$v['lastname'],
 				);
-				$html.=ShowFriendBlock($avatars[$k]['file'],$v,$stamp,$cart);
+				$html.=ShowFriendBlock($user_wp, $avatars[$k]['file'], $v, $stamp, $cart);
 			}
 		}
 
@@ -80,7 +83,7 @@
 						"friend-wp"  => $friends[$i]['user_wp'],
 						"friend-name"=> $friends[$i]['firstname'].' '.$friends[$i]['lastname'],
 					);
-					$html.=ShowFriendBlock($avatar[$i]['avatar'], $friend, $stamp, $cart);
+					$html.=ShowFriendBlock($_SESSION['WP_USER']['user_wp'], $avatar[$i]['avatar'], $friend, $stamp, $cart);
 				}
 			}
 			$resultArray=array(
@@ -92,7 +95,7 @@
 		}
 
 		elseif(strlen($search)==0){
-			ShowPeopleList($_POST['items'], $_POST['list'], $_POST['online'], $_POST['circle'], 'json');
+			ShowPeopleList($_POST['user_wp'], $_POST['items'], $_POST['list'], $_POST['online'], $_POST['circle'], 'json');
 		}
 	}
 ?>

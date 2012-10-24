@@ -343,8 +343,8 @@
 		//!Страница пользователя
 		default:
 			if(isset($_SESSION['WP_USER']['user_wp']) && $_URLP[0] == $_SESSION['WP_USER']['user_wp']){ // Если это я
-				$USER_INFO = $_SESSION['WP_USER'];
-				$left_menu = 1;//Отобразить мою страницу
+				$USER_INFO=$_SESSION['WP_USER'];
+				$left_menu=1;//Отобразить мою страницу
 			}
 			else{
 				$USER_INFO=$USER->Info_min($_URLP[0],190,190);
@@ -352,18 +352,16 @@
 				$scripts .='<script type="text/javascript" src="js/common.friends.js"></script>';
 			}
 
+			//Страницы других пользоватеей
 			if(is_array($USER_INFO)){
-				$USER->AddVisitor($USER_INFO['user_wp']); // Определяем заход в гости
-				$TITLE = trim($USER_INFO['firstname']." ".$USER_INFO['lastname']);
+				$USER->AddVisitor($USER_INFO['user_wp']);//Определяем заход в гости
+				$TITLE=trim($USER_INFO['firstname'].' '.$USER_INFO['lastname']);
 				switch(@$_URLP[1]){
 					case 'friends': // Друзья пользователя
-						if($USER_INFO['user_wp'] == $_SESSION['WP_USER']['user_wp'])
-							header("Location: /my-friends");
+						if($USER_INFO['user_wp']==$_SESSION['WP_USER']['user_wp'])header("Location: /my-friends");
 
-						$TITLE  .=" - Друзья";
-						$file    ="bloks/users_friends.php";
-						$scripts.="
-							<script type=\"text/javascript\" src=\"js/jquery.popupmenu.js\"></script>";
+						$TITLE.=' - Друзья';
+						$file  ='bloks/my_friends.php';
 					break;
 
 					case 'photoalbums': // Фотоальбомы пользователя
