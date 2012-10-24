@@ -122,6 +122,11 @@ switch($_URLP[1]){
 	    require_once(path_root."jquery/jq_myplaces.php");
 	break;
 
+	case 'mycheckin': // Карта
+		if(isset($_SESSION['WP_USER']))
+		require_once(path_root."jquery/jq_mycheckin.php");
+	break;
+
 	case 'profile': // Сохранения инфо. профиля
 		if(isset($_SESSION['WP_USER']))
 		require_once(path_root."jquery/jq_profile_update.php");

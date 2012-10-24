@@ -220,6 +220,23 @@
 						$file     ='bloks/my_feed.php';
 						$TITLE    ='Лента новостей';
 					break;
+
+					//!Лента новостей
+					case 'feed':
+						$left_menu=1;
+						$file     ='bloks/my_feed.php';
+						$TITLE    ='Лента новостей';
+					break;
+
+					//!Check-in
+					case 'checkin':
+						$left_menu=1;
+						$file     ='bloks/my_checkin.php';
+						$TITLE    ='Check-in';
+						$scripts .='
+							<script src="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.js"></script>
+							<link href="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.css" rel="stylesheet" />';
+					break;
 //Конец профиля
 
 					default:
@@ -278,7 +295,6 @@
 			$left_menu=3;
 			$shop_id  =varr_int(@$_URLP[1]);
 			require_once(path_modules.'ini.groups.php');
-			require_once(path_modules.'ini.shop.php');
 			$SHOP_INFO=$SHOP->Info($shop_id,190,190);
 			if(!is_array($SHOP_INFO)) header("Location: /".@$_SESSION['WP_USER']['user_wp']);
 			$TITLE    =$SHOP_INFO['name'];

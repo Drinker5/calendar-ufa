@@ -35,7 +35,7 @@
 	$myPos=false;//Мое местоположение
 
 	$places=$MYSQL->query("
-		SELECT `pfx_shops_adress`.`adress`, `pfx_shops_adress`.`latitude`, `pfx_shops_adress`.`longitude`, `pfx_shops`.`name`, `pfx_shops`.`id` `shop_id`
+		SELECT `pfx_users_places`.`address`, `pfx_shops_adress`.`adress`, `pfx_shops_adress`.`latitude`, `pfx_shops_adress`.`longitude`, `pfx_shops`.`name`, `pfx_shops`.`id` `shop_id`
 		FROM `pfx_users_places`
 		INNER JOIN `pfx_shops_adress` ON `pfx_shops_adress`.`id`=`pfx_users_places`.`address`
 		INNER JOIN `pfx_shops` ON `pfx_shops_adress`.`shop_id`=`pfx_shops`.`id`
@@ -280,15 +280,40 @@
 			});	
 		}
 
+		function placeDelete(id,pin){
+			if(confirm('Вы уверены что хотите удалить это любимое место?')){
+				$.ajax({
+					url:'/jquery-shop',
+					type:'POST',
+					data:{type:'delete',id:id},
+					cache:false,
+					success: function(data){
+						if(data){
+							$('.place[rel=pin' + pin + ']').slideUp('slow',function(){
+								$(this).remove();
+								//Удаляем маркер
+							});
+							//if($("#search-content").html()==''){
+							//	$("#search-content").html('Нет результатов');
+							//}
+						}
+					}
+				});
+			}
+		}
+
 		jQuery(function($){
-			$("#search-submit").click(function(){
+			//$("#search-submit").click(function(){
+			//	placeSearch();
+			//});
+			//$("#search-input").keypress(function(event){
+			//	if(event.which == '13'){
+			//		placeSearch();
+			//		return false;
+			//	}
+			//});
+			$("#search-input").keyup(function(){
 				placeSearch();
-			});
-			$("#search-input").keypress(function(event){
-				if(event.which == '13'){
-					placeSearch();
-					return false;
-				}
 			});
 		});
 <?php } ?>
@@ -319,9 +344,9 @@
 					<p><?=str_replace('::', ', ', $places[$i]['adress'])?></p>
 				</div>
 				<div class="action fl_r">
-					<a href="" class="small-icon icon-delete"></a>
+					<a href="javascript:;" onclick="placeDelete(<?=$places[$i]['address']?>,<?=$i?>)" class="small-icon icon-delete"></a>
 				</div>
-			</div> <!-- /.place -->
+			</div>
 <?php
 		}
 ?>

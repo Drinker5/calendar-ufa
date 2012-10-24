@@ -7,7 +7,7 @@ switch(@$_POST['type']){
 			$map='';
 
 			$places=$MYSQL->query("
-				SELECT `pfx_shops_adress`.`adress`, `pfx_shops_adress`.`latitude`, `pfx_shops_adress`.`longitude`, `pfx_shops`.`name`, `pfx_shops`.`id` `shop_id`
+				SELECT `pfx_users_places`.`address`, `pfx_shops_adress`.`adress`, `pfx_shops_adress`.`latitude`, `pfx_shops_adress`.`longitude`, `pfx_shops`.`name`, `pfx_shops`.`id` `shop_id`
 				FROM `pfx_users_places`
 				INNER JOIN `pfx_shops_adress` ON `pfx_shops_adress`.`id`=`pfx_users_places`.`address`
 				INNER JOIN `pfx_shops` ON `pfx_shops_adress`.`shop_id`=`pfx_shops`.`id`
@@ -39,9 +39,9 @@ switch(@$_POST['type']){
 				<p>'.str_replace('::', ', ', $places[$i]['adress']).'</p>
 			</div>
 			<div class="action fl_r">
-				<a href="" class="small-icon icon-delete"></a>
+				<a href="javascript:;" onclick="placeDelete('.$places[$i]['address'].','.$i.')" class="small-icon icon-delete"></a>
 			</div>
-		</div> <!-- /.place -->';
+		</div>';
 				}
 			}
 
