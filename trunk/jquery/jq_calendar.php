@@ -2,6 +2,7 @@
 //$db = mysql_pconnect('localhost', 'root', '');
 //mysql_select_db('discount',$db);
 //mysql_query("SET NAMES 'utf8'");
+//$_SESSION['WP_USER']['user_wp'] - id (user_wp) текущего пользователя
 
 global $MYSQL;
 $GLOBALS['PHP_FILE'] = __FILE__;
