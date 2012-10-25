@@ -90,6 +90,7 @@
                               begin=begin+rows;
                               //alert(page+' '+begin);
                               status = 1;
+                              //alert(html.num_rows);
                               num_rows += parseInt(html.num_rows);
                           }
                           else{

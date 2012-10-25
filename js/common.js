@@ -89,7 +89,13 @@ jQuery(document).ready(function($) {
         .popover('setClasses', 'friend-action-popover');
 
     $(".friend-item .find-friend-actions")
-        .popover('content', $('#find-friend-action-template').html())
+        .popover('content', $('#find-friend-action-template').html(), true)
+        .popover('setOption', 'position', 'bottom')
+        .popover('setOption', 'horizontalOffset', -31)
+        .popover('setClasses', 'friend-action-popover');
+
+    $(".friend-item .find-friend-actions-exist")
+        .popover('content', $('#find-friend-action-template-exist').html(), true)
         .popover('setOption', 'position', 'bottom')
         .popover('setOption', 'horizontalOffset', -31)
         .popover('setClasses', 'friend-action-popover');

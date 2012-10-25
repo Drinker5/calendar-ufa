@@ -41,6 +41,7 @@ jQuery(document).ready(function($) {
 	$('.add_new_friend').live('click', function(e){
 		e.preventDefault();
 		var that=$(this), id=that.data('user'), name=that.data('name');
+		console.log('Нажал на кнопку добавления друга. id='+id+'. name='+name+'.');
 		$.ajax({
 			url:'/jquery-friendaction', cache:false, type:'POST', data:{friend_add:id},
 			success:function(result){

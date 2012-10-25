@@ -169,29 +169,38 @@
 		<script id="subscriber-action-template" type="text/template">
 			<div>
 				<ul class="friend-actions">
-					<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
-					<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
-					<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
-					<li><a href="#"><i class="small-icon icon-add-friend"></i>Пригласить в друзья</a></li>
+					<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
+					<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
+					<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
+					<li><a href="#"><i class="small-icon icon-add-friend"></i> Пригласить в друзья</a></li>
 				</ul>
 			</div>
 		</script>
-		
-		<script id="find-friend-action-template" type="text/template">
+
+		<script id="find-friend-action-template-exist" type="text/template">
 			<ul class="friend-actions">
-				<li><a href="#"><i class="small-icon icon-add-friend"></i>Добавить в друзья</a></li>
-				<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
-				<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
-				<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
+				<li><i class="small-icon icon-add-friend"></i> Уже</li>
+				<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
+				<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
+				<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
 			</ul>
 		</script>
-<?php if(@$_URLP[0]=='my'){ ?>
+
+		<script id="find-friend-action-template" type="text/template">
+			<ul class="friend-actions">
+				<li><a href="#" class="add_new_friend" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-add-friend"></i> Добавить в друзья</a></li>
+				<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
+				<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
+				<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
+			</ul>
+		</script>
+
 		<script id="friend-action-template" type="text/template">
 			<div>
 				<ul class="friend-actions">
-					<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
-					<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
-					<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
+					<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
+					<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
+					<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
 				</ul>
 			</div>
 		</script>
@@ -199,10 +208,10 @@
 		<script id="my-friend-action-template" type="text/template">
 			<div data-id="{{{friend-id}}}" class="friend-id">
 				<ul class="friend-actions">
-					<li><a href="#"><i class="small-icon icon-gift"></i>Сделать подарок</a></li>
-					<li><a href="#"><i class="small-icon icon-chat"></i>Начать чат</a></li>
-					<li><a href="#"><i class="small-icon icon-invite"></i>Отправить приглашение</a></li>
-					<li><a href="#" onclick="return delfriend($(this), true);" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-delete-friend"></i>Убрать из друзей</a></li>
+					<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
+					<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
+					<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
+					<li><a href="#" onclick="return delfriend($(this), true);" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
 					<div class="separator"></div>
 					{{#friend-krugi}}
 						<li><label class="crcledt"><input type="checkbox"{{#checked}} checked="checked"{{/checked}} value="{{{krug_id}}}" />{{{name}}}</label></li>
@@ -211,6 +220,5 @@
 			</div>
 		</script>
 <?php
-		}
 	}
 ?>

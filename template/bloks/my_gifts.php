@@ -32,9 +32,9 @@
 ?>
 					</ul>
 					<ul class="fl_r right">
-						<li<?php if($_REQUEST['c']=='new')echo ' class="active"';?>><a href="/my-gifts?c=new">Ожидаемые (<?=$USER->CountPodarki(0,0,'new')?>)</a></li>
-						<li<?php if($_REQUEST['c']=='recieved')echo ' class="active"';?>><a href="/my-gifts?c=recieved">Полученные (<?=$USER->CountPodarki(0,0,'recieved')?>)</a></li>
-						<li<?php if($_REQUEST['c']=='expired')echo ' class="active"';?>><a href="/my-gifts?c=expired">Просроченные (<?=$USER->CountPodarki(0,0,'expired')?>)</a></li>
+						<li<?php if(@$_REQUEST['c']=='new')echo ' class="active"';?>><a href="/my-gifts?c=new">Ожидаемые (<?=$USER->CountPodarki(0,0,'new')?>)</a></li>
+						<li<?php if(@$_REQUEST['c']=='recieved')echo ' class="active"';?>><a href="/my-gifts?c=recieved">Полученные (<?=$USER->CountPodarki(0,0,'recieved')?>)</a></li>
+						<li<?php if(@$_REQUEST['c']=='expired')echo ' class="active"';?>><a href="/my-gifts?c=expired">Просроченные (<?=$USER->CountPodarki(0,0,'expired')?>)</a></li>
 					</ul>
 				</div> <!-- /.nav-panel -->
 
