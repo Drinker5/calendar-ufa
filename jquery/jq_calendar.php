@@ -47,7 +47,17 @@ switch ($op) {
 	case 'source':
 		switch($type){
 			case 'akcia':
-				$sql = 'SELECT * FROM discount_akcia';
+				$sql = 'SELECT DISTINCT discount_akcia . * 
+						FROM discount_akcia, discount_podpiska_view, discount_podpiska_ban
+						WHERE del =0
+						AND (
+							discount_akcia.id = discount_podpiska_view.akcia_id
+							AND discount_podpiska_view.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
+							)
+						AND NOT (
+							discount_akcia.id = discount_podpiska_ban.akcia_id
+							AND discount_podpiska_ban.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
+							)';
 				$result = mysql_query($sql);
 				$json = Array();
 				
@@ -79,7 +89,11 @@ switch ($op) {
 				}
 			break;
 			case 'birthday':
-				$sql = 'SELECT * FROM discount_users';
+				$sql = 'SELECT DISTINCT discount_users.*, discount_users_friends.good
+						FROM discount_users_friends
+						INNER JOIN discount_users ON discount_users.user_wp = discount_users_friends.friend_wp
+						WHERE discount_users_friends.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
+						AND discount_users_friends.good =1';
 				$result = mysql_query($sql);
 				$json = Array();
 				while ($row = mysql_fetch_assoc($result)) {
@@ -95,6 +109,7 @@ switch ($op) {
 						'textColor' => 'black',
 						'allDay' => false,
 						'editable' => false,
+						'url' => ''.$row['user_wp'].''
 					);
 				}
 			break;
@@ -102,7 +117,7 @@ switch ($op) {
 		echo json_encode($json);
 		break;
 	case 'delete':
-		$sql = 'DELETE FROM discount_akcia WHERE id = "' . $id . '"';
+		$sql = 'INSERT INTO discount_podpiska_ban (user_wp, akcia_id) VALUES ("' .$_SESSION['WP_USER']['user_wp']. '", "'.$id.'")';
 		if (mysql_query($sql)) {
 			echo $id;
 		}
