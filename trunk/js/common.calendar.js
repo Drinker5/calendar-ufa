@@ -112,7 +112,9 @@
                 height: 500,
                 editable: true,
 				allDaySlot: false,
-				ignoreTimezone: true,
+				minTime: 8,
+				maxTime: 24,
+				ignoreTimezone: false,
                  /* формат времени выводимый перед названием события */
 				timeFormat: '',
 				
@@ -172,11 +174,22 @@
                 },
 				/* событие мышка навелась на эвент */
 				eventMouseover: function(event, jsEvent, view) {
-					if(event.editable == false) return;
-					
-					var layer = '<div id="events-layer"  style="position:absolute; width:100%; height:100%; top:-1px; text-align:right; z-index:100"><a><img src="../pic/edit.png" title="edit" width="14" id="edbut'+event.id+'" border="0" style="padding-right:5px; padding-top:5px;" /></a></div>';
-					
-					 $(this).append(layer);
+					 layer = '';
+					var pict_name, pict_title;
+					if(event.editable)
+					{
+						pict_name = '../pic/edit.png';
+						pict_title = 'Показать всю информацию';						
+					}						
+					else
+					{
+						pict_name = '../pic/e_info.png'; 					
+						pict_title = 'Показать всю информацию';						
+					}						
+					var layer = '<span id="events-layer"  style="float:right">'+
+						'<img src="'+pict_name+'" title="'+pict_title+'" id="edbut'+event.id+'" style="vertical-align: bottom;" /></span>';
+					 
+					 $(this).children('.fc-event-inner').append(layer);
 					 $("#edbut"+event.id).hide();
 					 $("#edbut"+event.id).fadeIn(300);
 					 $("#edbut"+event.id).click(function() {
@@ -188,7 +201,6 @@
 			    /* событие мышка ушла из эвента */
 			    eventMouseout : function( event, jsEvent, view ) 
 			    {  
-					if(event.editable == false) return;
 					$('#events-layer').remove();
 			    },
 				/* событие начала перетаскивания */
@@ -259,11 +271,11 @@
             });
 			
 			/* отображение + в дне при наведении */
-			var layer = '<div id="days-layer" style="position:relative; text-align:right; width:100%; height:100%; bottom:0;">'+
-								'<div title="add" class="small-icon icon-green-plus" id="qwer" style="" </div></div></div>';
+			var layer = '<span id="days-layer" style="float:right;">'+
+								'<div title="Добавить" class="small-icon icon-green-plus" id="qwer" style=""> </div></span>';
 			$(".fc-widget-content").hover(
 				function(){
-					$(this).children("div").children(".fc-day-content").children("div").append(layer);
+					$(this).children("div").children(".fc-day-number").append(layer);
 					$("#qwer").hide();
 					$("#qwer").fadeIn(300);
 				},
