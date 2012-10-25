@@ -55,7 +55,7 @@ var defaults = {
 		day: 'dddd M/d'
 	},
 	timeFormat: { // for event elements
-		'': 'h(:mm)t' // default
+		'': 'H(:mm)t' // default
 	},
 	
 	// locale
@@ -1579,10 +1579,10 @@ var dateFormatters = {
 	MMMM: function(d,o)	{ return o.monthNames[d.getMonth()] },
 	yy	: function(d)	{ return (d.getFullYear()+'').substring(2) },
 	yyyy: function(d)	{ return d.getFullYear() },
-	t	: function(d)	{ return d.getHours() < 12 ? 'a' : 'p' },
-	tt	: function(d)	{ return d.getHours() < 12 ? 'am' : 'pm' },
-	T	: function(d)	{ return d.getHours() < 12 ? 'A' : 'P' },
-	TT	: function(d)	{ return d.getHours() < 12 ? 'AM' : 'PM' },
+	t	: function(d)	{ return ':00' },
+	tt	: function(d)	{ return ':00' },
+	T	: function(d)	{ return ':00' },
+	TT	: function(d)	{ return ':00' },
 	u	: function(d)	{ return formatDate(d, "yyyy-MM-dd'T'HH:mm:ss'Z'") },
 	S	: function(d)	{
 		var date = d.getDate();
@@ -2811,9 +2811,9 @@ setDefaults({
 	firstHour: 6,
 	slotMinutes: 30,
 	defaultEventMinutes: 120,
-	axisFormat: 'h(:mm)tt',
+	axisFormat: 'H(:mm)tt',
 	timeFormat: {
-		agenda: 'h:mm{ - h:mm}'
+		agenda: 'H:mm{ - H:mm}'
 	},
 	dragOpacity: {
 		agenda: .5
