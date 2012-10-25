@@ -56,17 +56,6 @@ switch ($op) {
 						AND adminview = 1
 						AND discount_podpiska_view.user_wp = '.$_SESSION['WP_USER']['user_wp'].'
 						AND discount_podpiska_ban.user_wp <> '.$_SESSION['WP_USER']['user_wp'].'';
-						//'SELECT DISTINCT discount_akcia . * 
-						//FROM discount_akcia, discount_podpiska_view, discount_podpiska_ban
-						//WHERE del =0
-						//AND (
-						//	discount_akcia.id = discount_podpiska_view.akcia_id
-						//	AND discount_podpiska_view.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
-						//	)
-						//AND NOT (
-						//	discount_akcia.id = discount_podpiska_ban.akcia_id
-						//	AND discount_podpiska_ban.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
-						//	)';
 				$result = mysql_query($sql);
 				$json = Array();
 				
@@ -93,6 +82,7 @@ switch ($op) {
 						'end' => $row['DiscData2'],
 						'color' => $color,
 						'textColor' => 'white',
+						'editable' => false,
 						'allDay' => false,
 					);
 				}
