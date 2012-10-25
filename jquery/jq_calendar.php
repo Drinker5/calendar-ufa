@@ -47,17 +47,26 @@ switch ($op) {
 	case 'source':
 		switch($type){
 			case 'akcia':
-				$sql = 'SELECT DISTINCT discount_akcia . * 
-						FROM discount_akcia, discount_podpiska_view, discount_podpiska_ban
-						WHERE del =0
-						AND (
-							discount_akcia.id = discount_podpiska_view.akcia_id
-							AND discount_podpiska_view.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
-							)
-						AND NOT (
-							discount_akcia.id = discount_podpiska_ban.akcia_id
-							AND discount_podpiska_ban.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
-							)';
+				$sql = 'SELECT DISTINCT discount_akcia.* 
+						FROM discount_podpiska_view
+						INNER JOIN discount_akcia ON discount_akcia.id = discount_podpiska_view.akcia_id
+						INNER JOIN discount_podpiska_ban ON discount_akcia.id <> discount_podpiska_ban.akcia_id
+						WHERE discount_akcia.del = 0
+						AND discount_akcia.Moderator = 1
+						AND adminview = 1
+						AND discount_podpiska_view.user_wp = '.$_SESSION['WP_USER']['user_wp'].'
+						AND discount_podpiska_ban.user_wp <> '.$_SESSION['WP_USER']['user_wp'].'';
+						//'SELECT DISTINCT discount_akcia . * 
+						//FROM discount_akcia, discount_podpiska_view, discount_podpiska_ban
+						//WHERE del =0
+						//AND (
+						//	discount_akcia.id = discount_podpiska_view.akcia_id
+						//	AND discount_podpiska_view.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
+						//	)
+						//AND NOT (
+						//	discount_akcia.id = discount_podpiska_ban.akcia_id
+						//	AND discount_podpiska_ban.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
+						//	)';
 				$result = mysql_query($sql);
 				$json = Array();
 				
