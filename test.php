@@ -1,6 +1,6 @@
 <?php
 //Соединение с базой и установка кодировки
-	mysql_connect('83.222.116.206','usrmmg','gtxmfn7mbxTm7EXM') or die(mysql_error());
+	mysql_connect('localhost','root','') or die(mysql_error());
 	mysql_select_db('discount') or die(mysql_error());
 	mysql_query("set character_set_client='utf8'");
 	mysql_query("set character_set_results='utf8'");
@@ -34,5 +34,5 @@
 		return $password;
 	}
 
-	echo tep_encrypt_password('1234567'.pfx_passw);
+	echo tep_encrypt_password('1'.pfx_passw);
 ?>
