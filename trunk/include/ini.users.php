@@ -1475,18 +1475,20 @@ class T_USERS {
 //!Друзья — друг или нет?
 	function IsFriend($friend_wp){
 		global $MYSQL;
+		$GLOBALS['PHP_FILE']=__FILE__;
+		$GLOBALS['FUNCTION']=__FUNCTION__;
+		$friend_wp          =varr_int($friend_wp);
+		$tbfriends          ="pfx_users_friends";
 
-		$GLOBALS['PHP_FILE'] = __FILE__;
-	    $GLOBALS['FUNCTION'] = __FUNCTION__;
+		$friendship=$MYSQL->query("
+			SELECT `id` FROM `".$tbfriends."`
+			WHERE (`user_wp`=".(int)$_SESSION['WP_USER']['user_wp']." AND `friend_wp`=".$friend_wp.")
+				OR (`user_wp`=".$friend_wp." AND `friend_wp`=".(int)$_SESSION['WP_USER']['user_wp'].")
+				AND `good`=1
+		");
 
-	    $friend_wp = varr_int($friend_wp);
-	    $tbfriends = "pfx_users_friends";
-
-	    $friendship = $MYSQL->query("SELECT id FROM $tbfriends WHERE (user_wp = ".(int)$_SESSION['WP_USER']['user_wp']." AND friend_wp = $friend_wp)
-	                                 OR (user_wp = $friend_wp AND friend_wp = ".(int)$_SESSION['WP_USER']['user_wp'].")
-	                                 AND good = 1");
-	    if(is_array($friendship) && count($friendship) == 2) return true;
-	    return false;
+		if(is_array($friendship) && count($friendship)==2)return true;
+		return false;
 	}
 
 
@@ -2905,7 +2907,7 @@ class T_USERS {
 	}
 
 //Список жеданий+вишлист
-function FindWLPosition($user_wp, $rows=21,$begin=0){
+function FindWLPosition($user_wp, $rows=10,$begin=0){
         global $MYSQL;
         $GLOBALS['PHP_FILE'] = __FILE__;
 	    $GLOBALS['FUNCTION'] = __FUNCTION__;
@@ -2918,7 +2920,7 @@ function FindWLPosition($user_wp, $rows=21,$begin=0){
         $i = $begin;
         $array_num = '';
 
-        $result = $MYSQL->query("SELECT $tbhochu.akcia_id, $tbhochu.id
+        $result = $MYSQL->query("SELECT *
     	                         FROM $tbhochu
  	                             WHERE $tbhochu.user_wp = $user_wp
     		                     ORDER BY $tbhochu.adddata DESC
@@ -3005,6 +3007,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
         $sql        = '';
         $user_wp    = (int)@$_SESSION['WP_USER']['user_wp'];
         $count      = 0;
+        $wish_num   = $begin;
 
         $wl_array = $USER->FindWLPosition($user_wp, $rows, $begin);
 
@@ -3019,8 +3022,8 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
                     }
 
                     if (count($wl_array) == 1){
-                        $limit = $rows - ($wl_array[$i]['num']+1);
-                        $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');
+                        $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
+                        $res_array = $USER->LoadWishes($user_wp, 0, 0, $limit, 'wishes');    //+1
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
@@ -3033,6 +3036,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
                   if ($pre_pos == -1){
                     $limit = $wl_array[$i]['num'] - $begin;
                     $res_array = $USER->LoadWishes($user_wp, 0, $begin, $limit, 'wishes');
+                    $wish_num += $limit;
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
@@ -3045,8 +3049,8 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
                     }
 
                     if (count($wl_array) == 1){
-                        $limit = $rows - ($wl_array[$i]['num']+1);
-                        $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1),$limit, 'wishes');
+                        $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);    //+1
+                        $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');    //+1
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
@@ -3062,10 +3066,21 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
                             $count++;
                         }
                         $pre_pos = $wl_array[$i]['num'];
+
+                        if (count($wl_array) == ($i+1)){
+                            $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
+                            $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');  //+1
+                            $wish_num += $limit;
+                            for ($j=0; $j<count($res_array);$j++){
+                                $total_array[$count] = $res_array[$j];
+                                $count++;
+                            }
+                        }
                     }
                     else {
                         $limit = $wl_array[$i]['num'] - ($pre_pos + 1);
-                        $res_array = $USER->LoadWishes($user_wp, 0, ($pre_pos+1),$limit, 'wishes');
+                        $res_array = $USER->LoadWishes($user_wp, 0, ($pre_pos + 1), $limit, 'wishes');
+                        $wish_num += $limit;
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
@@ -3079,8 +3094,9 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 
                         $pre_pos = $wl_array[$i]['num'];
                         if (count($wl_array) == ($i+1)){
-                            $limit = $rows - ($wl_array[$i]['num']+1);
-                            $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1),$limit, 'wishes');
+                            $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
+                            $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');  //+1
+                            $wish_num += $limit;
                             for ($j=0; $j<count($res_array);$j++){
                                 $total_array[$count] = $res_array[$j];
                                 $count++;
@@ -3092,7 +3108,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
                 elseif ($wl_array[$i]['num'] == ($begin + $rows)){
                     //echo "3--><br />";
                     $limit = $rows - 1;
-                    $res_array = $USER->LoadWishes($user_wp, 0, $begin,$limit, 'wishes');
+                    $res_array = $USER->LoadWishes($user_wp, 0, 0, $limit, 'wishes');
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;

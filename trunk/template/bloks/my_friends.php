@@ -7,7 +7,8 @@
 
 	require_once('jquery/jq_myfriends.php');
 	$friends_all=$subs_count=$USER->CountFriends(0, $user_wp);
-	$rows=30; $t=''; $c=''; $online=0; $circle=1;
+	$rows=30;//Количество выводимых друзей.
+	$t=''; $c=''; $online=0; $circle=1;
 
 	if(isset($_REQUEST['t'])){
 		$t='t='.$_REQUEST['t'].'&';
@@ -170,8 +171,7 @@
 							$('div#loadmoreajaxloader').hide();
 							html =jQuery.parseJSON(data);
 							idLenta.append(html.html);
-<?php if($_URLP=='my'){ ?>
-							idLenta.find('[rel="'+html.uid+'"]')
+							idLenta.find('.my-friend-actions[rel="'+html.uid+'"]')
 								.popover({
 									trigger: 'none',
 									autoReposition: false,
@@ -182,21 +182,20 @@
 								.popover('setOption', 'position', 'bottom')
 								.popover('setOption', 'horizontalOffset', -31)
 								.popover('setClasses', 'friend-action-popover');
-							$(".popover input:checkbox").uniform();
-<?php } else{ ?>
-							idLenta.find('[rel="'+html.uid+'"]')
+<?php if($_URLP!='my'){ ?>
+							idLenta.find('.find-friend-actions[rel="'+html.uid+'"]')
 								.popover({
 									trigger: 'none',
 									autoReposition: false,
 									stopChildrenPropagation: false,
 									hideOnHTMLClick: true
 								})
-        .popover('content', $('#subscriber-action-template').html(), true)
-        .popover('setOption', 'position', 'bottom')
-        .popover('setOption', 'horizontalOffset', -31)
-        .popover('setClasses', 'friend-action-popover');
-							$(".popover input:checkbox").uniform();
+								.popover('content', $('#find-friend-action-template').html(), true)
+								.popover('setOption', 'position', 'bottom')
+								.popover('setOption', 'horizontalOffset', -31)
+								.popover('setClasses', 'friend-action-popover');
 <?php } ?>
+							$(".popover input:checkbox").uniform();
 							page =page+1;
 							begin=begin+rows;
 						}

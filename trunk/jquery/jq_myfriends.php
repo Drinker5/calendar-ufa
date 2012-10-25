@@ -1,6 +1,9 @@
 <?php
 //Блок с информацие о друге
 	function ShowFriendBlock($user_wp, $avatar, $friend, $stamp, $cart){
+		global $USER;
+		$GLOBALS['PHP_FILE']=__FILE__;
+		$GLOBALS['FUNCTION']=__FUNCTION__;
 		$html='
 		<div class="friend-item fl_l">
 			<a class="bordered medium-avatar fl_l" href="/'.$friend['user_wp'].'"><img src="'.$avatar.'" alt="" /></a>
@@ -8,14 +11,14 @@
 				<span class="name"><a href="/'.$friend['user_wp'].'">'.$friend['firstname'].' '.$friend['lastname'].'</a></span>
 				<br />
 				<span class="place">'.$friend['country_name'].', '.$friend['town_name'].'</span>
-			</div>
-			<span class="popover-btn ';
-		if($user_wp==$_SESSION['WP_USER']['user_wp'])$html.='my-friend-actions';
-		else                                         $html.='find-friend-actions';
-		$html.=' opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'">
-				<i class="small-icon icon-action"></i> Действия <i class="small-icon icon-grey-arrow"></i>
-			</span>
-		</div>';
+			</div>';
+		if($friend['user_wp']!=$_SESSION['WP_USER']['user_wp']){
+			$html.='<span class="popover-btn ';
+			if($USER->IsFriend($friend['user_wp']))$html.='my-friend-actions';
+			else                                   $html.='find-friend-actions';
+			$html.=' opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'"><i class="small-icon icon-action"></i> Действия <i class="small-icon icon-grey-arrow"></i></span>';
+		}
+		$html.='</div>';
 		return $html;
 	}
 
@@ -38,7 +41,7 @@
 				for($ki=0; $ki<count($krugi); $ki++){
 					if(is_array($v['krugi'])){
 						if(in_array($krugi[$ki]['krug_id'], $v['krugi']))$krugi[$ki]['checked']=true;
-						else																						$krugi[$ki]['checked']=false;
+						else                                             $krugi[$ki]['checked']=false;
 					}
 					else $krugi[$ki]['checked']=false;
 				}
