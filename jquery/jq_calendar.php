@@ -23,22 +23,24 @@ $tbakcia = 'pfx_akcia';
 
 switch ($op) {
 	case 'add':
-		$sql = 'INSERT INTO discount_akcia (
-			DiscData1, 
-			DiscData2, 
-			header) 
+		$sql = 'INSERT INTO discount_users_events (
+			owner_wp,
+			data_start, 
+			data_end, 
+			title) 
 			VALUES 
-			("' . date("Y-m-d H:i:s", strtotime($start)) . '",
-			"' . date("Y-m-d H:i:s", strtotime($end)) . '", 
-			"' . $type . '")';
+			("' . $_SESSION['WP_USER']['user_wp'] . '",
+			 "' . date("Y-m-d H:i:s", strtotime($start)) . '",
+			 "' . date("Y-m-d H:i:s", strtotime($end)) . '", 
+			 "' . $type . '")';
 		if (mysql_query($sql)) {
 			echo mysql_insert_id();
 		}
 		break;
 	case 'edit':
-		$sql = 'UPDATE discount_akcia SET 	DiscData1 = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
-									DiscData2	  = "' . date("Y-m-d H:i:s", strtotime($end)) . '",
-									header  = "' . $type . '"
+		$sql = 'UPDATE discount_users_events SET 	data_start = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
+									data_end	  = "' . date("Y-m-d H:i:s", strtotime($end)) . '",
+									title  = "' . $type . '"
 									WHERE id = "' . $id . '"';
 		if (mysql_query($sql)) {
 			echo $id;
@@ -60,7 +62,6 @@ switch ($op) {
 				$json = Array();
 				
 				while ($row = mysql_fetch_assoc($result)) {
-				//********************** цвета ***********************
 					switch($row['idtype'])
 					{
 						case 1:	$color = '#79CDCD';break;//аква
@@ -70,11 +71,6 @@ switch ($op) {
 						case 5:	$color = '#9a46d7';break;//фиолетовый
 						default:$color = '#94d11f';break;//зеленый	
 					}
-					/*
-					if($b%2==1) $color = '#94d11f'; //зелененький
-					else $color = '#469ad7'; //сининький
-					$b++;*/
-				//****************************************************
 					$json[] = array(
 						'id' => $row['id'],
 						'title' => $row['header'],
@@ -85,8 +81,56 @@ switch ($op) {
 						'editable' => false,
 						'allDay' => false,
 					);
+					
+				}
+				
+				
+			break;
+			case 'user_events':
+				$sql = 'SELECT *
+						FROM discount_users_events
+						WHERE owner_wp = '.$_SESSION['WP_USER']['user_wp'];
+				$json = Array();
+				$result = mysql_query($sql);
+				$color = '#94d11f'; 
+				while ($row = mysql_fetch_assoc($result)) {
+					$json[] = array(
+						'id' => $row['id'],
+						'title' => $row['title'],
+						'start' => $row['data_start'],
+						'end' => $row['data_end'],
+						'color' => $color,
+						'textColor' => 'white',
+						'editable' => true
+						//'allDay' => false,
+					);
 				}
 			break;
+			case 'user_friends_events':
+				$sql = 'SELECT DISTINCT discount_users_events.*
+						FROM discount_users_events
+						LEFT OUTER JOIN discount_users_friends ON discount_users_friends.friend_wp = discount_users_events.owner_wp AND discount_users_friends.good = 1
+						LEFT OUTER JOIN discount_users_events_visible ON discount_users_events_visible.event_id = discount_users_events.id 
+						WHERE discount_users_events_visible.friend_wp = '.$_SESSION['WP_USER']['user_wp'].'
+						OR (discount_users_events.visible_all = 1 AND discount_users_friends.user_wp = '.$_SESSION['WP_USER']['user_wp'].')';
+				$json = Array();
+				$result = mysql_query($sql);
+				$color = '#469ad7'; 
+				
+				while ($row = mysql_fetch_assoc($result)) {
+					$json[] = array(
+						'id' => $row['id'],
+						'title' => $row['title'],
+						'start' => $row['data_start'],
+						'end' => $row['data_end'],
+						'color' => $color,
+						'textColor' => 'white',
+						'editable' => false
+						//'allDay' => false,
+					);
+				}
+			break;
+			
 			case 'birthday':
 				$sql = 'SELECT DISTINCT discount_users.*, discount_users_friends.good
 						FROM discount_users_friends
