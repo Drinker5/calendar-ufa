@@ -1,10 +1,13 @@
 <?php
-    function WishList($user_wp, $rows=10, $begin=0, $par='', $what=''){
+    function WishList($user_wp, $rows=10, $begin=0, $par='', $what='', $wish_pos=0){
       global $USER, $COMMENTS, $MYSQL;
       $GLOBALS['PHP_FILE']=__FILE__;
       $GLOBALS['FUNCTION']=__FUNCTION__;
 
-      $myWishes=$USER->ShowIHochu($user_wp,$rows,$begin, $par);
+      //Параметр для загрузки желаний
+      $wish_cnt = $wish_pos;
+
+      $myWishes=$USER->ShowIHochu($user_wp,$rows,$begin, $par, $wish_cnt);
       $stamp=time();
 
       //Комментарии
@@ -100,6 +103,7 @@
 
               }
               else {
+                $wish_cnt++;
                 $html .= "<div id=\"wish".$myWishes[$i]['akcia_id']."\" class=\"wish-item group toggle-stop\">
                             <div class=\"big-avatar bordered fl_l\">
                                 <img src=\"".$photo[$i]['foto']."\">
@@ -178,32 +182,30 @@
 
                             </div>
                             <div id="separator'.$myWishes[$i]['akcia_id'].'" class="separator"></div>';
-
-
-
-
-
         }
 
 
-
-
-
         $resultArray=array(
-				"html"     =>$html,
-				"uid"      =>$stamp,
-                "num_rows" =>count($myWishes)
+			"html"     =>$html,
+			"uid"      =>$stamp,
+            "num_rows" =>count($myWishes),
+            "wish_cnt" =>$wish_cnt
 		);
 
         if($what=='json')echo json_encode($resultArray);
 		else             echo $html;
 
+        $return_array = array(
+            "wish_cnt" =>$wish_cnt
+        );
+
+        return $return_array;
       }
       else echo "У Вас нет исполненных желаний!";
     }
 
     if(isset($_POST['list'])){
-	  WishList($_POST['wp'], $_POST['items'], $_POST['list'], $_POST['param'],'json');
+	  WishList($_POST['wp'], $_POST['items'], $_POST['list'], $_POST['param'],'json', $_POST['wish_num']);
 	}
 
 //удалить желание
