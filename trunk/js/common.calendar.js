@@ -19,7 +19,19 @@
 					type: 'POST',
 					url: '/jquery-calendar',cache:false, 
 					data: {	op: 'source',	type: 'akcia' },
-					error: function(){ alert('Ошибка соединения, акции'); }
+					error: function(id){ alert(id+' Ошибка соединения, акции'); }
+				},
+				user_events : {
+					type: 'POST',
+					url: '/jquery-calendar',cache:false, 
+					data: {	op: 'source',	type: 'user_events' },
+					error: function(){ alert('Ошибка соединения, события пользователя'); }
+				},
+				user_friends_events : {
+					type: 'POST',
+					url: '/jquery-calendar',cache:false, 
+					data: {	op: 'source',	type: 'user_friends_events' },
+					error: function(){ alert('Ошибка соединения, события друзей'); }
 				},
 				birthdays : {
 					type: 'POST',
@@ -38,8 +50,10 @@
                 if ($('#show_combobox :selected').val() == 'show_all'){
 					calendar.fullCalendar( 'removeEventSources' );
                     calendar.fullCalendar( 'removeEvents' );
-					calendar.fullCalendar( 'addEventSource', fcSources.birthdays );
 					calendar.fullCalendar( 'addEventSource', fcSources.akcia );
+					calendar.fullCalendar( 'addEventSource', fcSources.user_events );
+					calendar.fullCalendar( 'addEventSource', fcSources.user_friends_events );
+					calendar.fullCalendar( 'addEventSource', fcSources.birthdays );
                 }
             });
 			
@@ -261,6 +275,8 @@
                 /* источник записей, изначальные события которые будут отображаться в календаре */
                 eventSources: [
 					fcSources.akcia, 
+					fcSources.user_events,
+					fcSources.user_friends_events,
 					fcSources.birthdays
 				],
 				
