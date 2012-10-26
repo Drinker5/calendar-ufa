@@ -2263,23 +2263,29 @@ class T_USERS {
 		                             INNER JOIN $tbshops ON $tbshops.id = $tbshopadres.shop_id
 		                            WHERE $tbshopadres.id = ".varr_int($value['id_deystvie']));
 
-	    				if(is_array($shop)){
-	    				 $shop[0]['adress'] = explode("::",$shop[0]['adress']);
-	                       $adressa = array(
-		                     'street' => @$shop[0]['adress'][0],
-		                     'house'  => @$shop[0]['adress'][1],
-		                     'town'   => @$shop[0]['adress'][2],
-		                   );
+						if(is_array($shop)){
+							$shop[0]['adress'] = explode("::",$shop[0]['adress']);
+							$adressa = array(
+								'street' => @$shop[0]['adress'][0],
+								'house'  => @$shop[0]['adress'][1],
+								'town'   => @$shop[0]['adress'][2],
+							);
 
-	    				$array[] = array(
-	    				'id'           => $value['id'],
-	    			    'deystvie'     => 8,
-	    			    'data'         => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			    'user'         => $this->Info_min($value['user_wp'],40,40),
-	    			    'shop_id'      => $shop[0]['shop_id'],
-	    			    'shop_name'    => htmlspecialchars(stripslashes(trim($shop[0]['shop_name']))),
-	    			    'shop_adress'  => $adressa,
-	    			    );
+							$photo = ShowLogo(array($shop[0]['shop_id']),146,101,true);
+							if(is_array($photo)) $photo = $photo[0]['logo'];
+
+							$array[] = array(
+								'id'           => $value['id'],
+								'deystvie'     => 8,
+								'data'         => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+								'user'         => $this->Info_min($value['user_wp'],40,40),
+								'shop_id'      => $shop[0]['shop_id'],
+								'shop_name'    => htmlspecialchars(stripslashes(trim($shop[0]['shop_name']))),
+								'shop_adress'  => $adressa,
+								'shop_photo'   => $photo,
+								'shop_url'     => @$shop[0]['URL'],
+								'shop_phone'   => @$shop[0]['phones'],
+							);
 	    				} else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
 	    			  	    return $this->ShowHistoryLenta($user_wp,$circle,$rows,$begin+$rows);
@@ -2634,6 +2640,9 @@ class T_USERS {
 		                     'town'   => @$shop['adress'][2],
 		                   );
 
+	    			 	$photo = ShowFotoAkcia(array($podarok['id']),146,101);
+	    			 	if(is_array($photo)) $photo = $photo[0]['foto'];
+
 	    				$array[] = array(
 	    				'id'           => $value['id'],
 	    			    'deystvie'     => 8,
@@ -2642,6 +2651,7 @@ class T_USERS {
 	    			    'shop_id'      => $shop['shop_id'],
 	    			    'shop_name'    => htmlspecialchars(stripslashes(trim($shop['shop_name']))),
 	    			    'shop_adress'  => $adressa,
+	    			    'shop_photo'   => $photo,
 	    			    );
 	    				} else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
@@ -2874,7 +2884,7 @@ class T_USERS {
 	}
 
 //!Желания — количество
-	function CountIHochu($user_wp=0){
+	function CountIHochu($user_wp=0, $par=''){
 		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
@@ -2884,26 +2894,39 @@ class T_USERS {
         $count = 0;
 	    $user_wp = (int) $user_wp;
 		$tbhochu  = "pfx_users_hochu";
+
 		if($user_wp == 0) $user_wp = $_SESSION['WP_USER']['user_wp'];
 
-        $result = $MYSQL->query("SELECT $tbhochu.status, COUNT($tbhochu.status) AS num_wishes
+        if ($par == 'all')
+            $sql = "SELECT COUNT(*) AS num_rows
+		                  FROM $tbhochu
+                          WHERE $tbhochu.user_wp = $user_wp";
+        else
+            $sql = "SELECT $tbhochu.status, COUNT($tbhochu.status) AS num_wishes
 		                  FROM $tbhochu
                           WHERE $tbhochu.user_wp = $user_wp AND $tbhochu.akcia_id <> 0
-                          GROUP BY $tbhochu.status");
+                          GROUP BY $tbhochu.status";
 
-        for($i=0; $i < count($result); $i++){
-            if ($result[$i]['status'] == 1)
-                $performed_wishes  = $result[$i]['num_wishes'];
+        $result = $MYSQL->query($sql);
 
-            $count += $result[$i]['num_wishes'];
-    	}
 
-        $wish_array = array(
-            'all'        => $count,
-            'performed'  => $performed_wishes,
-        );
+        if ($par == 'all'){
+            return @$result[0];
+        }
+        else {
+            for($i=0; $i < count($result); $i++){
+                if ($result[$i]['status'] == 1)
+                    $performed_wishes  = $result[$i]['num_wishes'];
 
-		return @$wish_array;
+                $count += $result[$i]['num_wishes'];
+        	}
+
+            $wish_array = array(
+                'all'        => $count,
+                'performed'  => $performed_wishes,
+            );
+            return @$wish_array;
+        }
 	}
 
 //Список жеданий+вишлист
@@ -2942,7 +2965,7 @@ function FindWLPosition($user_wp, $rows=10,$begin=0){
         else return false;
 }
 
-function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
+function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_cnt=0){
     global $MYSQL, $USER;
 
     $GLOBALS['PHP_FILE'] = __FILE__;
@@ -2987,7 +3010,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 }
 
 //!Желания — список желаний
-	function ShowIHochu($user_wp,$rows=21,$begin=0, $par=''){
+	function ShowIHochu($user_wp,$rows=21,$begin=0, $par='', $wish_cnt=0){
 		global $MYSQL, $USER;
 
 		$wish_array = $this->CountIHochu($user_wp);
@@ -2999,6 +3022,8 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 		$rows    = varr_int($rows);
 		$begin   = varr_int($begin);
 		$user_wp = varr_int($user_wp);
+        $wish_cnt= varr_int($wish_cnt);
+
 
 		$tbhochu    = "pfx_users_hochu";
 		$tbakcia    = "pfx_akcia";
@@ -3007,7 +3032,6 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
         $sql        = '';
         $user_wp    = (int)@$_SESSION['WP_USER']['user_wp'];
         $count      = 0;
-        $wish_num   = $begin;
 
         $wl_array = $USER->FindWLPosition($user_wp, $rows, $begin);
 
@@ -3023,11 +3047,12 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 
                     if (count($wl_array) == 1){
                         $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
-                        $res_array = $USER->LoadWishes($user_wp, 0, 0, $limit, 'wishes');    //+1
+                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);    //+1
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
                         }
+                        $wish_cnt += count($res_array);
                     }
                     $pre_pos = $wl_array[$i]['num'];
                 }
@@ -3035,12 +3060,12 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
                   //echo "2--><br />";
                   if ($pre_pos == -1){
                     $limit = $wl_array[$i]['num'] - $begin;
-                    $res_array = $USER->LoadWishes($user_wp, 0, $begin, $limit, 'wishes');
-                    $wish_num += $limit;
+                    $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
                     }
+                    $wish_cnt += count($res_array);
 
                     $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
                     for ($j=0; $j<count($res_array);$j++){
@@ -3050,11 +3075,12 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 
                     if (count($wl_array) == 1){
                         $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);    //+1
-                        $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');    //+1
+                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);    //+1
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
                         }
+                        $wish_cnt += count($res_array);
                     }
                     $pre_pos = $wl_array[$i]['num'];
                   }
@@ -3069,22 +3095,23 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 
                         if (count($wl_array) == ($i+1)){
                             $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
-                            $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');  //+1
+                            $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);  //+1
                             $wish_num += $limit;
                             for ($j=0; $j<count($res_array);$j++){
                                 $total_array[$count] = $res_array[$j];
                                 $count++;
                             }
+                            $wish_cnt += count($res_array);
                         }
                     }
                     else {
                         $limit = $wl_array[$i]['num'] - ($pre_pos + 1);
-                        $res_array = $USER->LoadWishes($user_wp, 0, ($pre_pos + 1), $limit, 'wishes');
-                        $wish_num += $limit;
+                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
                         }
+                        $wish_cnt += count($res_array);
 
                         $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
                         for ($j=0; $j<count($res_array);$j++){
@@ -3095,24 +3122,25 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
                         $pre_pos = $wl_array[$i]['num'];
                         if (count($wl_array) == ($i+1)){
                             $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
-                            $res_array = $USER->LoadWishes($user_wp, 0, ($wl_array[$i]['num']+1), $limit, 'wishes');  //+1
-                            $wish_num += $limit;
+                            $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);  //+1
                             for ($j=0; $j<count($res_array);$j++){
                                 $total_array[$count] = $res_array[$j];
                                 $count++;
                             }
+                            $wish_cnt += count($res_array);
                         }
                     }
                   }
                 }
                 elseif ($wl_array[$i]['num'] == ($begin + $rows)){
                     //echo "3--><br />";
-                    $limit = $rows - 1;
-                    $res_array = $USER->LoadWishes($user_wp, 0, 0, $limit, 'wishes');
+                    $limit = ($begin + $rows) - 1;
+                    $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes');
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
                     }
+                    $wish_cnt += count($res_array);
 
                     $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
                     for ($j=0; $j<count($res_array);$j++){
@@ -3129,21 +3157,25 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
         }
         else{
             if ($par == 'performed')
-                $result = $MYSQL->query("SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+                $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                             FROM $tbhochu
         		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
         		                            WHERE $tbhochu.user_wp = $user_wp AND $tbhochu.status = 1
         		                            ORDER BY $tbhochu.adddata DESC
-        		                            LIMIT $begin,$rows");
+        		                            LIMIT $wish_cnt,$rows";
             else
-        		$result = $MYSQL->query("SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.wlist_name, $tbhochu.wishes_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+        		$sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.wlist_name, $tbhochu.wishes_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                             FROM $tbhochu
         		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
         		                            WHERE $tbhochu.user_wp = $user_wp
         		                            ORDER BY $tbhochu.adddata DESC
-        		                            LIMIT $begin,$rows");
+        		                            LIMIT $wish_cnt,$rows";
+
+            //echo $wish_cnt."/n/r";
+            //echo $sql;
+            $result = $MYSQL->query($sql);
 
     		if(is_array($result) && count($result)){
             foreach($result as $key=>$value){
@@ -3229,14 +3261,12 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
-	    $GLOBALS['FUNCTION'] = __FUNCTION__;
+		$GLOBALS['FUNCTION'] = __FUNCTION__;
 
 		$tbihere = "pfx_users_ihere";
 		$result = $MYSQL->query("SELECT Count(*) FROM $tbihere WHERE address_id = ".(int)$address_id);
-		if($result[0]['count'] > 0)
-		   return "<b style=\"color:red\">".$result[0]['count']."</b>";
-		else
-		  return $result[0]['count'];
+
+		return $result[0]['count'];
 	}
 
 	function CountWhohereShopAddressFriends($address_id){
@@ -3335,7 +3365,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par=''){
 		$tbihere  = "pfx_users_ihere";
 		$tbshops  = "pfx_shops";
 		$tbshopadres = "pfx_shops_adress";
-		$result = $MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbshopadres.adress, $tbshopadres.id adress_id
+		$result = $MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbshops.URL, $tbshopadres.phones, $tbshopadres.adress, $tbshopadres.id adress_id,$tbihere.data
 		                              FROM $tbihere
 		                             INNER JOIN $tbshopadres ON $tbshopadres.id = $tbihere.address_id
 		                             INNER JOIN $tbshops ON $tbshops.id = $tbshopadres.shop_id

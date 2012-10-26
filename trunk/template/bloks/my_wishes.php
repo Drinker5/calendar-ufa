@@ -8,6 +8,8 @@
  $begin = 0;
 
  $wish_array = $USER -> CountIHochu();
+ $wish_num   = $USER -> CountIHochu(0, 'all');
+
  $perf_wishes_html = '';
  $my_wishes_html = '';
  $par = '';
@@ -45,7 +47,7 @@
           echo "</ul>
              </div>
              <div id=\"idItems\">";
-                WishList($user_wp, $rows, $begin, $par);
+                $r_array = WishList($user_wp, $rows, $begin, $par);
        echo "</div>";
      echo "</div>";
  }
@@ -57,24 +59,26 @@
 <div id="loadmoreajaxloader" style="display:none; text-align:center;"><img src="/pic/loader.gif" alt="loader" width="32" height="32" /></div>
 
 <script type="text/javascript">
- var page=1, max=<?=ceil($wish_array['all']/$rows)?>, rows=<?=$rows?>, begin=rows, user_wp=<?=$user_wp?>, status=1, par='<?=$par?>';
- var num_rows = rows;
+ var page=1, max=<?=ceil($wish_num['num_rows']/$rows)?>, rows=<?=$rows?>, begin=rows, user_wp=<?=$user_wp?>, status=1, par='<?=$par?>';
+ var num_rows = rows, wish_cnt = <?=$r_array['wish_cnt']?>;
 
+ //alert(<?=$wish_num['num_rows']?>+' '+<?=$rows?>);
  function wishes(){
+    //alert(wish_cnt);
     status = 0;
     if(max>page)
         $('div#loadmoreajaxloader').show();
     $.ajax({
   		    url:'/jquery-mywishes',
             type:'POST',
-            data:{list:begin, items:rows, wp:user_wp, param:par},
+            data:{list:begin, items:rows, wp:user_wp, param:par, wish_num:wish_cnt},
             cache:false,
   			success: function(data){
               			var html, idItems=$('#idItems');
                         if(data){
                           if(max>page){
                             $('div#loadmoreajaxloader').hide();
-                              console.log(data);
+                              //console.log(data);
                               html = jQuery.parseJSON(data);
                               idItems.append(html.html);
                               idItems.find('[rel="'+html.uid+'"]').popover({
@@ -92,6 +96,8 @@
                               status = 1;
                               //alert(html.num_rows);
                               num_rows += parseInt(html.num_rows);
+                              wish_cnt = html.wish_cnt;
+                              //alert(html.wish_cnt);
                           }
                           else{
                             $('div#loadmoreajaxloader').hide();
