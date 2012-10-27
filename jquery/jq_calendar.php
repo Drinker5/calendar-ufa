@@ -166,3 +166,22 @@ switch ($op) {
 		}
 		break;
 }
+
+if(isset($_GET["term"])){
+	$param = $_GET["term"];
+	//Заправшиваем базу данных
+	$query = mysql_query("SELECT * FROM `discount_users` WHERE `firstname` REGEXP '^$param' OR `lastname` REGEXP '^$param'");
+	
+	//строим массив результата/ы
+	for ($x = 0, $numrows = mysql_num_rows($query); $x < $numrows; $x++) {
+		$row = mysql_fetch_assoc($query);
+    
+		$friends[$x] = array("name" => $row["firstname"].' '.$row['lastname']);		
+	}
+	
+	//Выводим JSON на страницу
+	$response = $_GET["callback"] . "(" . json_encode($friends) . ")";
+	echo $response;
+}
+
+?>
