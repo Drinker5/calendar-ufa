@@ -29,8 +29,7 @@ form{
 #event_type{
 	margin-top:10px;
 	padding-left:10px;
-	color:grey;
-	width: 590px;
+	
 	height: 20px;
 }
 
@@ -39,7 +38,6 @@ form{
 	margin-top:15px;
 	margin-bottom:10px;
 	color:grey;
-	width: 590px;
 	height: 20px;
 	background-image: url("../pic/info.png"); 
 	background-position: right 2px;
@@ -114,20 +112,29 @@ padding-left:10px;
 	margin-bottom:10px;
 	margin-left:20px;
 }
-#privacy_friends{
-	padding-left:10px;
-	margin-bottom:15px;
-	color:grey;
-	width: 590px;
-	height: 20px;
-	background-image: url("../pic/info.png"); 
-	background-position: right 2px;
- 	background-repeat: no-repeat;
+
+#privacy_friends { 
+	width:590px; height: 18px; 
+	padding:3px 3px; 
+	margin-left: 5px;
+	margin-bottom:15px; 
+	border:1px solid #DDD; 
+	background-color:#fff;
 }
+#privacy_friends #to { width:80px; margin:0 0 2px 0; padding:0 0 3px; position:relative; top:0; float:left; border:none; z-index:0;}
+#privacy_friends input { display:block; }
+#privacy_friends span { display:block; width:auto; margin:0 3px 3px 0; padding:3px 20px 4px 8px; position:relative; float:left; text-indent:0; background-color:#eee; border:1px solid #333; -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px; color:#333; font:normal 11px Verdana, Sans-serif; }
+#privacy_friends span a { position:absolute; right:8px; top:2px; color:#666; font:bold 12px Verdana, Sans-serif; text-decoration:none; }
+#privacy_friends span a:hover { color:#ff0000; }
+.ui-menu .ui-menu-item { white-space:nowrap; padding:0 10px 0 0; }
+/* Выпадающий список в css/ui_custom.css 294 строка */
+/* строка 296: z-index там был 1000 и рисовалось за окошком */
+
 #event_note{
 	padding-left:10px;
-	outline: none; /*удаляет обводку*/
-	resize: none; /*запрещает изменять размер*/
+	outline: none; 
+	resize: none; 
 	width:600px;
 	height:60px;
 }
+

@@ -73,7 +73,9 @@
 			</div>
 			Показать событие определенным друзьям: 
 			<br>
-			<input type="text" id="privacy_friends" name="privacy_friends" placeholder="Потом...">
+			<div id="privacy_friends" class="ui-helper-clearfix">
+				<input placeholder="Работает!" id="to" type="text">
+			</div>
 			<textarea name="event_note" id="event_note" placeholder="Заметки..."></textarea>
 			<input type="hidden" name="event_id" id="event_id" value="">
 		</form>
