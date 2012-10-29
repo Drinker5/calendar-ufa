@@ -123,6 +123,7 @@
 	/* инициализируем FullCalendar */
 	calendar.fullCalendar({
 		firstDay: 1,
+		weekMode: 'variable',
 		height: 500,
 		editable: true,
 		allDaySlot: false,
@@ -131,7 +132,6 @@
 		ignoreTimezone: false,
 		 /* формат времени выводимый перед названием события */
 		timeFormat: '',
-		
 		selectable: true,
 		selectHelper: true,
 		
