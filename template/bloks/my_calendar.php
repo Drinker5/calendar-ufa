@@ -68,13 +68,15 @@
 			<hr/> <!-- -------------------------------- -->
 			Приватность:
 			<div style="color:grey">
-				<input id="privacy_all" type="radio" name="privacy" value="privacy_all">Показать в ленте новостей друзей
+				<input id="privacy_all" type="radio" name="privacy" value="privacy_all" checked>Показать в ленте новостей друзей
 				<input id="privacy_nobody" type="radio" name="privacy" value="privacy_nobody">Не показывать никому
 			</div>
-			Показать событие определенным друзьям: 
-			<br>
-			<div id="privacy_friends" class="ui-helper-clearfix">
-				<input placeholder="Работает!" id="to" type="text">
+			<div id="privacy_friends_div" >
+				Показать событие определенным друзьям: 
+				<br>
+				<div id="privacy_friends" class="ui-helper-clearfix">
+					<input placeholder="Работает!" id="to" type="text">
+				</div>
 			</div>
 			<textarea name="event_note" id="event_note" placeholder="Заметки..."></textarea>
 			<input type="hidden" name="event_id" id="event_id" value="">

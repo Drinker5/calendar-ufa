@@ -425,14 +425,16 @@
 		//Присоединяем автозаполнение
 		$("#to").autocomplete({
 			//Определяем обратный вызов к результатам форматирования
+			minLength:0,
 			source: function(req, add){
 				//Передаём запрос на сервер
 				$.getJSON("/jquery-calendar?callback=?", req, function(data) {
 					//Создаем массив для объектов ответа
 					var suggestions = [];
 					//Обрабатываем ответ
-					$.each(data, function(i, val){								
-						suggestions.push(val.name);
+					$.each(data, function(i, val){
+						if (true)
+							suggestions.push(val.name);
 					});
 					//Передаем массив обратному вызову
 					add(suggestions);
@@ -461,7 +463,7 @@
 		//Добавляем обработчки события click для div privacy_friends
 		$("#privacy_friends").click(function(){
 			//Фокусируемся на поле 'Кому'
-			$("#to").focus();
+			$("#to").focus().autocomplete( "search", "" );
 		});
 		
 		//Добавляем обработчик для события click удаленным ссылкам
@@ -474,4 +476,12 @@
 			}				
 		});				
 	});	
+	
+	$("#privacy_nobody").click(function(){
+		$("#privacy_friends_div").hide();
+	});
+
+	$("#privacy_all").click(function(){
+		$("#privacy_friends_div").show();
+	});
 });
