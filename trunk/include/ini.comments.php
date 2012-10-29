@@ -19,6 +19,9 @@ class T_COMMENT {
 	    elseif(isset($data['akcia_id'])){
 	    	$where = " akcia_id=".varr_int($data['akcia_id']);
 	    }
+        elseif(isset($data['wlist_id'])){
+	    	$where = " wlist_id=".varr_int($data['wlist_id']);
+	    }
 	    elseif(isset($data['photo_id'])){
 	    	$where = " photo_id=".varr_int($data['photo_id']);
 	    }
@@ -53,8 +56,11 @@ class T_COMMENT {
 	    	$where = " shop_id=".varr_int($data['shop_id']);
 	    }
 	    elseif(isset($data['akcia_id'])){
-	    	$where = " akcia_id=".varr_int($data['akcia_id']);
+            $where = " akcia_id=".varr_int($data['akcia_id']);
 	    }
+        elseif(isset($data['wlist_id'])){
+            $where = " wlist_id=".varr_int($data['wlist_id']);
+        }
 	    elseif(isset($data['photo_id'])){
 	    	$where = " photo_id=".varr_int($data['photo_id']);
 	    }
@@ -63,8 +69,8 @@ class T_COMMENT {
 	    if($rows > 0) $limit = "LIMIT $begin,$rows";
 	    
 	    $result = $MYSQL->query("SELECT $tbcomments.id, IFNULL($tbcomments.parent,0) parent, $tbcomments.data, $tbcomments.msg, $tbusers.user_wp, $tbusers.firstname, $tbusers.lastname
-	                                FROM $tbcomments
-	                              INNER JOIN $tbusers ON $tbusers.user_wp = $tbcomments.user_wp
+	                             FROM $tbcomments
+	                             INNER JOIN $tbusers ON $tbusers.user_wp = $tbcomments.user_wp
 	                             WHERE $where ORDER BY $tbcomments.data $order
 	                             $limit");
 	    
@@ -104,6 +110,10 @@ class T_COMMENT {
 	    elseif(isset($data['akcia_id'])){
 	    	$pole  = "akcia_id";
 	    	$value = varr_int($data['akcia_id']);
+	    }
+        elseif(isset($data['wlist_id'])){
+	    	$pole  = "wlist_id";
+	    	$value = varr_int($data['wlist_id']);
 	    }
 	    elseif(isset($data['photo_id'])){
 	    	$pole  = "photo_id";

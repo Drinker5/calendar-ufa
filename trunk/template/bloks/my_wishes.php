@@ -155,13 +155,13 @@
  });
 
  //Comments
- function CommentsAction(id,type,n){
+ function CommentsAction(id,type,n,par){
    var msg    = $("#comments-" + id + "-add").val(),
    	   count  = $("#comments-" + id + "-count0").get(0);
    $.ajax({
      url:'/jquery-comments',
      type:'POST',
-     data:{type:type,id:id,msg:msg,n:n,page:'akcia'},
+     data:{type:type,id:id,msg:msg,n:n,page:'akcia',par:par},
      cache:false,
      success: function(data){
        var html,
@@ -188,19 +188,20 @@
      }
    });
  }
- function CommentsShow(id,num){
+ function CommentsShow(id,num,par){
    var idCommentsFull = $('#comments-' + id + '-full');
 
    $(this).toggle(function(){
      $.ajax({
        url:'/jquery-comments',
        type:'POST',
-       data:{type:'show',id:id,num:num},
+       data:{type:'show',id:id,num:num,page:'akcia',par:par},
        cache:false,
        success: function(data){
          var html;
          if(data){
            html = jQuery.parseJSON(data);
+           //console.log(html.html);
            idCommentsFull.append(html.html);
            idCommentsFull.slideDown('slow');
          }

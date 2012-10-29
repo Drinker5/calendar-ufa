@@ -427,7 +427,7 @@ $(document).ready(function(){
     $('input[name=sex_name_user]').click(function(){GetMaritalStatus( $(this).val(), $(marital_status).val() ); $(marital_status).selectBox('refresh'); });
 });
 
-ffunction GetMaritalStatus(sex,defaults)
+function GetMaritalStatus(sex,defaults)
 {
     var default_status = defaults || 0;
     var select_of_marital_status = $('select[name=marital_status]');

@@ -3,8 +3,12 @@ switch(@$_POST['type'])
 {
     case'show':
 		if(isset($_POST['id']) && $_POST['id'] > 0 && isset($_POST['num']) && $_POST['num'] > 0){
-		  if (isset($_POST['page']) && $_POST['page'] == 'akcia')
-            $_fullList=$COMMENTS->ShowComments(array('akcia_id'=>$_POST['id']),$_POST['num'],0,'ASC');
+		  if (isset($_POST['page']) && $_POST['page'] == 'akcia'){
+            if (isset($_POST['par']) && $_POST['par'] == 'akcia')
+                $_fullList=$COMMENTS->ShowComments(array('akcia_id'=>$_POST['id']),$_POST['num'],0,'ASC');
+            else
+                $_fullList=$COMMENTS->ShowComments(array('wlist_id'=>$_POST['id']),$_POST['num'],0,'ASC');
+          }
           else
 			$_fullList=$COMMENTS->ShowComments(array('lenta_id'=>$_POST['id']),$_POST['num'],0,'ASC');
 
@@ -28,12 +32,17 @@ switch(@$_POST['type'])
                             </div>';
 				echo json_encode(array('html'=>$_html));
 			}
+            else echo json_encode(array('html'=>"xxx"));
 		}
 	break;
 	case'add':
 		if(isset($_POST['id']) && $_POST['id'] > 0 && isset($_POST['msg']) && strlen(trim($_POST['msg'])) > 0){
-    		if (isset($_POST['page']) && $_POST['page'] == 'akcia')
+    		if (isset($_POST['page']) && $_POST['page'] == 'akcia'){
+    		  if (isset($_POST['par']) && $_POST['par'] == 'wlist')
+                $comment_id = $COMMENTS->Add(array('wlist_id'=>$_POST['id']),$_POST['msg']);
+              else
                 $comment_id = $COMMENTS->Add(array('akcia_id'=>$_POST['id']),$_POST['msg']);
+            }
             else
                 $comment_id = $COMMENTS->Add(array('lenta_id'=>$_POST['id']),$_POST['msg']);
 

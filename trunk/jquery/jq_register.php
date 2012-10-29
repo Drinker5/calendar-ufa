@@ -1,48 +1,80 @@
 <?php
-  switch(@$_POST['type']){
-  	case 'register':
-  		if(isset($_POST['email']) && is_email($_POST['email'])){
-  			switch($USER->Add(trim($_POST['email']),trim($_POST['password']))){
-		      case  0: echo 'ok'; break;
-		      case -1: echo 'Не корректный email'; break;
-		      case -2: echo 'Ошибка выполнения скрипта'; break;
-		      case -3: echo 'Регистрация прошла успешно, но отправить письмо с активацией не удалось'; break;
-		      case -4: echo 'Такой Email уже зарегистрирован';
-	        }
-  		} else echo "Email указан не верно";
-  	break;
-  	default:
-  		echo "
-  		 <div id=\"reg-form\">
-	       <p><strong>".LANG_REGISTER_FOR_USER."</strong></p>
-	       <p id=\"idErrorMsg\" style=\"color:red\"></p>
-	       <p><input type=\"text\" id=\"user-reg-mail\" placeholder=\"Email\" class=\"brdrd\" /></p>
-	       <p><input type=\"password\" id=\"user-reg-password\" placeholder=\"Пароль\" class=\"brdrd\" /></p>
-	       <p><input type=\"checkbox\" checked=\"checked\" class=\"checkbox\" safari=1 id=\"user-accordance\" disabled /> С правилами <b>".sys_copy."</b> согласен </p>
-	       <span class=\"clr-but clr-but-blue\"><center>".loading_clock."</center><div id=\"btnEnter\"><sub></sub><a href=\"#\" id=\"reg-form-but\" onClick=\"return false;\">".LANG_BTN_REGISTER_2."</a><sup></sup></div></span>
-         </div>
-         <script>
-           $('#loading').css('display','none');
-           $('#reg-form-but').click(function(){
-              $('#btnEnter').css('display','none'); $('#loading').css('display','block');
-              $.ajax({
-	            url:'/jquery-register',
-	            cache:false, type:'POST',
-	            data: {type:'register',email:$('#user-reg-mail').val(),password:$('#user-reg-password').val()},
-	            success:function(result){
-	   	          if(result == 'ok'){
-	   	            $('#idErrorMsg').html('<font style=\"color:green\">Регистрация прошла успешно! Вам выслано письмо с активацией.</font>');
-	   	            $('#loading').css('display','none');
-	   	          } else {
-	   	            $('#idErrorMsg').html(result);
-	   	            $('#loading').css('display','none');
-	   	            $('#btnEnter').css('display','block');
-	   	          }
-	            }
-	          });
-           });
-         </script>
-  		";
-  	break;
-  }
+global $MYSQL;
+$errors = array();
+
+function filter_param($val){
+    return trim(htmlspecialchars(addslashes($val)));
+}
+
+
+function empty_check($info)
+{
+    global $errors;
+    foreach ($info as $key => $value)
+        if (strlen($value) == 0 || $value='0')
+            $errors[] = "Поле $key обязательно для заполнения";
+}
+
+function pass_check($pass)
+{
+    global $errors;
+    if (strlen($pass)<5)
+        $errors[] = "Пароль меньше 5 символов";
+}
+
+function mail_check($mail)
+{
+    global $MYSQL;
+    global $errors;
+    $tbusers  = "pfx_users";
+    if (!is_email($mail))
+        $errors[] = "Введен некорректный mail";
+
+    $result = $MYSQL->query("SELECT Count(*) FROM $tbusers WHERE email='$mail'");
+    if($result[0]['count'] > 0)
+        $errors[] = "К сожалению, данный email занят";
+
+}
+
+function phone_check($phone)
+{
+    global $errors;
+    if (strlen($phone)<11 || ! is_numeric($phone))
+        $errors[] = "Ошибка при вводе номера телефона";
+}
+
+
+$userinfo_raw = json_decode($_POST['userinfo'],true);
+$userinfo = array_map("filter_param", $userinfo_raw);
+$userinfo['phone'] = preg_replace("(\s|\(|\)|\+|\-)",'', $userinfo['phone']);
+empty_check($userinfo);
+pass_check($userinfo['password']);
+mail_check($userinfo['email']);
+phone_check($userinfo['phone']);
+$userinfo['birthday_day'] = (int)$userinfo['birthday_day'];
+$userinfo['birthday_month'] = (int)$userinfo['birthday_month'];
+$userinfo['birthday_year'] = (int)$userinfo['birthday_year'];
+$userinfo['town'] = (int)$userinfo['town'];
+$userinfo['country'] = (int)$userinfo['country'];
+$userinfo['sex'] = (int) $userinfo['sex'];
+$response = array();
+//Есть ошибки?
+if (count($errors)>0){
+    $response['status'] = -1; //Ошибки в заполнении формы
+    $response['errors'] = $errors; // Список ошибок
+    echo json_encode($response);
+    die();
+}
+global $USER;
+$result = $USER->Add($userinfo);
+if ($result>=0)
+{
+    $response['status'] = 0; // все ОК, пользователю отправили письмо
+    echo json_encode($response);
+    die();
+}
+$response['status'] = -2;
+$response['errors'] = array('Произошла неизвестная ошибка. Попробуйте повторить позднее');
+echo json_encode($response);
+die();
 ?>
