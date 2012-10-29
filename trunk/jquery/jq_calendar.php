@@ -101,8 +101,8 @@ switch ($op) {
 						'end' => $row['data_end'],
 						'color' => $color,
 						'textColor' => 'white',
-						'editable' => true
-						//'allDay' => false,
+						'editable' => true,
+						'allDay' => false,
 					);
 				}
 			break;
@@ -125,8 +125,8 @@ switch ($op) {
 						'end' => $row['data_end'],
 						'color' => $color,
 						'textColor' => 'white',
-						'editable' => false
-						//'allDay' => false,
+						'editable' => false,
+						'allDay' => false,
 					);
 				}
 			break;

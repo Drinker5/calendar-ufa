@@ -12,7 +12,7 @@
 	var format_month = "MM";
 	var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 	var format_year = "yyyy";
-
+	var lastView;
 	/* Источники данных */
 	var fcSources = { 
 		akcia: { 
@@ -117,9 +117,9 @@
 		ampm: false
 	};
 	$.timepicker.setDefaults($.timepicker.regional['ru']);
-	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy'});
-	event_end.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy'});
-	event_after.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy'});
+	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
+	event_end.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
+	event_after.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
 	/* инициализируем FullCalendar */
 	calendar.fullCalendar({
 		firstDay: 1,
@@ -131,10 +131,9 @@
 		minTime: 8,
 		maxTime: 24,
 		ignoreTimezone: false,
+		lazyFetching: true,
 		 /* формат времени выводимый перед названием события */
 		timeFormat: '',
-		
-		
 		header: {
 		left: 'prev,next',
 		center: 'title',
@@ -292,7 +291,26 @@
 		],
 		
 		viewDisplay: function(view) {
-		
+			if (lastView == undefined) { lastView = 'firstRun';  }
+			if (view.name != lastView )
+			{
+				if (view.name == 'agendaDay') 
+				{ 
+					lastView = view.name;
+					var layer1 = '<span id="days-layer1" style="float:right;">'+
+								'<div title="Добавить" class="small-icon icon-green-plus" id="qwer1" style="height:15px !important"> </div></span>';
+					$(".fc-view-agendaDay .fc-widget-content").hover(
+						function(){
+							$(this).children("div").append(layer1);
+							$("#qwer1").hide();
+							$("#qwer1").fadeIn(300);
+						},
+						function(){
+							$('#days-layer1').remove();
+						}
+					);
+				}
+			}
 		},
 
 	});
@@ -300,7 +318,7 @@
 	/* отображение + в дне при наведении */
 	var layer = '<span id="days-layer" style="float:right;">'+
 						'<div title="Добавить" class="small-icon icon-green-plus" id="qwer" style=""> </div></span>';
-	$(".fc-widget-content").hover(
+	$(".fc-view-month .fc-widget-content").hover(
 		function(){
 			$(this).children("div").children(".fc-day-number").append(layer);
 			$("#qwer").hide();
@@ -310,6 +328,8 @@
 			$('#days-layer').remove();
 		}
 	);
+
+	
 
 	/* обработчик формы добавления */
 	form.dialog({ 
