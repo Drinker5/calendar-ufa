@@ -33,9 +33,13 @@ switch ($op) {
 			 "' . date("Y-m-d H:i:s", strtotime($start)) . '",
 			 "' . date("Y-m-d H:i:s", strtotime($end)) . '", 
 			 "' . $type . '")';
+
 		if (mysql_query($sql)) {
 			echo mysql_insert_id();
 		}
+			//!!!!!!!!!!!!!
+			$USER->AddDeystvie(0,$_SESSION['WP_USER']['user_wp'],10,mysql_insert_id());
+			//!!!!!!!!!!!!!!
 		break;
 	case 'edit':
 		$sql = 'UPDATE discount_users_events SET 	data_start = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
