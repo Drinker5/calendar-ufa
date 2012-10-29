@@ -93,7 +93,8 @@ switch ($op) {
 			case 'user_events':
 				$sql = 'SELECT *
 						FROM discount_users_events
-						WHERE owner_wp = '.$_SESSION['WP_USER']['user_wp'];
+						WHERE deleted = 0 
+						AND owner_wp = '.$_SESSION['WP_USER']['user_wp'];
 				$json = Array();
 				$result = mysql_query($sql);
 				$color = '#94d11f'; 
@@ -115,8 +116,9 @@ switch ($op) {
 						FROM discount_users_events
 						LEFT OUTER JOIN discount_users_friends ON discount_users_friends.friend_wp = discount_users_events.owner_wp AND discount_users_friends.good = 1
 						LEFT OUTER JOIN discount_users_events_visible ON discount_users_events_visible.event_id = discount_users_events.id 
-						WHERE discount_users_events_visible.friend_wp = '.$_SESSION['WP_USER']['user_wp'].'
-						OR (discount_users_events.visible_all = 1 AND discount_users_friends.user_wp = '.$_SESSION['WP_USER']['user_wp'].')';
+						WHERE discount_users_events.deleted = 0 
+						AND (discount_users_events_visible.friend_wp = '.$_SESSION['WP_USER']['user_wp'].'
+						OR (discount_users_events.visible_all = 1 AND discount_users_friends.user_wp = '.$_SESSION['WP_USER']['user_wp'].'))';
 				$json = Array();
 				$result = mysql_query($sql);
 				$color = '#469ad7'; 
@@ -164,23 +166,42 @@ switch ($op) {
 		echo json_encode($json);
 		break;
 	case 'delete':
-		$sql = 'INSERT INTO discount_podpiska_ban (user_wp, akcia_id) VALUES ("' .$_SESSION['WP_USER']['user_wp']. '", "'.$id.'")';
+		/*$sql = 'INSERT INTO discount_podpiska_ban (user_wp, akcia_id) VALUES ("' .$_SESSION['WP_USER']['user_wp']. '", "'.$id.'")';
+		if (mysql_query($sql)) {
+			echo $id;
+		}*/
+		$sql = 'UPDATE discount_users_events SET deleted = 1 WHERE id = '.$id;
 		if (mysql_query($sql)) {
 			echo $id;
 		}
+		
 		break;
 }
 
 if(isset($_GET["term"])){
 	$param = $_GET["term"];
+	
+	require_once("include/translit_ru.php");
+	$param_en = translit_ru($param);
+	/*$param_rus = translit_lat($param);*/
 	//Заправшиваем базу данных
-	$query = mysql_query("SELECT * FROM `discount_users` WHERE `firstname` REGEXP '^$param' OR `lastname` REGEXP '^$param'");
+	$query = mysql_query("SELECT DISTINCT `discount_users`.* 
+						FROM `discount_users_friends` 
+						INNER JOIN `discount_users` ON `discount_users`.`user_wp` = `discount_users_friends`.`friend_wp` 
+						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']."
+						AND (UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param') 
+						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param')
+						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_en') 
+						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_en'))");/*
+						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_rus') 
+						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_rus'))");*/
 	
 	//строим массив результата/ы
 	for ($x = 0, $numrows = mysql_num_rows($query); $x < $numrows; $x++) {
 		$row = mysql_fetch_assoc($query);
     
-		$friends[$x] = array("name" => $row["firstname"].' '.$row['lastname']);		
+		$friends[$x] = array("friend_wp" => $row["user_wp"],
+							"name" => $row["firstname"].' '.$row['lastname']);		
 	}
 	
 	//Выводим JSON на страницу
