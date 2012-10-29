@@ -124,6 +124,7 @@
 	calendar.fullCalendar({
 		firstDay: 1,
 		weekMode: 'variable',
+		slotMinutes: 60,   
 		height: 500,
 		editable: true,
 		allDaySlot: false,
@@ -132,8 +133,7 @@
 		ignoreTimezone: false,
 		 /* формат времени выводимый перед названием события */
 		timeFormat: '',
-		selectable: true,
-		selectHelper: true,
+		
 		
 		header: {
 		left: 'prev,next',
@@ -145,7 +145,6 @@
 			week: 'ddd d/M',
 			day: 'dddd d/M'
 		}, 
-
 		monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
 		monthNamesShort: ['Янв.','Фев.','Март','Апр.','Май','Июнь','Июль','Авг.','Сент.','Окт.','Ноя.','Дек.'],
 		dayNames: ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],
@@ -160,7 +159,19 @@
 			week: "Неделя",
 			day: "День"
 		},
-		
+		selectable: true,
+		selectHelper: true,
+		/* обработчик выбора промежутка для создания эвента */
+		select: function(start, end, allDay) {
+			var DateStart = $.fullCalendar.formatDate(start, format);
+			var DateEnd = $.fullCalendar.formatDate(end, format);
+			event_start.val(DateStart);
+			event_end.val(DateEnd);
+			var Month = parseInt($.fullCalendar.formatDate(start, format_month),10);
+			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(start, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(start, format_year));
+			formOpen('add');
+			calendar.fullCalendar('unselect');
+		},
 		/* обработчик события клика по определенному дню */
 
 		dayClick: function(event, allDay, jsEvent, view) {
