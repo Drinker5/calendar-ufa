@@ -63,7 +63,6 @@ switch($_URLP[1]){
 	break;
 
 	case 'seltowns': // Выбор города в профиле
-	    if(isset($_SESSION['WP_USER']))
 		require_once(path_root."jquery/jq_towns.php");
 	break;
 

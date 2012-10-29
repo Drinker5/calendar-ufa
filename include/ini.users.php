@@ -6,41 +6,34 @@ require_once("ini.comments.php");
 class T_USERS {
 
 //!Пользователи — добавление нового пользователя
-	function Add($email,$passw){
+	function Add($userinfo){
 		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
 	    $GLOBALS['FUNCTION'] = __FUNCTION__;
-
 		$tbusers  = "pfx_users";
+		$passw= tep_encrypt_password($userinfo['password'].pfx_passw);
+		$date = $userinfo['birthday_year'].'-'.$userinfo['birthday_month'].'-'.$userinfo['birthday_day'];
+		$session = md5($userinfo['email']."::".date("d.m.Y")."::".$MYSQL->getmicrotime()); // Генерим временную сессию
+		$result  = $MYSQL->query("INSERT INTO $tbusers (datareg,email,session,passw,firstname,lastname,mobile,town_id,sex,birthday) VALUES (now(),'{$userinfo['email']}','$session','$passw','{$userinfo['firstname']}','{$userinfo['lastname']}','{$userinfo['phone']}',{$userinfo['town']},{$userinfo['sex']},STR_TO_DATE('$date','%Y-%m-%d'))");
+		if($result > 0){
+		$MYSQL->query("INSERT INTO pfx_users_ihere (data,user_wp,address_id,online) VALUES (now(),$result,0,0)");
+         $Msg  = "Здравствуйте!<br /><br />";
+         $Msg .= "Это письмо отправленно Вам с сервиса ".sys_copy."<br />";
+	     $Msg .= "Этот email адрес был зарегистрирован в нашем сервисе.<br />";
+	     $Msg .= "Если Вы не регистрировались на нашем сайте ".sys_url.", то можете удалить данное письмо<br /><br />";
+	     $Msg .= "Если регистрацию проходили Вы, то нажмите мышкой на ссылку указанную ниже для активации своего аккаунта<br />";
+	     $Msg .= "--- Ссылка для Активации Вашего аккаунта ---<br />";
+	     $Msg .= "    <a href=\"".sys_url."active-$session\">".sys_url."active-$session</a><br /><br />";
+	     $Msg .= "С Уважением, ".sys_copy." ".sys_url."<br /><br />";
 
-		if(is_email($email)){
-			$result = $MYSQL->query("SELECT Count(*) FROM $tbusers WHERE email='$email'");
-			if($result[0]['count'] > 0) return -4;
-
-			$passw= tep_encrypt_password($passw.pfx_passw);
-
-			$session = md5($email."::".date("d.m.Y")."::".$MYSQL->getmicrotime()); // Генерим временную сессию
-			$result  = $MYSQL->query("INSERT INTO $tbusers (datareg,email,session,passw) VALUES (now(),'$email','$session','$passw')");
-
-			if($result > 0){
-	         $Msg  = "Здравствуйте!<br /><br />";
-	         $Msg .= "Это письмо отправленно Вам с сервиса ".sys_copy."<br />";
-		     $Msg .= "Этот email адрес был зарегистрирован в нашем сервисе.<br />";
-		     $Msg .= "Если Вы не регистрировались на нашем сайте ".sys_url.", то можете удалить данное письмо<br /><br />";
-		     $Msg .= "Если регистрацию проходили Вы, то нажмите мышкой на ссылку указанную ниже для активации своего аккаунта<br />";
-		     $Msg .= "--- Ссылка для Активации Вашего аккаунта ---<br />";
-		     $Msg .= "    <a href=\"".sys_url."active-$session\">".sys_url."active-$session</a><br /><br />";
-		     $Msg .= "С Уважением, ".sys_copy." ".sys_url."<br /><br />";
-
-		     if(send_mail($email, $Msg, LANG_BTN_REGISTER.' '.sys_copy))
-			  return 0; // Регистрация успешна
-		     else
-		      return -3; // Регистрация успешна но письмо не отправилось \\ Херово :)
-			}
-			return -2; // Не удалось вставить строку в БД
+	     if(send_mail($email, $Msg, LANG_BTN_REGISTER.' '.sys_copy))
+		  return 0; // Регистрация успешна
+	     else
+	      return -3; // Регистрация успешна но письмо не отправилось \\ Херово :)
 		}
-		return -1; // Не корректный email
+		return -2; // Не удалось вставить строку в БД
+		
 	}
 
 
@@ -2977,7 +2970,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 
     if ($type == 'wishes'){
         if ($par == 'performed'){
-            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                FROM $tbhochu
         		                INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
@@ -2986,7 +2979,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         		                LIMIT $begin,$rows";
         }
         else{
-            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                FROM $tbhochu
         		                INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
@@ -3157,7 +3150,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         }
         else{
             if ($par == 'performed')
-                $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+                $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                             FROM $tbhochu
         		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
@@ -3165,7 +3158,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         		                            ORDER BY $tbhochu.adddata DESC
         		                            LIMIT $wish_cnt,$rows";
             else
-        		$sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.wlist_name, $tbhochu.wishes_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+        		$sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.wlist_name, $tbhochu.wishes_id, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                             FROM $tbhochu
         		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
@@ -3181,7 +3174,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
             foreach($result as $key=>$value){
             	$total_array[] = array(
             	   'akcia_id'    => $value['akcia_id'],
-            	   'hochu_id'    => $value['id'],
+            	   'id'          => $value['id'],
                    'status'      => $value['status'],
                    'reason'      => $value['reason'],
                    'adddata'     => $value['adddata'],
@@ -3189,6 +3182,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
             	   'amount'      => $value['amount'],
             	   'mtext'       => htmlspecialchars(stripslashes(trim($value['mtext']))),
             	   'currency'    => $value['mask'],
+                   'adress_id'   => $value['adress_id']
             	);
             }
     		}
@@ -3199,7 +3193,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         return true;
 	}
 
-    function ShowPlace($akcia_id){
+    function ShowPlace($adress_id){
    		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
@@ -3211,7 +3205,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         $tbshops_adress = "pfx_shops_adress";
 
         /*
-        $result = $MYSQL->query(" SELECT  $tbhochu.akcia_id, $tbakcia.shop_id, $tbshops.name, $tbshops_adress.adress
+        $result = $MYSQL->query(" SELECT $tbhochu.akcia_id, $tbakcia.shop_id, $tbshops.name, $tbshops_adress.adress
                                   FROM $tbhochu
                                   INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
                                   INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
@@ -3219,12 +3213,20 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
                                   WHERE $tbhochu.user_wp = ".(int)@$_SESSION['WP_USER']['user_wp']." AND $tbhochu.akcia_id = ".(int)$akcia_id."
         ");
         */
-        $result = $MYSQL->query(" SELECT  $tbhochu.akcia_id, $tbakcia.shop_id, $tbshops.name, $tbshops_adress.adress
+        /*
+        $result = $MYSQL->query(" SELECT $tbhochu.akcia_id, $tbakcia.shop_id, $tbshops.name, $tbshops_adress.adress
                                   FROM $tbhochu
                                   INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
                                   INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
                                   INNER JOIN $tbshops_adress ON $tbshops_adress.id = $tbhochu.adress_id
                                   WHERE $tbhochu.user_wp = ".(int)@$_SESSION['WP_USER']['user_wp']." AND $tbhochu.akcia_id = ".(int)$akcia_id."
+        ");
+        */
+        $result = $MYSQL->query(" SELECT $tbhochu.adress_id, $tbhochu.akcia_id, $tbshops_adress.shop_id, $tbshops.name, $tbshops_adress.adress
+                                  FROM $tbhochu
+                                  INNER JOIN $tbshops_adress ON $tbshops_adress.id = $tbhochu.adress_id
+                                  INNER JOIN $tbshops ON $tbshops_adress.shop_id = $tbshops.id
+                                  WHERE $tbhochu.user_wp = ".(int)@$_SESSION['WP_USER']['user_wp']." AND $tbhochu.adress_id = ".(int)$adress_id."
         ");
 
         if(is_array($result) && count($result)){
