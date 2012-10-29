@@ -29,7 +29,7 @@
 		$tbdeystvie         ='pfx_deystvie';
 		$tbsettings_deystvie='pfx_users_settings_lenta';
 		$tbuserskrugi       ='pfx_users_krugi';
-
+		$tbusers_events		='pfx_users_events';
 		for($i=0;$i<$count;$i++){
 			//Подарок
 			if($list[$i]['deystvie']==2){
@@ -72,7 +72,24 @@
 <?php
 				}
 			}
-
+				//Создание события
+				elseif($list[$i]['deystvie']==10){
+				$userfrom=$USER->Info_min($list[$i]['user_wp']);
+				
+				//$EventName = $MYSQL->query("SELECT title FROM $tbusers_events WHERE id = ".$list[$i]['id_deystvie']."");
+				if(is_array($userfrom)){
+?>
+					<tr class="uveditem">
+						<td><i class="small-icon icon-whos-near"></i></td>
+						<td><?=OnlineStatus($userfrom['status_chat'],'')?></td>
+						<td class="info"><b><a href="/<?=$list[$i]['user_wp']?>"><?=trim($userfrom['firstname'].' '.$userfrom['lastname'])?></a></b> создал событие</td>
+						<td class="cursive"><?=$list[$i]['date']?>&nbsp;&nbsp;</td>
+						<td class="remove opacity_link"><i class="small-icon icon-delete" id="u<?=$list[$i]['id']?>"></i></td>
+					</tr>
+<?php
+				}
+			}
+			//
 		}
 
 		//PreArray($list);//Массив с уведомлениями
