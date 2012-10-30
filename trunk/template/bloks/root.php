@@ -29,9 +29,13 @@
 						$left_menu=1;
 						$file='bloks/my_calendar.php';
 						$TITLE='Мой календарь';
-						$scripts.="<script type=\"text/javascript\" src=\"js/common.calendar.js\"></script>
-								   <script type=\"text/javascript\" src=\"js/plugins/others/jquery.fullcalendar.js\"></script>
-								   <script type=\"text/javascript\" src=\"js/plugins/others/jquery-ui-timepicker-addon.js\"></script>
+						$scripts.="	<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/gleb.css\" />
+									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/aigul.css\" />
+									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/jquery-ui-timepicker-addon.css\" />
+									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/fullcalendar.css\" />
+									<script type=\"text/javascript\" src=\"js/common.calendar.js\"></script>
+									<script type=\"text/javascript\" src=\"js/plugins/others/jquery.fullcalendar.js\"></script>
+									<script type=\"text/javascript\" src=\"js/plugins/others/jquery-ui-timepicker-addon.js\"></script>
 								   ";
 					break;
 
