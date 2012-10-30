@@ -16,7 +16,8 @@
       if (is_array($myWishes)){
         $html   ='';
         $cart   ='';
-        $action = '';
+        $action ='';
+        $place  ='';
         //идентификатор желания или вишлиста
         $id='';
 
@@ -54,6 +55,7 @@
 
               //Место
               $place_array=$USER->ShowPlace($myWishes[$i]['adress_id']);
+              $place = str_replace("::",", ",$place_array[0]['adress']);
 
               //Комментарии
               $_comments='';
@@ -88,7 +90,9 @@
               if ($myWishes[$i]['akcia_id'] == 0){
                 $html .= "<div id=\"wish".$id."\" class=\"wish-item group toggle-stop\">
                             <div class=\"big-avatar bordered fl_l\">
-                                <img src=\"/pic/wishlist.png\">
+                                <a href=\"/wlist-".$id."\" class=\"wish-target\">
+                                <img src=\"/pic/wishlist.jpg\">
+                                </a>
                             </div>
                             <div class=\"fl_r\">
                                 <ul class=\"wishlist-actions\">
@@ -103,13 +107,13 @@
                             </div>
 
                             <div class=\"wish-content wrapped\">
-                                <strong>Wishlist: </strong><a href=\"/gift-".$id."\" class=\"wish-target\"><strong>".$myWishes[$i]['wlist_name']."</strong></a><span class=\"date\">".ShowDateRus($myWishes[$i]['adddata'])."</span>
+                                <strong>Wishlist: </strong><a href=\"/wlist-".$id."\" class=\"wish-target\"><strong>".$myWishes[$i]['wlist_name']."</strong></a><span class=\"date\">".ShowDateRus($myWishes[$i]['adddata'])."</span>
                                 <p>
                                     <!--
                                     Подарок к: <strong> Check DATE </strong>
                                     <br>
                                     -->
-                                    Место получения: <strong> ".$place_array[0]['name']." на ".$place_array[0]['adress']."</strong>
+                                    Место получения: <strong> ".$place_array[0]['name']." на ".$place."</strong>
                                 </p>";
                                 if ($myWishes[$i]['reason'] == '')
                                   $html .= "<p id=\"p_reason".$id."\" style=\"display: none;\">
@@ -125,7 +129,9 @@
                 $wish_cnt++;
                 $html .= "<div id=\"wish".$id."\" class=\"wish-item group toggle-stop\">
                             <div class=\"big-avatar bordered fl_l\">
+                                <a href=\"/gift-".$id."\" class=\"wish-target\">
                                 <img src=\"".$photo[$i]['foto']."\">
+                                </a>
                             </div>
                             <div class=\"fl_r\">
                                 <ul class=\"wishlist-actions\">
@@ -156,7 +162,7 @@
                                     Подарок к: <strong> Check DATE </strong>
                                     <br>
                                     -->
-                                    Место получения: <strong> ".$place_array[0]['name']." на ".$place_array[0]['adress']."</strong>
+                                    Место получения: <strong> ".$place_array[0]['name']." на ".$place."</strong>
                                 </p>";
                                 if ($myWishes[$i]['reason'] == '')
                                   $html .= "<p id=\"p_reason".$id."\" style=\"display: none;\">

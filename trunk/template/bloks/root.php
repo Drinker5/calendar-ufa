@@ -280,7 +280,7 @@
 			$gr_id    =varr_int(@$_URLP[2]);
 			$shop_id  =varr_int(@$_URLP[3]);
 			if($type_id==0)header("Location: /".@$_SESSION['WP_USER']['user_wp']);
-			$left_menu=2;
+			$left_menu=1;
 
 			require_once(path_modules.'ini.groups.php');
 			$arrGROUPS = $GROUPS->ShowGroupType($type_id,0);
@@ -320,6 +320,15 @@
 			  <script type=\"text/javascript\" src=\"js/jquery.jscrollpane.min.js\"></script>
 			  <script type=\"text/javascript\" src=\"js/photoview.js\"></script>
 			";
+		break;
+
+        //Просмотр вишлиста
+        case 'wlist':
+		    $left_menu=1;
+            $wlist_id = varr_int(@$_URLP[1]);
+			$file ='bloks/wishlist.php';
+			$TITLE='Wishlist';
+			//$scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>';
 		break;
 
 		//!Кумиры

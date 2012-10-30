@@ -1,6 +1,6 @@
 <?php
 	function GiftList($rows=10,$begin=0,$type_id=0,$par='',$what=''){
-		global $USER, $MYSQL;
+		global $USER, $MYSQL, $SHOP;
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
 		$html='<p>Таких подарков у вас еще не было.</p>';
@@ -23,7 +23,7 @@
 				$avatar     =ShowAvatar($users_arr,100,100);
 				$photo      =ShowFotoAkcia($akcia_arr,100,100);
 
-				$result=$MYSQL->query("SELECT `code`, `podarok`, `msg` FROM `pfx_historypay` WHERE `id`=".$myGifts[$i]['id']);
+				$result=$MYSQL->query("SELECT `code`, `podarok`, `msg`, `address_id` FROM `pfx_historypay` WHERE `id`=".$myGifts[$i]['id']);
 				if(is_array($result)){
 					$result=$result[0];
 					$info  =unserialize($result['podarok']);
@@ -34,8 +34,9 @@
 						"shop-type"         => 'Ресторан',
 						"path-to-avatar"    => $logo,
 						"shop-page-link"    => '/shop-'.varr_int($info['shop_id']),
+						"shop-address-id"   => varr_int($result['address_id']),
+						"shop-if"           => $SHOP->isFavorite(array(varr_int($result['address_id'])))?'<a href="javascript:;" onclick="FavAction('.varr_int($result['address_id']).')"><i class="small-icon icon-favorite-place-green"></i>Любимое место</a>':'<a href="javascript:;" onclick="FavAction('.varr_int($result['address_id']).')"><i class="small-icon icon-favorite-place"></i>Добавить в любимые места</a>',
 						"shop-map"          => 'wewqewqe',
-						"shop-add-favorite" => 'dsad',
 						"gift-code"         => $result['code'],
 						"gift-message"      => trim($result['msg'])
 					);

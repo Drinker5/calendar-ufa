@@ -205,6 +205,11 @@ switch($_URLP[1]){
 		require_once(path_root."jquery/jq_shop.php");
 	break;
 
+	case 'gifts': // Подарки
+		if(isset($_SESSION['WP_USER']))
+		require_once(path_root."jquery/jq_gifts.php");
+	break;
+
     case 'invitefriends': // Вход пользователя
 		require_once(path_root."jquery/jq_invite_friends.php");
 	break;
