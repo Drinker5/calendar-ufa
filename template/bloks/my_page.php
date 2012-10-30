@@ -14,6 +14,9 @@
 	else
 		$photos='Список фотографий пуст!';
 
+	//CheckIn
+	$iHere=$USER->IHere($USER_INFO['user_wp']);
+
 	//Личная информация
 	$uMaritalSatus=array();
 	switch($USER_INFO['sex'])
@@ -81,12 +84,21 @@
 
                     <div class="fl_r">
                         <ul class="info_right">
-                            <li class="fl_r"><i class="small-icon icon-check-in"></i><b>checked-in</b> вчера в 14:35</li>
-                            <li class="blue clear popover-btn name"><h3><a href="javascript:;">Частный Клуб караоке Третьяков</a></h3></li>
+                            <li class="fl_r"><i class="small-icon icon-check-in"></i><b>checked-in</b> <?=ShowDateRus($iHere['data'])?></li>
+                            <li class="blue clear popover-btn name"><h3><a href="javascript:;"><?=$iHere['shop_name']?></a></h3></li>
                             <li>
                                 <div class="y_counter fl_r">
                                     <span class="c_name">Сейчас здесь</span>
-                                    <span class="c_digit">1</span><span class="c_digit">2</span><span class="c_digit">3</span>
+<?php
+	$cDigit ='';
+	$daysStr=strval($USER->CountWhohereShopAddress($iHere['adress_id']));
+
+	for($d=0; $d<strlen($daysStr); $d++)
+		$cDigit.='<span class="c_digit">'.$daysStr[$d].'</span>';
+
+	echo'
+                                    '.$cDigit;
+?>
                                 </div>
                             </li>
                         </ul>
@@ -461,13 +473,16 @@
 							}
 						});
 					}
+
 					function LentaSearch(){
 					}
+
 					function NewEvent(){
 					}
+
 					function CommentsAction(id,type,n){
 						var msg    = $("#comments-" + id + "-add").val(),
-							count  = $("#comments-" + id + "-count0").get(0);
+							count  = $("#comments-" + id + "-count").get(0);
 
 						$.ajax({
 							url:'/jquery-comments',
@@ -485,19 +500,19 @@
 										html = jQuery.parseJSON(data);
 										idComments.append(html.html);
 										idComments.find('.wishlist-comment group:last').slideDown('slow');
+										$("#comments-" + id + "-add").val('');
 									} else if(type=='delete'){
 										nCount--;
 										$('#comments-' + n + '-id').slideUp('slow',function(){
 											$(this).remove();
 										});
 									}
-									$('#comments-' + id + '-count0').html(nCount);
-									$('#comments-' + id + '-count1').html(nCount);
-									$('#comments-' + id + '-count2').html(nCount);
+									$('#comments-' + id + '-count').html(nCount);
 								}
 							}
 						});
 					}
+
 					function CommentsShow(id,num){
 						var idCommentsFull = $('#comments-' + id + '-full');
 
@@ -513,7 +528,6 @@
 									if(data){
 										html = jQuery.parseJSON(data);
 										idCommentsFull.append(html.html);
-										idCommentsFull.slideDown('slow');
 									}
 								}
 							});
@@ -524,6 +538,7 @@
 							});
 						});
 					}
+
 					$(window).scroll(function(){
 						if($(window).scrollTop()==$(document).height()-$(window).height()){
 							myLenta();

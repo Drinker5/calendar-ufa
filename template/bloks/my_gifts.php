@@ -82,6 +82,28 @@
 						}
 					}
 
+					function FavAction(id){
+						var type;
+
+						$.ajax({
+							url:'/jquery-shop',
+							type:'POST',
+							data:{type:'toogle',id:id},
+							cache:false,
+							success: function(data){
+								if(data){
+									type=$.parseJSON(data);
+
+									if(type=='add'){
+										$('<li id="fav-' + id + '"><a href="javascript:;" onclick="FavAction('+id+')"><i class="small-icon icon-favorite-place-green"></i>Любимое место</a></li>').replaceAll('li#fav-'+id);
+									} else if(type=='delete'){
+										$('<li id="fav-' + id + '"><a href="javascript:;" onclick="FavAction('+id+')"><i class="small-icon icon-favorite-place"></i>Добавить в любимые места</a></li>').replaceAll('li#fav-'+id);
+									}
+								}
+							}
+						});
+					}
+
 					$(window).scroll(function(){
 						if($(window).scrollTop()==$(document).height()-$(window).height()){
 							gifts();

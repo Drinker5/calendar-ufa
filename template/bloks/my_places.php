@@ -291,8 +291,8 @@
 						if(data){
 							$('.place[rel=pin' + pin + ']').slideUp('slow',function(){
 								$(this).remove();
-								//Удаляем маркер
 							});
+							$('#pin' + pin).remove();
 							//if($("#search-content").html()==''){
 							//	$("#search-content").html('Нет результатов');
 							//}
