@@ -56,6 +56,33 @@
 	*/
 	}
 
+	if(@$_URLP[0]=='type'){
+?>
+
+        <script id="gifts-categories" type="text/template">
+            <ul id="gifts-categories-list">
+            	{{#sub}}
+                <li><a href="javascript:;" onclick="setCat({{key}})">{{name}}</a></li>
+                {{/sub}}
+            </ul>
+        </script>
+
+		<script id="gift-exchange-list" type="text/template">
+			<ul class="common-list">
+				<li class="common-list-item">
+					<span class="common-list-link"><a href="javascript:;" onclick="setCurrency('RUR')">РУБ</a></span>
+				</li>
+				<li class="common-list-item">
+					<span class="common-list-link"><a href="javascript:;" onclick="setCurrency('USD')">USD</a></span>
+				</li class="common-list-item">
+				<li class="common-list-item">
+					<span class="common-list-link"><a href="javascript:;" onclick="setCurrency('EUR')">EUR</a></span>
+				</li>
+			</ul>
+		</script>
+<?php
+	}
+
 	if(@$_URLP[1]=='subscribes'){
 ?>
 		<script id="subscribe-info" type="text/template">
@@ -91,7 +118,7 @@
 						<ul>
 							<li><a href="{{{shop-page-link}}}"><i class="small-icon icon-shop-page"></i>Страница заведения</a></li>
 							<li><a href="{{{shop-map}}}"><i class="small-icon icon-check-in"></i>Посмотреть на карте</a></li>
-							<li><a href="{{{shop-add-favorite}}}"><i class="small-icon icon-favorite-place"></i>Добавить в любимые места</a></li>
+							<li id="fav-{{{shop-address-id}}}">{{{shop-if}}}</li>
 						</ul>
 					</div>
 				</div>

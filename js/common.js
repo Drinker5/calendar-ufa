@@ -131,7 +131,7 @@ jQuery(document).ready(function($) {
         .popover('setOption', 'position', 'bottom');
 
     $('.gift-search-block .big-category-icon')
-        .popover('content', $('#gifts-categories').html())
+        .popover('content', $('#gifts-categories').html(), true)
         .popover('setOption', 'horizontalOffset', -2)
         .popover('setOption', 'verticalOffset', 0)
         .popover('setOption', 'position', 'bottom');
@@ -141,6 +141,13 @@ jQuery(document).ready(function($) {
         .popover('setOption', 'horizontalOffset', -285)
         .popover('setOption', 'verticalOffset', -1)
         .popover('setOption', 'position', 'right');
+
+    $('.gift-exchange-button')
+        .popover('content', $('#gift-exchange-list').html())
+        .popover('setOption', 'horizontalOffset', -3)
+        .popover('setOption', 'verticalOffset', 5)
+        .popover('setOption', 'position', 'bottom');
+
 
     $('body').on('click', '.popover-btn', function(e) {
         var $this = $(this);

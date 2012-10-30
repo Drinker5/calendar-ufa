@@ -37,3 +37,7 @@
  position: relative;
  left: 3px;
 }
+
+.error {
+ background: pink !important;
+}

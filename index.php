@@ -26,6 +26,7 @@
 	require_once(path_root.'js/facebook/facebook.php');
 	require_once(path_modules.'ini.users.php');//Создание объекта Пользователь
 	require_once(path_modules.'ini.akcia.php');
+	require_once(path_modules.'ini.shop.php');
 
 	switch($_URLP[0]){
 		case 'active'://Активация нового пользователя
