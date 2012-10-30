@@ -126,7 +126,7 @@
 
 			if($random) $random = " RAND() "; else $random = " $tbakcia.sort ";
 
-			$result = $MYSQL->query("SELECT $tbakcia.id, $tbakcia.shop_id, $tbakcia.header, IFNULL($tbakcia.discdata1,'0000-00-00') datastart, IFNULL($tbakcia.discdata2,'0000-00-00') dataend, $tbakcia.amount, $tbakcia.currency_id, IFNULL($tbtype.dogovor,0) dogovor
+			$result = $MYSQL->query("SELECT $tbakcia.id, $tbakcia.shop_id, $tbakcia.header, IFNULL($tbakcia.discdata1,'0000-00-00') datastart, IFNULL($tbakcia.discdata2,'0000-00-00') dataend, $tbakcia.amount, $tbakcia.currency_id, IFNULL($tbtype.dogovor,0) dogovor, $tbshops.name shop_name
 			                        FROM $tbakcia
 			                       INNER JOIN $tbtype  ON $tbtype.id  = $tbakcia.idtype
 			                       INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
@@ -147,6 +147,7 @@
 	        	$array[] = array(
 	        	   'akcia_id'  => $akcia['id'],
 	        	   'shop_id'   => $akcia['shop_id'],
+	        	   'shop_name' => $akcia['shop_name'],
 	        	   'header'    => htmlspecialchars(stripslashes(trim($akcia['header']))),
 	        	   'dogovor'   => $akcia['dogovor'],
 	        	   'type_id'   => $type_id,
