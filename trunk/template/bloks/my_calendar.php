@@ -44,20 +44,21 @@
 				</div>
 			
 				
-				 <select id="event_repeat" name="s1" class="styled"><option disabled selected>Повтор...</option>
-											<option value="every_day">Каждый день</option>
-											<option value="every_week">Каждую неделю</option>
-											<option value="every_month">Каждый месяц</option>
-											<option value="every_year">Каждый год</option>
+				 <select id="event_repeat" name="s1" class="styled">
+											<option value="0" selected>Не повторять</option>
+											<option value="1">Каждый день</option>
+											<option value="7">Каждую неделю</option>
+											<option value="30">Каждый месяц</option>
+											<option value="365">Каждый год</option>
 											</select>
-				 <select id="event_complete" name="s2" class="styled"><option disabled selected>Завершить...</option>
-											<option value="no_finish">Не завершать</option>
-											<option value="after_2">После 2 раз</option>
-											<option value="after_3">После 3 раз</option>
-											<option value="after_date">После даты:</option>
+				 <select id="event_finish" name="s2" class="styled">
+											<option value="0" selected>Не завершать</option>
+											<option value="2">После 2 раз</option>
+											<option value="3">После 3 раз</option>
+											<option value="1">После даты:</option>
 											</select>
-				 <select id="event_reminder" name="s3" class="styled"><option disabled selected>Напоминания...</option>
-											<option value="not_remind">Не напоминать</option>
+				 <select id="event_reminder" name="s3" class="styled">
+											<option value="not_remind" selected>Не напоминать</option>
 											<option value="by_email">По e-mail</option>
 											<option value="in_notif">В уведомлениях</option>
 											</select>

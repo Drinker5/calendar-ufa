@@ -8,11 +8,14 @@ global $MYSQL;
 $GLOBALS['PHP_FILE'] = __FILE__;
 $GLOBALS['FUNCTION'] = __FUNCTION__;
 
+$id = @$_POST['id'];
 $start = @$_POST['start'];
 $end = @$_POST['end'];
+$after = @$_POST['after'];
 $type = @$_POST['type'];
 $op = @$_POST['op'];
-$id = @$_POST['id'];
+$repeat = @$_POST['repeat'];
+$finish = @$_POST['finish'];
 
 $b = 1;
 $color = 'red';
@@ -20,35 +23,59 @@ $color = 'red';
 
 $tbakcia = 'pfx_akcia';
 
+function DayAdd($old_date,$days){
+/*	$date_time = explode(' ',$old_date);
+	$date = explode('-',$date_time[0]);
+	$time = explode(':',$date_time[1]);
+								// mktime(hour, minute, second, month, day, year);
+	$new_date = date("Y-m-d H:i:s",mktime($time[0],$time[1],$time[2], $date[1],$date[2]+$days,$date[0]));
+*/
+	$date_time = strtotime($old_date);
+	$new_date = strtotime("+$days day", $date_time);
+	return date("Y-m-d H:i:s",$new_date);
+}
 
 switch ($op) {
 	case 'add':
-		$sql = 'INSERT INTO discount_users_events (
-			owner_wp,
-			data_start, 
-			data_end, 
-			title) 
+		$sql = 'INSERT INTO `discount_users_events` (
+			`owner_wp`,
+			`data_start`, 
+			`data_end`, 
+			`data_after`,
+			`title`,
+			`repeat`,
+			`finish`) 
 			VALUES 
 			("' . $_SESSION['WP_USER']['user_wp'] . '",
 			 "' . date("Y-m-d H:i:s", strtotime($start)) . '",
 			 "' . date("Y-m-d H:i:s", strtotime($end)) . '", 
-			 "' . $type . '")';
+			 "' . date("Y-m-d", strtotime($after)) . '", 
+			 "' . $type . '",
+			 "' . $repeat . '",
+			 "' . $finish . '")';
 
 		if (mysql_query($sql)) {
 			echo mysql_insert_id();
-		}
-			//!!!!!!!!!!!!!
 			$USER->AddDeystvie(0,$_SESSION['WP_USER']['user_wp'],10,mysql_insert_id());
-			//!!!!!!!!!!!!!!
+		}
+		break;
+	case 'editdate':
+		$sql = 'UPDATE `discount_users_events` SET 	
+				`data_start` = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
+				`data_end`	  = "' . date("Y-m-d H:i:s", strtotime($end)) . '"
+				WHERE `id` = "' . $id . '"';
+		if (mysql_query($sql)) { echo $id; }
 		break;
 	case 'edit':
-		$sql = 'UPDATE discount_users_events SET 	data_start = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
-									data_end	  = "' . date("Y-m-d H:i:s", strtotime($end)) . '",
-									title  = "' . $type . '"
-									WHERE id = "' . $id . '"';
-		if (mysql_query($sql)) {
-			echo $id;
-		}
+		$sql = 'UPDATE `discount_users_events` SET 	
+				`data_start` = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
+				`data_end`	  = "' . date("Y-m-d H:i:s", strtotime($end)) . '",
+				`data_after`	  = "' . date("Y-m-d", strtotime($after)) . '",
+				`title`  = "' . $type . '",
+				`repeat` = "' . $repeat .'",
+				`finish` = "' . $finish .'"
+				WHERE `id` = "' . $id . '"';
+		if (mysql_query($sql)) { echo $id; }
 		break;
 	case 'source':
 		switch($type){
@@ -87,8 +114,7 @@ switch ($op) {
 					);
 					
 				}
-				
-				
+
 			break;
 			case 'user_events':
 				$sql = 'SELECT *
@@ -99,16 +125,110 @@ switch ($op) {
 				$result = mysql_query($sql);
 				$color = '#94d11f'; 
 				while ($row = mysql_fetch_assoc($result)) {
-					$json[] = array(
-						'id' => $row['id'],
-						'title' => $row['title'],
-						'start' => $row['data_start'],
-						'end' => $row['data_end'],
-						'color' => $color,
-						'textColor' => 'white',
-						'editable' => true,
-						'allDay' => false,
-					);
+					if(isset($row['repeat']) && $row['repeat']!=0){ //Если повторять
+						switch ($row['finish']) //Завершение
+						{
+						case 0: //Не завершать
+							$count = 365*2; //На 2 года
+							$i=0;
+							while($i*$row['repeat'] <= $count){
+								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
+								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
+								
+								$json[] = array(
+									'id' => $row['id'],
+									'title' => $row['title'],
+									'start' => $data_start,
+									'end' => $data_end,
+									'color' => $color,
+									'textColor' => 'white',
+									'editable' => true,
+									'allDay' => false,
+								);
+								$i++;
+							}
+						break;
+						case 2: //После 2-х раз
+							for($i=0;$i<=2;$i++){
+								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
+								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
+								
+								$json[] = array(
+									'id' => $row['id'],
+									'title' => $row['title'],
+									'start' => $data_start,
+									'end' => $data_end,
+									'color' => $color,
+									'textColor' => 'white',
+									'editable' => true,
+									'allDay' => false,
+								);
+							}
+							
+						break;
+						case 3: //После 3-х раз
+							for($i=0;$i<=3;$i++){
+								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
+								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
+								
+								$json[] = array(
+									'id' => $row['id'],
+									'title' => $row['title'],
+									'start' => $data_start,
+									'end' => $data_end,
+									'color' => $color,
+									'textColor' => 'white',
+									'editable' => true,
+									'allDay' => false,
+								);
+							}
+						break;
+						
+						case 1: //После даты
+							$data_end = date("Y-m-d",strtotime($row['data_end']));
+							$data_after = date("Y-m-d",strtotime($row['data_after']));
+							$i=0;
+							while($data_end <= $data_after){
+								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
+								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
+								$json[] = array(
+									'id' => $row['id'],
+									'title' => $row['title'],
+									'start' => $data_start,
+									'end' => $data_end,
+									'color' => $color,
+									'textColor' => 'white',
+									'editable' => true,
+									'allDay' => false,
+								);
+								$i++;
+							}
+						break;
+						default: 
+							$json[] = array(
+								'id' => $row['id'],
+								'title' => $row['title'],
+								'start' => $row['data_start'],
+								'end' => $row['data_end'],
+								'color' => $color,
+								'textColor' => 'white',
+								'editable' => true,
+								'allDay' => false,
+							);
+						}
+					}
+					else {
+						$json[] = array(
+							'id' => $row['id'],
+							'title' => $row['title'],
+							'start' => $row['data_start'],
+							'end' => $row['data_end'],
+							'color' => $color,
+							'textColor' => 'white',
+							'editable' => true,
+							'allDay' => false,
+						);
+					}
 				}
 			break;
 			case 'user_friends_events':
@@ -147,7 +267,7 @@ switch ($op) {
 				$json = Array();
 				while ($row = mysql_fetch_assoc($result)) {
 					if(!isset($row['birthday'])) continue;
-					$year = '2012'; 
+					$year = '2012';  
 					$month = substr($row['birthday'],5,2);
 					$day = substr($row['birthday'],8,2);
 					$json[] = array(
