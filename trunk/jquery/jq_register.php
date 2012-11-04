@@ -46,6 +46,7 @@ function phone_check($phone)
 
 $userinfo_raw = json_decode($_POST['userinfo'],true);
 $userinfo = array_map("filter_param", $userinfo_raw);
+$userinfo['phone'] = $userinfo['phone_code'].$userinfo['phone'];
 $userinfo['phone'] = preg_replace("(\s|\(|\)|\+|\-)",'', $userinfo['phone']);
 empty_check($userinfo);
 pass_check($userinfo['password']);

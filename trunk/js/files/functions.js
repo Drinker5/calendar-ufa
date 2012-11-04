@@ -9,7 +9,8 @@ $(function() {
 	
 	$.mask.definitions['~'] = "[+-]";
 	$(".maskDate").mask("99/99/9999",{completed:function(){alert("Callback when completed");}});
-	$(".maskPhone").mask("+9 (999) 999-99-99");
+	$(".maskPhone").mask("(999) 999-99-99");
+	$(".maskCode").mask("99999");
 	$(".maskPhoneExt").mask("(999) 999-9999? x99999");
 	$(".maskIntPhone").mask("+33 999 999 999");
 	$(".maskTin").mask("99-9999999");

@@ -16,7 +16,7 @@
 					<div class="profile-avatar"><img src="<?=$USER_INFO['photo']?>" width="190" /></div>
 					<div class="profile-bottom">
 						<div class="status-wrap">
-							<span class="icon-wrap" style="position: relative;"><i class="status-icon icon-online"></i></span>
+							<?=OnlineStatus($USER_INFO['status_chat'],'')?>
 							<?=trim($USER_INFO['firstname'].' '.$USER_INFO['lastname'])?>
 						</div>
 						<div class="separator"></div>
@@ -27,8 +27,10 @@
 						</ul>
 					</div>
 					<ul class="sidebar-menu">
-		<?php if($USER_INFO['security']){ ?>
-						<li><a href="/<?=$USER_INFO['user_wp']?>-wishes"><i class="small-icon icon-wish"></i> Желания</a> <span class="notice-wrap"><?=$USER->CountIHochu($USER_INFO['user_wp'])?></span></li>
+		<?php if($USER_INFO['security']){
+						$count_hochu=$USER->CountIHochu($USER_INFO['user_wp']);
+		?>
+						<li><a href="/<?=$USER_INFO['user_wp']?>-wishes"><i class="small-icon icon-wish"></i> Желания</a> <span class="notice-wrap"><?=$count_hochu['all']?></span></li>
 						<li><a href="/<?=$USER_INFO['user_wp']?>-calendar"><i class="small-icon icon-calendar"></i> Календарь</a></li>
 						<li><a href="/<?=$USER_INFO['user_wp']?>-friends"><i class="small-icon icon-whos-near"></i> Друзья</a> <span class="notice-wrap"><?=$USER->CountFriends(0,$USER_INFO['user_wp'])?></span></li>
 						<li><a href="/<?=$USER_INFO['user_wp']?>-photoalbums"><i class="small-icon icon-photoalbum"></i> Фотоальбомы</a> <span class="notice-wrap"><?=$USER->CountPhotoAlbums($USER_INFO['user_wp'])?></span></li>

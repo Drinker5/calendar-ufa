@@ -1,4 +1,4 @@
-<?php // print_r($_POST);
+<?php
 function getCountryList()
 {
     global $MYSQL;
@@ -152,7 +152,8 @@ $(document).ready(function() {
          <input type="text" class="half fl_r ie-r tipW" original-title="Фамилiя?" name="lastname" placeholder="Фамилия" />
          <input type="text" class="full clear loginEmail tipW" original-title="Телеграфъ?" name="email" placeholder="Электронная почта" />
          <input type="password" class="full clear loginPassword tipW" original-title="Не менее 5 символовъ" name="password" placeholder="Пароль" />
-         <input type="text" class="full clear loginPhone maskPhone tipW" original-title="Телефонъ?" name="phone" placeholder="Номер телефона" />
+         <span class="t-plus">+</span> <input type="text" class="t-code clear maskCode tipE" original-title="Код страны" name="phone_code" placeholder="Код" value="">
+         <input type="text" class="t-phone clear maskPhone loginPhone tipW" original-title="Телефонъ?" name="phone" placeholder="Номер телефона" value=""/>
          <div class="searchDrop half m1 fl_l">
                <select data-placeholder="Страна" class="select" name='country'>
                   <option value=""></option>
@@ -317,8 +318,13 @@ $(document).ready(function() {
     {
       User.initial();
       User.getErrors();
+      deleteError();
       if (User.errors.length > 0)
-        $('div.reg_error').html(showError(User.errors));
+      {
+        $('div.reg_error').html('Допущены ошибки в заполнении формы.</br> Ошибочные поля выделены цветом');
+        viewError(User.errors);
+        $('div.reg_error').css({'color':'red'});
+      }
       else
       {
         var userinfo = JSON.stringify(User.userinfo);
@@ -329,11 +335,14 @@ $(document).ready(function() {
           type: "POST",
           data:{userinfo:userinfo},
           success:function(data){
-            if (data['status']<0)
+            if (data['status']<0){
               $('div.reg_error').html(showError(data.errors));
+              $('div.reg_error').css({'color':'red'});
+            }
             else
             {
               $('div.reg_error').html('<p class="success_reg">Ваша регистрация успешно завершена! На указанный email выслано письмо со ссылкой на активацию</p>');
+              $('div.reg_error').css({'color':'green'});
               setTimeout("window.location = '/'",4000);
             }
 
@@ -361,6 +370,7 @@ function forget_password(element)
  {
   var login = $('#login input[name=login]').val();
   var pass = $('#login input[name=password]').val();
+  deleteError();
   $.ajax({
     url:'/jquery-login',
     cache:false,
@@ -370,11 +380,38 @@ function forget_password(element)
       if(result == 'ok'){
        location.href='/';
       } else {
+        loginError(result);
         $('div.login_error').html('<p>'+result+'</p>');
       }
     }
   });
  }
+function loginError(text)
+{
+  var errors = {'Некорректный email':'#login input[name=login]','Поля не должны быть пустыми':'#login input[name=login], #login input[name=password]', 'Нет такого пользователя':'#login input[name=login]', 'Пароль указан не верно':'#login input[name=password]','Заполните все поля':'#login input[name=login], #login input[name=password]'};
+  $(errors[text]).addClass('error');
+}
+function viewError(list_of_error)
+{
+  var len = list_of_error.length;
+  for (i=0;i<len;i++)
+  {
+    var type = list_of_error[i][1];
+    var selector = list_of_error[i][0];
+    if (type == 'input')
+      $(selector).addClass('error');
+    else
+    {
+      var par = $(selector).parent().parent();
+      $('a',par).addClass('error');
+    }
+  }
+}
+
+function deleteError()
+{
+  $('.error').removeClass('error');
+}
 
 function showError(list_of_error){
   var html = '';
@@ -427,7 +464,8 @@ function isEmpty(val)
 }
 User = {};
 User.userinfo = {firstname:'', lastname:'', password:'', email:'', phone:'',country:'', town:'', sex:'', birthday_day:'', birthday_month:'', birthday_year:''};
-User.errorsMessage = {firstname_empty:'Не заполнено имя', lastname_empty:'Не заполнена фамилия', email_empty:'Не заполнен email',  password_empty:'Не заполнен пароль', phone_empty:'Не заполнен номер телефона',country_empty:'Не указана страна',town_empty:'Не указан город',sex_empty: 'Не указан пол', birthday_day_empty:'Не указан день рождения', birthday_month_empty:'Не указан месяц рождения', birthday_year_empty:'Не указан год рождения',mail_not_valid:'Введенный email некорректен',password_short:'Длина пароля минимум 5 символов'};
+//User.errorsMessage = {firstname_empty:'Не заполнено имя', lastname_empty:'Не заполнена фамилия', email_empty:'Не заполнен email',  password_empty:'Не заполнен пароль', phone_empty:'Не заполнен номер телефона',country_empty:'Не указана страна',town_empty:'Не указан город',sex_empty: 'Не указан пол', birthday_day_empty:'Не указан день рождения', birthday_month_empty:'Не указан месяц рождения', birthday_year_empty:'Не указан год рождения',mail_not_valid:'Введенный email некорректен',password_short:'Длина пароля минимум 5 символов'};
+User.errorsMessage = {firstname_empty:['input[name=firstname]','input'], lastname_empty:['input[name=lastname]','input'], email_empty:['input[name=email]','input'],  password_empty:['input[name=password]','input'], phone_empty:['input[name=phone]','input'], phone_code_empty:['input[name=phone_code]','input'], country_empty:['select[name=country]','select'],town_empty:['select[name=town]','select'], birthday_day_empty:['select[name=birthday_day]','select'], birthday_month_empty:['select[name=birthday_month]','select'], birthday_year_empty:['select[name=birthday_year]','select'],mail_not_valid:['input[name=email]','input'],password_short:['input[name=password]','input']};
 User.errors = [];
 
 
@@ -454,6 +492,7 @@ User.initial = function(){
   this.userinfo.password = $('input[name=password]',parent).val();
   this.userinfo.email = $('input[name=email]',parent).val();
   this.userinfo.phone = $('input[name=phone]',parent).val();
+  this.userinfo.phone_code = $('input[name=phone_code]',parent).val();
   this.userinfo.country = $('select[name=country]',parent).val();
   this.userinfo.town = $('select[name=town]',parent).val();
   this.userinfo.birthday_day = $('select[name=birthday_day]',parent).val();
@@ -466,7 +505,6 @@ User.getErrors = function(){
   this.emptyCheck();
   this.mailCheck();
   this.passwordCheck();
-  console.log(this.errors);
 };
 
  </script>
