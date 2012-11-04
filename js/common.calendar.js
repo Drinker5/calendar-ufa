@@ -19,7 +19,7 @@
 			type: 'POST',
 			url: '/jquery-calendar',cache:false, 
 			data: {	op: 'source',	type: 'akcia' },
-			error: function(id){ alert(id+' Ошибка соединения, акции'); }
+			error: function(){ alert(' Ошибка соединения, акции'); }
 		},
 		user_events : {
 			type: 'POST',
@@ -64,6 +64,7 @@
 		event_after.val("99.99.9999");
 		event_type.val("");
 		event_id.val("");
+		
 	} 
 	/* режимы открытия формы */
 	function formOpen(mode) {
@@ -119,7 +120,7 @@
 	$.timepicker.setDefaults($.timepicker.regional['ru']);
 	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
 	event_end.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
-	event_after.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
+	event_after.datepicker({dateFormat: 'mm/dd/yy', showButtonPanel: true});
 	/* инициализируем FullCalendar */
 	calendar.fullCalendar({
 		firstDay: 1,
@@ -203,7 +204,7 @@
 			if(event.editable)
 			{
 				pict_name = '../pic/edit.png';
-				pict_title = 'Показать всю информацию';						
+				pict_title = 'Редактировать';						
 			}						
 			else
 			{
@@ -242,8 +243,7 @@
 					id: event.id,
 					start: $.fullCalendar.formatDate(event.start, format),
 					end: $.fullCalendar.formatDate(event.end, format),
-					type: event.title,
-					op: 'edit'
+					op: 'editdate'
 				},
 				success: function(id){
 					calendar.fullCalendar('refetchEvents');
@@ -272,8 +272,7 @@
 					id: event.id,
 					start: $.fullCalendar.formatDate(event.start, format),
 					end: $.fullCalendar.formatDate(event.end, format),
-					type: event.title,
-					op: 'edit'
+					op: 'editdate'
 				},
 				success: function(id){
 					calendar.fullCalendar('refetchEvents');
@@ -351,7 +350,10 @@
 					data: {
 						start: event_start.val(),
 						end: event_end.val(),
+						after: event_after.val(),
 						type: event_type.val(),
+						repeat:	$("#event_repeat :selected").val(),
+						finish: $("#event_finish :selected").val(),
 						op: 'add'
 					},
 					success: function(id){
@@ -363,10 +365,10 @@
 																allDay: false,
 															});
 						calendar.fullCalendar('refetchEvents');
-					}
+					},
 				});
 				$(this).dialog('close');
-	emptyForm();
+				emptyForm();
 			}
 		},
 		{   id: 'edit',
@@ -379,7 +381,10 @@
 						id: event_id.val(),
 						start: event_start.val(),
 						end: event_end.val(),
+						after: event_after.val(),
 						type: event_type.val(),
+						repeat:	$("#event_repeat :selected").val(),
+						finish: $("#event_finish :selected").val(),
 						op: 'edit'
 					},
 					success: function(id){
@@ -426,6 +431,7 @@
 		$("#to").autocomplete({
 			//Определяем обратный вызов к результатам форматирования
 			minLength:0,
+			
 			source: function(req, add){
 				//Передаём запрос на сервер
 				$.getJSON("/jquery-calendar?callback=?", req, function(data) {
