@@ -49,7 +49,7 @@ th.ui-state-default:first-child { border-left: none; }
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a,.ui-widget-header .ui-state-highlight a { color: #363636; }
-.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {border: 1px solid #cd0a0a; background: #fef1ec url(../pic/jquery_ui/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x; color: #cd0a0a; }
+.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {border: 1px solid #cd0a0a; background: #fef1ec url(../images/jquery_ui/ui-bg_glass_95_fef1ec_1x400.png) 50% 50% repeat-x; color: #cd0a0a; }
 .ui-state-error a, .ui-widget-content .ui-state-error a, .ui-widget-header .ui-state-error a { color: #cd0a0a; }
 .ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text { color: #cd0a0a; }
 .ui-priority-primary, .ui-widget-content .ui-priority-primary, .ui-widget-header .ui-priority-primary { font-weight: bold; }
@@ -60,14 +60,14 @@ th.ui-state-default:first-child { border-left: none; }
 ----------------------------------*/
 
 /* states and images */
-.ui-icon { width: 16px; height: 16px; background-image: url(../pic/jquery_ui/ui-icons_222222_256x240.png); }
-.ui-widget-content .ui-icon {background-image: url(../pic/jquery_ui/ui-icons_222222_256x240.png); }
-.ui-widget-header .ui-icon {background-image: url(../pic/jquery_ui/ui-icons_222222_256x240.png); }
-.ui-state-default .ui-icon { background-image: url(../pic/jquery_ui/ui-icons_888888_256x240.png); }
-.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(../pic/jquery_ui/ui-icons_454545_256x240.png); }
-.ui-state-active .ui-icon {background-image: url(../pic/jquery_ui/ui-icons_454545_256x240.png); }
-.ui-state-highlight .ui-icon {background-image: url(../pic/jquery_ui/ui-icons_2e83ff_256x240.png); }
-.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(../pic/jquery_ui/ui-icons_cd0a0a_256x240.png); }
+.ui-icon { width: 16px; height: 16px; background-image: url(../images/jquery_ui/ui-icons_222222_256x240.png); }
+.ui-widget-content .ui-icon {background-image: url(../images/jquery_ui/ui-icons_222222_256x240.png); }
+.ui-widget-header .ui-icon {background-image: url(../images/jquery_ui/ui-icons_222222_256x240.png); }
+.ui-state-default .ui-icon { background-image: url(../images/jquery_ui/ui-icons_888888_256x240.png); }
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(../images/jquery_ui/ui-icons_454545_256x240.png); }
+.ui-state-active .ui-icon {background-image: url(../images/jquery_ui/ui-icons_454545_256x240.png); }
+.ui-state-highlight .ui-icon {background-image: url(../images/jquery_ui/ui-icons_2e83ff_256x240.png); }
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(../images/jquery_ui/ui-icons_cd0a0a_256x240.png); }
 
 /* positioning */
 .ui-icon-carat-1-n { background-position: 0 0; }
@@ -260,8 +260,8 @@ th.ui-state-default:first-child { border-left: none; }
 .ui-corner-all { -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; }
 
 /* Overlays */
-.ui-widget-overlay { background: #aaaaaa url(../pic/elements/ui/pageOverlay.png); opacity: .60;filter:Alpha(Opacity=60); }
-.ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(../pic/jquery_ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }
+.ui-widget-overlay { background: #aaaaaa url(../images/elements/ui/pageOverlay.png); opacity: .60;filter:Alpha(Opacity=60); }
+.ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(../images/jquery_ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }
 
 
 /* ===== UI resizable ===== */
@@ -293,7 +293,7 @@ th.ui-state-default:first-child { border-left: none; }
 
 /* ===== UI autocomplete ===== */
 
-.ui-autocomplete { position: absolute; display: none; padding: 0; z-index: 1500!important; border: 1px solid #d5d5d5; border-top: none; max-height: 185px; overflow: auto; }	
+.ui-autocomplete { position: absolute; display: none; padding: 0; z-index: 100!important; border: 1px solid #d5d5d5; border-top: none; max-height: 185px; overflow: auto; }	
 .ui-autocomplete .ui-state-hover { background: none; padding: 6px 10px 7px 32px; }
 
 /* workarounds */
@@ -363,13 +363,13 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog .ui-resizable-se { width: 14px; height: 14px; right: 5px; bottom: 5px; opacity: 0.3; }
 .ui-draggable .ui-dialog-titlebar { cursor: move; }
 
-.ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #AAA url(../pic/jquery_ui/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30; filter: Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }
+.ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #AAA url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30; filter: Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }
 
 
 /* ===== UI Slider ===== */
 
 .ui-slider { position: relative; text-align: left; }
-.ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 16px; height: 16px; cursor: default; background: url(../pic/elements/ui/handle.png) no-repeat; border: none; cursor: pointer; }
+.ui-slider .ui-slider-handle { position: absolute; z-index: 2; width: 16px; height: 16px; cursor: default; background: url(../pic/handle.png) no-repeat; border: none; cursor: pointer; }
 .ui-slider .ui-slider-handle:hover { background-position: 0 -16px; }
 .ui-slider .ui-slider-handle:active { background-position: 0 -32px; }
 
@@ -411,14 +411,15 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-datepicker-inline { width: 100%; box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; margin-top: 35px; }
 #sidebar .ui-datepicker-inline, .widget .ui-datepicker-inline { margin-top: 0; }
 .formRow .ui-datepicker-inline { width: 195px; }
-.ui-datepicker .ui-datepicker-header { position:relative; padding: 8px 0 7px 0; border:0px; font-weight: bold; font-size: 11px; width: 100%; color: #636363; text-shadow: 0 1px white; border-bottom: 1px solid #CDCDCD; border-radius: 0!important; box-shadow: 0 1px 0 #fff; -webkit-box-shadow: 0 1px 0 #fff; -moz-box-shadow: 0 1px 0 #fff; background: #F8F8F8; background: -moz-linear-gradient(top, #F8F8F8 0%, #ececec 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F8F8F8), color-stop(100%,#ececec)); background: -webkit-linear-gradient(top, #F8F8F8 0%,#ececec 100%); background: -o-linear-gradient(top, #F8F8F8 0%,#ececec 100%); background: -ms-linear-gradient(top, #F8F8F8 0%,#ececec 100%); background: linear-gradient(top, #F8F8F8 0%,#ececec 100%); filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#ececec',GradientType=0 ); }
+.ui-datepicker .ui-datepicker-header, .ui-timepicker-div .ui-widget-header { position:relative; padding: 8px 0 7px 0; border:0px; font-weight: bold; font-size: 11px; width: 100%; color: #636363; text-shadow: 0 1px white; border-bottom: 1px solid #CDCDCD; border-radius: 0!important; box-shadow: 0 1px 0 #fff; -webkit-box-shadow: 0 1px 0 #fff; -moz-box-shadow: 0 1px 0 #fff; background: #F8F8F8; background: -moz-linear-gradient(top, #F8F8F8 0%, #ececec 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F8F8F8), color-stop(100%,#ececec)); background: -webkit-linear-gradient(top, #F8F8F8 0%,#ececec 100%); background: -o-linear-gradient(top, #F8F8F8 0%,#ececec 100%); background: -ms-linear-gradient(top, #F8F8F8 0%,#ececec 100%); background: linear-gradient(top, #F8F8F8 0%,#ececec 100%); filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#ececec',GradientType=0 ); }
 .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { position:absolute; top: 9px; width: 1.8em; height: 1.8em; cursor: pointer; }
 .ui-datepicker .ui-datepicker-prev-hover, .ui-datepicker .ui-datepicker-next-hover { background: none; }
 .ui-datepicker .ui-datepicker-prev { left:2px; }
 .ui-datepicker .ui-datepicker-next { right:7px; }
 .ui-datepicker .ui-datepicker-prev-hover { }
 .ui-datepicker .ui-datepicker-next-hover {  }
-.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span { display: block; width: 6px; cursor: pointer; height: 9px; position: absolute; left: 50%; top: 4px; background: url(../pic/elements/ui/dateArrows.png) no-repeat 0; }
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span { display: block; width: 6px; cursor: pointer; height: 9px; position: absolute; left: 50%; top: 4px; background: url(../pic/icons/dateArrows.png) no-repeat 0; }
+.ui-datepicker { -webkit-user-select: none; -moz-user-select: none; }
 .ui-datepicker .ui-datepicker-prev span { background-position: 0 0; }
 .ui-datepicker .ui-datepicker-next span { background-position: -8px 0; }
 .ui-datepicker .ui-datepicker-title { margin: 0 2.3em; line-height: 1.8em; text-align: center; }
@@ -473,7 +474,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /* ===== UI Progress bar ===== */
 
 .ui-progressbar { height: 16px; text-align: left; margin-top: 5px; background: #d7d7d7; border: 1px solid #bababa; box-shadow: 0 1px 0 #fff, 0 1px 0 #cfcfcf inset; clear: both; }
-.ui-progressbar .ui-progressbar-value {margin: 0px; height:100%; overflow: hidden; display: block; background: url(../pic/elements/ui/progressOverlay.png) repeat-x; border-right: 1px solid #5b9acb; }
+.ui-progressbar .ui-progressbar-value {margin: 0px; height:100%; overflow: hidden; display: block; background: url(../images/elements/ui/progressOverlay.png) repeat-x; border-right: 1px solid #5b9acb; }
 .pbar .ui-progressbar-value {display:block !important}
 .pbar, .precent, elapsed { display: block; }
 .percent, .elapsed { position: relative; margin-top: 5px; font-size: 11px; }

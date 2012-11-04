@@ -50,7 +50,8 @@
 						$left_menu=1;
 						$file ='bloks/my_wishes.php';
 						$TITLE='Мои желания';
-						$scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>';
+						$scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>
+                                   <script type="text/javascript" src="js/common.comments.js"></script>';
 					break;
 
 					//!Мои друзья - управление друзьями
@@ -151,7 +152,8 @@
 						$left_menu=1;
 						$file     ='bloks/my_profile.php';
 						$TITLE    ='Мой профиль';
-						$scripts .='';
+						$scripts .='<link type="text/css" rel="stylesheet" href="css/jquery.selectBox.css" />
+							<script type="text/javascript" src="js/jquery.selectBox.min.js"></script>';
 					break;
 
 					//!Смена аватарки
@@ -328,11 +330,12 @@
 
         //Просмотр вишлиста
         case 'wlist':
+            require_once(path_modules.'ini.groups.php');
 		    $left_menu=1;
             $wlist_id = varr_int(@$_URLP[1]);
 			$file ='bloks/wishlist.php';
 			$TITLE='Wishlist';
-			//$scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>';
+			$scripts.='<script type="text/javascript" src="js/common.comments.js"></script>';
 		break;
 
 		//!Кумиры

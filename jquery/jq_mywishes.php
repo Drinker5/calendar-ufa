@@ -17,7 +17,6 @@
         $html   ='';
         $cart   ='';
         $action ='';
-        $place  ='';
         //идентификатор желания или вишлиста
         $id='';
 
@@ -55,7 +54,6 @@
 
               //Место
               $place_array=$USER->ShowPlace($myWishes[$i]['adress_id']);
-              $place = str_replace("::",", ",$place_array[0]['adress']);
 
               //Комментарии
               $_comments='';
@@ -113,7 +111,7 @@
                                     Подарок к: <strong> Check DATE </strong>
                                     <br>
                                     -->
-                                    Место получения: <strong> ".$place_array[0]['name']." на ".$place."</strong>
+                                    Место получения: <strong> ".$place_array['name']." на ".$place_array['adress']."</strong>
                                 </p>";
                                 if ($myWishes[$i]['reason'] == '')
                                   $html .= "<p id=\"p_reason".$id."\" style=\"display: none;\">
@@ -162,7 +160,7 @@
                                     Подарок к: <strong> Check DATE </strong>
                                     <br>
                                     -->
-                                    Место получения: <strong> ".$place_array[0]['name']." на ".$place."</strong>
+                                    Место получения: <strong> ".$place_array['name']." на ".$place_array['adress']."</strong>
                                 </p>";
                                 if ($myWishes[$i]['reason'] == '')
                                   $html .= "<p id=\"p_reason".$id."\" style=\"display: none;\">

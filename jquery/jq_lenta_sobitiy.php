@@ -110,7 +110,7 @@
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text imp-hide toggle-control-2">
+                                <span class="c-control-text imp-hide">
                                     Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
@@ -229,7 +229,7 @@
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text imp-hide toggle-control-2">
+                                <span class="c-control-text imp-hide">
                                     Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
@@ -329,7 +329,7 @@
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text imp-hide toggle-control-2">
+                                <span class="c-control-text imp-hide">
                                     Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
@@ -449,7 +449,7 @@
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text imp-hide toggle-control-2">
+                                <span class="c-control-text imp-hide">
                                     Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
@@ -523,7 +523,7 @@
                                 <p class="action">check-in в <strong><a href="#">'.$massFeed[$i]['shop_name'].'</a></strong></p>
                                 <div class="content group">
                                     <a href="#" class="bordered fl_l">
-                                        <img src="'.$massFeed[$i]['shop_name'].'" alt="">
+                                        <img src="'.$massFeed[$i]['shop_photo'].'" alt="">
                                     </a>
                                     <div class="info wrapped">
                                         <h3 class="name"><a href="#">'.$massFeed[$i]['shop_name'].'</a></h3>
@@ -564,7 +564,7 @@
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text imp-hide toggle-control-2">
+                                <span class="c-control-text imp-hide">
                                     Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
@@ -641,7 +641,7 @@
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text imp-hide toggle-control-2">
+                                <span class="c-control-text imp-hide">
                                     Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>

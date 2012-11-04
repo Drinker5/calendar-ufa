@@ -22,10 +22,10 @@
 	switch($USER_INFO['sex'])
 	{
 		case'1':
-			$uMaritalSatus=array(0=>'Свободен',1=>'Женат',2=>'Есть подруга');
+			$uMaritalSatus=array(0=>'Не женат',1=>'Встречаюсь',2=>'Помолвлен',3=>'Женат',4=>'Влюблен',5=>'Все сложно',6=>'В активном поиске');
 		break;
 		case'2':
-			$uMaritalSatus=array(0=>'Свободна',1=>'Замужем',2=>'Есть друг');
+			$uMaritalSatus=array(0=>'Не замужем',1=>'Встречаюсь',2=>'Помолвлена',3=>'Замужем',4=>'Влюблена',5=>'Все сложно',6=>'В активном поиске');
 		break;
 	}
 
@@ -81,6 +81,12 @@
                             <a class="no c-db" href="/<?php echo $_SESSION['WP_USER']['user_wp']==$USER_INFO['user_wp']?'my':$USER_INFO['user_wp']; ?>-photoalbums">показать все</a>
                         </div>
                     </div>
+<?php
+	$cDigit ='';
+	$daysStr=strval($USER->CountWhohereShopAddress(isset($iHere['adress_id'])?$iHere['adress_id']:0));
+
+	if($daysStr>0){
+?>
 
                     <div class="fl_r">
                         <ul class="info_right">
@@ -90,9 +96,6 @@
                                 <div class="y_counter fl_r">
                                     <span class="c_name">Сейчас здесь</span>
 <?php
-	$cDigit ='';
-	$daysStr=strval($USER->CountWhohereShopAddress($iHere['adress_id']));
-
 	for($d=0; $d<strlen($daysStr); $d++)
 		$cDigit.='<span class="c_digit">'.$daysStr[$d].'</span>';
 
@@ -103,6 +106,9 @@
                             </li>
                         </ul>
                     </div>
+<?php
+	}
+?>
                 </div>
 
 				<script type="text/javascript">
@@ -433,10 +439,11 @@
                 <!-- </div> -->
 
 				<script type="text/javascript">
-					var page  = 1,
-						max   = <?=ceil($subs_count/$rows)?>,
-						rows  = <?=$rows?>,
-						begin = rows;
+					var page   = 1,
+						max    = <?=ceil($subs_count/$rows)?>,
+						rows   = <?=$rows?>,
+						begin  = rows,
+						cToggle= 1;
 
 					function myLenta(){
 						if(max>page)$('div#loadmoreajaxloader').show();
@@ -499,7 +506,7 @@
 										nCount++;
 										html = jQuery.parseJSON(data);
 										idComments.append(html.html);
-										idComments.find('.wishlist-comment group:last').slideDown('slow');
+										//idComments.find('.wishlist-comment group:last').slideDown('slow');
 										$("#comments-" + id + "-add").val('');
 									} else if(type=='delete'){
 										nCount--;
@@ -517,25 +524,28 @@
 						var idCommentsFull = $('#comments-' + id + '-full');
 
 						$(this).toggle(function(){
-							$.ajax({
-								url:'/jquery-comments',
-								type:'POST',
-								data:{type:'show',id:id,num:num},
-								cache:false,
-								success: function(data){
-									var html;
+							if(cToggle==1){
+								$.ajax({
+									url:'/jquery-comments',
+									type:'POST',
+									data:{type:'show',id:id,num:num},
+									cache:false,
+									success: function(data){
+										var html;
 
-									if(data){
-										html = jQuery.parseJSON(data);
-										idCommentsFull.append(html.html);
+										if(data){
+											cToggle=0;
+											html=jQuery.parseJSON(data);
+											idCommentsFull.append(html.html);
+										}
 									}
-								}
-							});
+								});
+							}
+							else
+								idCommentsFull.slideDown('slow');
 						},
 						function(){
-							idCommentsFull.slideUp('slow',function(){
-								$(this).remove();
-							});
+							idCommentsFull.slideUp('slow');
 						});
 					}
 

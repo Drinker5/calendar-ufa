@@ -1,10 +1,18 @@
 <?php
     require_once('jquery/jq_gifts.php');
 
-    $subs_count=countGifts($type_id,$gr_id); //Add Function
-    $rows=20;
-
+    //Массив категорий
     $catFull=catArray();
+
+    //Начальная валюта
+    $cID=2;
+    $cCurrent='руб';
+    $cFrom='2000';
+    $cTo='6000';
+    $cMax='10000'; //Функция по нахождению максимальной цены?!?!
+
+    $subs_count=countGifts($type_id,$gr_id,0,$cID,$cFrom*100,$cTo*100); //Add Function
+    $rows=20;
 ?>
             <div id="content" class="fl_r">
                 <div class="title margin">
@@ -43,11 +51,12 @@
                         <tr>
                             <td class="col1">
                                 <div class="arrow-box">
-                                    Цена подарка в <span class="gift-exchange-button popover-btn" style="text-decoration: underline; cursor: pointer;">РУБ</span>
+                                    Цена подарка в <span class="gift-exchange-button popover-btn" style="text-decoration: underline; cursor: pointer;" id="currencyM"><?=$cCurrent?></span>
                                 </div>
                             </td>
                             <td class="col2">
-                                <span id="rangeAmount">$75 - $300</span>
+                                <span id="rangeAmount"><span id="cFrom"><?=$cFrom?></span> <span id="currency"><?=$cCurrent?></span> - <span id="cTo"><?=$cTo?></span> <span id="currency"><?=$cCurrent?></span></span>
+                                <span id="cMax" style="display:none;"><?=$cMax?></span>
                                 <div class="uRange"></div>
                             </td>
                             <td class="col3">
@@ -66,7 +75,7 @@
     {
         echo'
                                 <div class="category-icons active fl_l tx_c">
-                                    <a href="#" class="big-category-icon category-icon-eat popover-btn" data-content="'.htmlspecialchars(json_encode($value)).'"></a><br>
+                                    <a href="#" class="big-category-icon category-icon-eat'.(isset($value['sub'])?' popover-btn':'').'" data-content="'.htmlspecialchars(json_encode($value)).'"></a><br>
                                     '.$value['mainname'].'
                                 </div>';
     }
@@ -83,7 +92,9 @@
                         rows    = <?=$rows?>,
                         begin   = rows,
                         category= 0,
-                        currency= 'RUR';
+                        currency= 2,
+                        cFrom   = <?=$cFrom?>,
+                        cTo     = <?=$cTo?>;
 
                     function choosenGifts(type){
                         var name      =$('#giftName').val(),
@@ -102,7 +113,7 @@
                         $.ajax({
                             url:'/jquery-gifts',
                             type:'POST',
-                            data:{type_id:<?=$type_id?>,gr_id:<?=$gr_id?>,list:begin,items:rows,order:order,name:name,region:region,mR:myRegion?1:0,mP:myPlace?1:0,oA:onlyAction?1:0,cat:category,currency:currency},
+                            data:{type_id:<?=$type_id?>,gr_id:<?=$gr_id?>,list:begin,items:rows,order:order,name:name,region:region,mR:myRegion?1:0,mP:myPlace?1:0,oA:onlyAction?1:0,cat:category,currency:currency,cFrom:cFrom,cTo:cTo},
                             cache:false,
                             success: function(data){
                                 var html,
@@ -135,8 +146,12 @@
                         choosenGifts('n');
                     }
 
-                    function setCurrency(p){
+                    function setCurrency(p,n){ //,f,t
                         currency=p;
+                        //cFrom=cFrom/f;
+                        //cTo=cTo/t;
+                        $('#currencyM').html(n);
+                        $('<span id="currency">' + n + '</span>').replaceAll('span#currency');
                         choosenGifts('n');
                     }
 
@@ -153,6 +168,13 @@
                         $("#giftName,#giftRegion,#giftOrder,#giftMyRegion,#giftMyPlace,#giftOnlyAction").change(function(){
                             choosenGifts('n');
                         });
+                        //$(".uRange").slider({
+                        //    slide: function( event, ui ) {
+                        //        cFrom=$("#cFrom").html();
+                        //        cTo=$("#cTo").html();
+                        //        choosenGifts('n');
+                        //    }
+                        //});
                     });
                 </script>
 
@@ -170,7 +192,7 @@
                 </div>
                 <div class="separator"></div>
                 <div class="group" id="idGifts">
-                <?=searchGifts($type_id,$gr_id,$rows,0,1,'html')?>
+                <?=searchGifts($type_id,$gr_id,$rows,0,1,'html',0,$cID,$cFrom*100,$cTo*100)?>
                 <!-- <div id="loadmoreajaxloader" style="display:none; text-align:center;"><img src="/pic/loader.gif" alt="loader" width="32" height="32" /></div> -->
                 </div>
             </div>

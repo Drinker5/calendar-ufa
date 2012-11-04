@@ -1029,4 +1029,19 @@ function ScanErrorFiles($directory){
         $date_rus = $month[$date->format("n") - 1]." ".$date->format("j, Y");
         return $date_rus;
     }
+
+//Массив валют
+	function curArray(){
+		global $MYSQL;
+
+		$GLOBALS['PHP_FILE'] = __FILE__;
+		$GLOBALS['FUNCTION'] = __FUNCTION__;
+
+		$cur=$MYSQL->query("SELECT id, currency, mask FROM `pfx_currency`");
+		if(is_array($cur))
+		{
+			return $cur;
+		}
+		else return array();
+	}
 ?>

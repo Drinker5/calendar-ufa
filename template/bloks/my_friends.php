@@ -61,7 +61,7 @@
 			echo '<ul class="fl_r right">';
 			foreach($circles as $key=>$value){
 				echo '<li';
-				if($_REQUEST['c']==$value['krug_id'])echo ' class="active"';
+				if(@$_REQUEST['c']==$value['krug_id'])echo ' class="active"';
 				echo '><a href="/'.$my.'-friends?c='.$value['krug_id'].'">'.$value['name'].'</a></li>';
 			}
 			echo '</ul>';

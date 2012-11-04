@@ -14,7 +14,10 @@
 			</div>';
 		if($friend['user_wp']!=$_SESSION['WP_USER']['user_wp']){
 			$html.='<span class="popover-btn ';
-			if($USER->IsFriend($friend['user_wp']))$html.='my-friend-actions';
+			if($USER->IsFriend($friend['user_wp'])){
+				if($user_wp!=$_SESSION['WP_USER']['user_wp'])$html.='my-friend-actions-short';
+				else                                         $html.='my-friend-actions';
+			}
 			else                                   $html.='find-friend-actions';
 			$html.=' opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'"><i class="small-icon icon-action"></i> Действия <i class="small-icon icon-grey-arrow"></i></span>';
 		}

@@ -9,7 +9,7 @@ $('#ascensorBuilding').ascensor({
 	Direction:'chocolate',
     AscensorMap:'2|1 & 3|1 & 2|2 & 1|1',
     Easing:'easeInOutQuad',
-    KeyNavigation:true
+    KeyNavigation:false
 });
 
 

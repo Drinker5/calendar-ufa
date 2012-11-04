@@ -8,7 +8,7 @@ Allow from all
 #<Files index.php>
 #  AuthUserFile  /var/www-tooeezzy.com/www/.htpasswd
 #  AuthType Basic  
-#  AuthName "MMG"  
+#  AuthName "Tooeezzy"
 #  Require valid-user
 #  Order allow,deny
 #  Allow from 192.168.0.0

@@ -25,8 +25,6 @@
     overflow: hidden;
     line-height: 12px;
     text-align: left;
-    color: #716E6B;
-    font-size: 10px;
     border: none;
     margin: 0;
     vertical-align: baseline;
@@ -35,6 +33,9 @@
     height: 21px;
     box-sizing: border-box;
     width: 100%;
+    font-weight: bold;
+    font-size: 12px;
+    color: #4F72AB;
     }
     .ui-state-hover .ui-icon, .ui-state-focus .ui-icon, .ui-state-default .ui-icon 
 
@@ -142,13 +143,13 @@
                                         <select id="user_day">
                                             <option value="">*</option>
                                             <?php print_r($_SESSION['WP_USER']['birthday'] );
-					  for($i=1; $i <= 31; $i++){
-					   if( $i == @(int)date_format(date_create($_SESSION['WP_USER']['birthday']),'d'))
-					      echo "<option value=\"$i\" selected>$i</option>";
-					   else
-					      echo "<option value=\"$i\">$i</option>";
-					  }
-					?>
+                      for($i=1; $i <= 31; $i++){
+                       if( $i == @(int)date_format(date_create($_SESSION['WP_USER']['birthday']),'d'))
+                          echo "<option value=\"$i\" selected>$i</option>";
+                       else
+                          echo "<option value=\"$i\">$i</option>";
+                      }
+                    ?>
                                         </select> 
                                     </div> 
                                     <div class="grid30">
@@ -199,7 +200,6 @@
                                     <div class="grid50">
                                         <label>Страна*</label>
                                         <select id="country" class='combobox' onChange="SelTowns(this.value)">
-                                            <option value="-1">--- Выберите страну ---</option>
                                                                <?php
                                                                 $GLOBALS['PHP_FILE'] = __FILE__;
                                             $GLOBALS['FUNCTION'] = __FUNCTION__;
@@ -416,10 +416,8 @@
 
 
 $(document).ready(function(){
-	//$('#center-profile select').not('#country').selectBox();
-	$('input[safari]:radio').checkbox({cls:'jquery-safari-checkbox'});
-	$('input[safari]:checkbox').checkbox({cls:'jquery-safari-checkbox-box'});
-	SelTowns(<?=$_SESSION['WP_USER']['country_id']?>);
+    //$('#center-profile select').not('#country').selectBox();
+    SelTowns(<?=$_SESSION['WP_USER']['country_id']?>);
     $( ".combobox" ).combobox();
     var marital_status = $('select[name=marital_status]');
     GetMaritalStatus(<?=$_SESSION['WP_USER']['sex']?>,<?=$_SESSION['WP_USER']['marital_status']?>);
@@ -472,14 +470,14 @@ function SecurityCheckboxs(element)
 }
 
 function SelTowns(country_id){
-	$.ajax({
-	    url:'/jquery-seltowns',
-		cache:false,
+    $.ajax({
+        url:'/jquery-seltowns',
+        cache:false,
         async:false,
-		type: "POST",
-		data: {country_id:country_id,select:1},
-		success:function(data){
-			$('#user_townid').html(data);
+        type: "POST",
+        data: {country_id:country_id,default_select:1,select:1},
+        success:function(data){
+            $('#user_townid').html(data);
             if (country_id != <?=$_SESSION['WP_USER']['country_id']?>)
             {
                 $('#user_townid option:first').attr('selected','selected');
@@ -490,8 +488,8 @@ function SelTowns(country_id){
             {
                 SecurityCheckboxs(this);
             });
-		}
-	});
+        }
+    });
 }
 
 
@@ -549,13 +547,13 @@ function SaveProfile(){
   var circles = GetSecurity();
 
   $.ajax({
-	url:'/jquery-profile',
-	cache:false,
-	type: "POST",
-	data: {'fname':user_fname,'url':user_url,'sname':user_sname,'otchestvo':user_otchestvo,'icq':user_icq,'skype':user_skype,'email':user_email,'sex':user_sex,'town_id':user_town,'day':user_day,'month':user_month,'year':user_year,'year_view':user_year_view,'circles':circles,'education':education,'career':career,'about':about,'marital_status':marital_status},
-	success:function(data){
-		$('#msg').html(data);
-	}
+    url:'/jquery-profile',
+    cache:false,
+    type: "POST",
+    data: {'fname':user_fname,'url':user_url,'sname':user_sname,'otchestvo':user_otchestvo,'icq':user_icq,'skype':user_skype,'email':user_email,'sex':user_sex,'town_id':user_town,'day':user_day,'month':user_month,'year':user_year,'year_view':user_year_view,'circles':circles,'education':education,'career':career,'about':about,'marital_status':marital_status},
+    success:function(data){
+        $('#msg').html(data);
+    }
   });
 }
     </script>

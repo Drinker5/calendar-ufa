@@ -893,7 +893,7 @@ class T_USERS {
 		return $list;
 	}
 
-//!Действия — дорбавление
+//!Действия — добавление
 	function AddDeystvie($user_from,$user_to,$deystvie,$id_deystvie,$privat=0){
 		global $MYSQL;
 		$GLOBALS['PHP_FILE']=__FILE__;
@@ -2751,7 +2751,11 @@ class T_USERS {
 				  'security' => Security($result[$i]['user_wp'],$result[$i]['pravo']),
 				  'count_photos' => $this->CountPhotosIsAlbum($result[$i]['id']),
 				  'updated'  => $updated,
+				  'prava'	 => unserialize($result[$i]['pravo']),
 				);
+				for($ki=0; $ki<count($array[$i]['prava']); $ki++){
+					$array[$i]['prava'][$ki]=$array[$i]['prava'][$ki]['krug_id'];
+				}
 			}
 		}
 		return @$array;
@@ -2923,7 +2927,7 @@ class T_USERS {
 	}
 
 //Список жеданий+вишлист
-function FindWLPosition($user_wp, $rows=10,$begin=0){
+function FindWLPosition($user_wp, $rows=10,$begin=0, $par=''){
         global $MYSQL;
         $GLOBALS['PHP_FILE'] = __FILE__;
 	    $GLOBALS['FUNCTION'] = __FUNCTION__;
@@ -2933,12 +2937,16 @@ function FindWLPosition($user_wp, $rows=10,$begin=0){
 		$begin   = varr_int($begin);
         $tbhochu = "pfx_users_hochu";
         $count = 0;
-        $i = $begin;
+        $i     = $begin;
+        $where = '';
         $array_num = '';
+
+        if ($par == 'performed')
+            $where = "AND $tbhochu.status=1";
 
         $result = $MYSQL->query("SELECT *
     	                         FROM $tbhochu
- 	                             WHERE $tbhochu.user_wp = $user_wp
+ 	                             WHERE $tbhochu.user_wp = $user_wp $where
     		                     ORDER BY $tbhochu.adddata DESC
                                  LIMIT $begin,$rows
     	");
@@ -3021,18 +3029,19 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 		$tbhochu    = "pfx_users_hochu";
 		$tbakcia    = "pfx_akcia";
 		$tbcurrency = "pfx_currency";
+        $where      = '';
         $pre_pos    = -1;
         $sql        = '';
         $user_wp    = (int)@$_SESSION['WP_USER']['user_wp'];
         $count      = 0;
 
-        $wl_array = $USER->FindWLPosition($user_wp, $rows, $begin);
+        $wl_array = $USER->FindWLPosition($user_wp, $rows, $begin, $par);
 
         if (is_array($wl_array) && count($wl_array)>0){
             for ($i=0; $i<count($wl_array);$i++){
                 if ($wl_array[$i]['num'] == $begin){
                     //echo "1--><br />";
-                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist', $par);
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
@@ -3040,7 +3049,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 
                     if (count($wl_array) == 1){
                         $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
-                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);    //+1
+                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', $par, $wish_cnt);    //+1
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
@@ -3053,14 +3062,14 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
                   //echo "2--><br />";
                   if ($pre_pos == -1){
                     $limit = $wl_array[$i]['num'] - $begin;
-                    $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);
+                    $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', $par, $wish_cnt);
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
                     }
                     $wish_cnt += count($res_array);
 
-                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist', $par);
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
@@ -3068,7 +3077,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 
                     if (count($wl_array) == 1){
                         $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);    //+1
-                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);    //+1
+                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', $par, $wish_cnt);    //+1
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
@@ -3079,7 +3088,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
                   }
                   else {
                     if ($wl_array[$i]['num'] == ($pre_pos + 1)){
-                        $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                        $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist', $par);
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
@@ -3088,7 +3097,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 
                         if (count($wl_array) == ($i+1)){
                             $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
-                            $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);  //+1
+                            $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', $par, $wish_cnt);  //+1
                             $wish_num += $limit;
                             for ($j=0; $j<count($res_array);$j++){
                                 $total_array[$count] = $res_array[$j];
@@ -3099,14 +3108,14 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
                     }
                     else {
                         $limit = $wl_array[$i]['num'] - ($pre_pos + 1);
-                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);
+                        $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', $par, $wish_cnt);
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
                         }
                         $wish_cnt += count($res_array);
 
-                        $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                        $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist', $par);
                         for ($j=0; $j<count($res_array);$j++){
                             $total_array[$count] = $res_array[$j];
                             $count++;
@@ -3115,7 +3124,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
                         $pre_pos = $wl_array[$i]['num'];
                         if (count($wl_array) == ($i+1)){
                             $limit = ($begin + $rows) - ($wl_array[$i]['num']+1);
-                            $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', '', $wish_cnt);  //+1
+                            $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', $par, $wish_cnt);  //+1
                             for ($j=0; $j<count($res_array);$j++){
                                 $total_array[$count] = $res_array[$j];
                                 $count++;
@@ -3128,14 +3137,14 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
                 elseif ($wl_array[$i]['num'] == ($begin + $rows)){
                     //echo "3--><br />";
                     $limit = ($begin + $rows) - 1;
-                    $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes');
+                    $res_array = $USER->LoadWishes($user_wp, 0, $wish_cnt, $limit, 'wishes', $par);
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
                     }
                     $wish_cnt += count($res_array);
 
-                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist');
+                    $res_array = $USER->LoadWishes($user_wp, $wl_array[$i]['id'], 0,0, 'wlist', $par);
                     for ($j=0; $j<count($res_array);$j++){
                         $total_array[$count] = $res_array[$j];
                         $count++;
@@ -3150,21 +3159,15 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         }
         else{
             if ($par == 'performed')
-                $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
-        		                             FROM $tbhochu
-        		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
-        		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
-        		                            WHERE $tbhochu.user_wp = $user_wp AND $tbhochu.status = 1
-        		                            ORDER BY $tbhochu.adddata DESC
-        		                            LIMIT $wish_cnt,$rows";
-            else
-        		$sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.wlist_name, $tbhochu.wishes_id, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
-        		                             FROM $tbhochu
-        		                             INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
-        		                             INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
-        		                            WHERE $tbhochu.user_wp = $user_wp
-        		                            ORDER BY $tbhochu.adddata DESC
-        		                            LIMIT $wish_cnt,$rows";
+                $where = "AND $tbhochu.status = 1";
+
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+        	        FROM $tbhochu
+        	        INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
+        	        INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
+        	        WHERE $tbhochu.user_wp = $user_wp $where
+        	        ORDER BY $tbhochu.adddata DESC
+        	        LIMIT $wish_cnt,$rows";
 
             //echo $wish_cnt."/n/r";
             //echo $sql;
@@ -3266,9 +3269,13 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 		$GLOBALS['FUNCTION'] = __FUNCTION__;
 
 		$tbihere = "pfx_users_ihere";
-		$result = $MYSQL->query("SELECT Count(*) FROM $tbihere WHERE address_id = ".(int)$address_id);
 
-		return $result[0]['count'];
+		if($address_id>0){
+			$result = $MYSQL->query("SELECT Count(*) FROM $tbihere WHERE address_id = ".(int)$address_id);
+			return $result[0]['count'];
+		}
+		else
+			return 0;
 	}
 
 	function CountWhohereShopAddressFriends($address_id){

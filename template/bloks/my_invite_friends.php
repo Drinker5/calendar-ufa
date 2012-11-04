@@ -16,6 +16,8 @@ function getCountryList()
     }
     return $output;  
 }
+
+
 function getRecommendUsers($offset,$count)
 {
     global $MYSQL,$USER;

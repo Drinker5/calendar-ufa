@@ -1,5 +1,5 @@
 <?php
-	function countGifts($type_id,$gr_id,$category=0,$currency='USD',$cF='7500',$cT='30000',$name='',$region='',$mR=false,$mP=false,$oA=false){
+	function countGifts($type_id,$gr_id,$category=0,$currency=2,$cF='7500',$cT='30000',$name='',$region='',$mR=false,$mP=false,$oA=false){
 		global $MYSQL, $AKCIANAME, $SHOPNAME;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
@@ -7,6 +7,8 @@
 
 		$type_id = varr_int($type_id);
 		$gr_id   = varr_int($gr_id);
+		$category= varr_int($category);
+		$currency= varr_int($currency);
 		$inner   = '';
 		$f       = '';
 		$w       = array();
@@ -20,12 +22,18 @@
 		$tbplaces      = "pfx_users_places";
 
 		$w[]=$tbakcia.'.`idtype`='.$type_id;
-		$w[]=$tbakcia.'.`amount` BETWEEN '.$cF.' AND '.$cT;
+		$w[]=$tbakcia.'.`amount` BETWEEN '.varr_int($cF).' AND '.varr_int($cT);
 
 		//if(isset($_SESSION['KLIENT']))
 		//	$w[]=$tbakcia.'.`klient_id`='.$_SESSION['KLIENT']['id'];
 		//else
 		//	$w[]=$tbakcia.'.`moderator`=1';
+
+		//if($category>0)
+		//	$w[]='';
+
+		if($currency>0)
+			$w[]=$tbakcia.'.`currency_id`='.$currency;
 
 		if(!empty($name) and strlen(trim($name))>0)
 			$w[]=$tbakcia.'.`header` LIKE \'%'.mysql_real_escape_string($name).'%\'';
@@ -59,7 +67,7 @@
 		return $result[0]['count'];
 	}
 
-	function searchGifts($type_id,$gr_id,$rows,$begin=0,$order=1,$what='',$category=0,$currency='USD',$cF='7500',$cT='30000',$name='',$region='',$mR=false,$mP=false,$oA=false){
+	function searchGifts($type_id,$gr_id,$rows,$begin=0,$order=1,$what='',$category=0,$currency=2,$cF='7500',$cT='30000',$name='',$region='',$mR=false,$mP=false,$oA=false){
 		global $MYSQL, $AKCIANAME, $SHOPNAME;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
@@ -69,9 +77,9 @@
 		$gr_id   = varr_int($gr_id);
 		$rows    = varr_int($rows);
 		$begin   = varr_int($begin);
-		$to      = $begin+$rows;
 		$order   = varr_int($order);
 		$category= varr_int($category);
+		$currency= varr_int($currency);
 		$inner   = '';
 		$f       = '';
 		$html    = 'Список подарков пуст.';
@@ -95,6 +103,9 @@
 
 		//if($category>0)
 		//	$w[]='';
+
+		if($currency>0)
+			$w[]=$tbakcia.'.`currency_id`='.$currency;
 
 		if(!empty($name) and strlen(trim($name))>0)
 			$w[]=$tbakcia.'.`header` LIKE \'%'.mysql_real_escape_string($name).'%\'';
@@ -145,7 +156,7 @@
 				                 $inner
 				                 $f
 				                 $by
-				                 LIMIT $begin,$to");
+				                 LIMIT $begin,$rows");
 
 		if(is_array($result)){
 			$html='';
@@ -214,6 +225,6 @@
 	}
 
 	if(isset($_POST['list'])){
-		searchGifts($_POST['type_id'],$_POST['gr_id'],$_POST['items'],$_POST['list'],$_POST['order'],'json',$_POST['cat'],$_POST['currency'],'7500','30000',$_POST['name'],$_POST['region'],$_POST['mR'],$_POST['mP'],$_POST['oA']);
+		searchGifts($_POST['type_id'],$_POST['gr_id'],$_POST['items'],$_POST['list'],$_POST['order'],'json',$_POST['cat'],$_POST['currency'],$_POST['cFrom']*100,$_POST['cTo']*100,$_POST['name'],$_POST['region'],$_POST['mR'],$_POST['mP'],$_POST['oA']);
 	}
 ?>

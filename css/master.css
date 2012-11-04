@@ -706,7 +706,7 @@ ul#actions li:last-child a:hover {
     color: #75849c;
 }
 
-.friend-item .subscribe-actions, .friend-item .actions, .friend-item .my-friend-actions, .friend-item .find-friend-actions {
+.friend-item .subscribe-actions, .friend-item .actions, .friend-item .my-friend-actions, .friend-item .find-friend-actions, .friend-item .my-friend-actions-short {
     position: absolute;
     left: 90px;
     bottom: 10px;
@@ -1401,7 +1401,7 @@ ul#actions li:last-child a:hover {
     position: absolute;
     display: none;
     width: 520px;
-    top:-22px;
+    top:-21px;
     left:-9px;
     border: 1px solid #ccc;
     background-color: #f7f7f7;

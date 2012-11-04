@@ -14,7 +14,7 @@
 		</script>
 
 		<script type="text/javascript" src="/js/jquery.min.js"></script>
-		<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="/js/mustache.js"></script>
 		<script type="text/javascript" src="/js/jquery.popover-1.1.0.js"></script>
 		<script type="text/javascript" src="/js/jquery.selectBox.min.js"></script>
@@ -69,15 +69,15 @@
 
 		<script id="gift-exchange-list" type="text/template">
 			<ul class="common-list">
+<?php
+    $curFull=curArray();
+    foreach($curFull as $key=>$value){
+    	echo'
 				<li class="common-list-item">
-					<span class="common-list-link"><a href="javascript:;" onclick="setCurrency('RUR')">РУБ</a></span>
-				</li>
-				<li class="common-list-item">
-					<span class="common-list-link"><a href="javascript:;" onclick="setCurrency('USD')">USD</a></span>
-				</li class="common-list-item">
-				<li class="common-list-item">
-					<span class="common-list-link"><a href="javascript:;" onclick="setCurrency('EUR')">EUR</a></span>
-				</li>
+					<span class="common-list-link"><a href="javascript:;" onclick="setCurrency('.$value['id'].',\''.$value['mask'].'\')">'.$value['mask'].'</a></span>
+				</li>';
+    }
+?>
 			</ul>
 		</script>
 <?php
@@ -174,23 +174,31 @@
 					<li><a href="/my-photoalbums-edit?album_id={{{album-id}}}"><i class="small-icon icon-edit"></i> Редактировать</a></li>
 					<li><a href="#"><i class="small-icon icon-comments"></i> Комментарии</a></li>
 					<li><a href="#"><i class="small-icon icon-delete"></i> Удалить альбом</a></li>
+					<div class="separator"></div>
+					Просматривать альбом могут:
+					<li><label class="crcledt"><input type="checkbox"{{#checked}} checked="checked"{{/checked}} value="0" />Все</label></li>
+					{{#album-krugi}}
+							<li><label class="crcledt"><input type="checkbox"{{#checked}} checked="checked"{{/checked}} value="{{{krug_id}}}" />{{{name}}}</label></li>
+					{{/album-krugi}}
 				</ul>
-				<div class="separator"></div>
-				Просматривать альбом могут:
-				<label><input type="checkbox" />Все</label>
-				<label><input type="checkbox" />Близкие друзья</label>
-				<label><input type="checkbox" />Коллеги</label>
-				<label><input type="checkbox" />Семья</label>
-				<label><input type="checkbox" />Кумиры</label>
-				<label><input type="checkbox" />Знакомые</label>
-				<label><input type="checkbox" />Никто, кроме меня</label>
-				<label><input type="checkbox" />Все, кроме...</label>
-				<label><input type="checkbox" />Некоторые друзья</label>
 			</div>
 		</script>
 <?php
 	}
-
+	if(@$_URLP[1]=='photoalbums' && @$_URLP[2]=='add'){
+?>
+		<script id="album-can-comment-template" type="text/template">
+			<div id="a{{{album-id}}}">
+				<ul class="friend-actions">
+					<li><label class="crcledt"><input type="checkbox"{{#checked}} checked="checked"{{/checked}} value="0" /> Все</label></li>
+					{{#album-krugi}}
+							<li><label class="crcledt"><input type="checkbox"{{#checked}} checked="checked"{{/checked}} value="{{{krug_id}}}" />{{{name}}}</label></li>
+					{{/album-krugi}}
+				</ul>
+			</div>
+		</script>
+<?php
+	}
 	if(@$_URLP[1]=='friends'){
 ?>
 		<script id="subscriber-action-template" type="text/template">
@@ -238,11 +246,22 @@
 					<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
 					<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
 					<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
-					<li><a href="#" onclick="return delfriend($(this), true);" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
+					<li><a href="#" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
 					<div class="separator"></div>
 					{{#friend-krugi}}
 						<li><label class="crcledt"><input type="checkbox"{{#checked}} checked="checked"{{/checked}} value="{{{krug_id}}}" />{{{name}}}</label></li>
 					{{/friend-krugi}}
+				</ul>
+			</div>
+		</script>
+		
+		<script id="my-friend-action-template-short" type="text/template">
+			<div data-id="{{{friend-id}}}" class="friend-id">
+				<ul class="friend-actions">
+					<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
+					<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
+					<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
+					<li><a href="#" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
 				</ul>
 			</div>
 		</script>

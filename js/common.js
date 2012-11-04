@@ -88,6 +88,12 @@ jQuery(document).ready(function($) {
         .popover('setOption', 'horizontalOffset', -31)
         .popover('setClasses', 'friend-action-popover');
 
+    $(".friend-item .my-friend-actions-short")
+        .popover('content', $('#my-friend-action-template-short').html(), true)
+        .popover('setOption', 'position', 'bottom')
+        .popover('setOption', 'horizontalOffset', -31)
+        .popover('setClasses', 'friend-action-popover');
+
     $(".friend-item .find-friend-actions")
         .popover('content', $('#find-friend-action-template').html(), true)
         .popover('setOption', 'position', 'bottom')
@@ -128,6 +134,10 @@ jQuery(document).ready(function($) {
 
     $('.photoalbum .actions')
         .popover('content', $('#my-fotoalbum-template').html(), true)
+        .popover('setOption', 'position', 'bottom');
+
+    $('.photoalbum .actionscomm')
+        .popover('content', $('#album-can-comment-template').html(), true)
         .popover('setOption', 'position', 'bottom');
 
     $('.gift-search-block .big-category-icon')
