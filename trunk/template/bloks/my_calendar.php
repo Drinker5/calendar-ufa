@@ -44,26 +44,26 @@
 				</div>
 			
 				
-				 <select id="event_repeat" name="s1" class="styled">
-											<option value="0" selected>Не повторять</option>
+				 <select id="event_repeat">
+											<option value="0">Не повторять</option>
 											<option value="1">Каждый день</option>
 											<option value="7">Каждую неделю</option>
 											<option value="30">Каждый месяц</option>
 											<option value="365">Каждый год</option>
 											</select>
-				 <select id="event_finish" name="s2" class="styled">
-											<option value="0" selected>Не завершать</option>
+				 <select id="event_finish">
+											<option value="0">Не завершать</option>
 											<option value="2">После 2 раз</option>
 											<option value="3">После 3 раз</option>
 											<option value="1">После даты:</option>
 											</select>
-				 <select id="event_reminder" name="s3" class="styled">
-											<option value="not_remind" selected>Не напоминать</option>
+				 <select id="event_reminder">
+											<option value="not_remind">Не напоминать</option>
 											<option value="by_email">По e-mail</option>
 											<option value="in_notif">В уведомлениях</option>
 											</select>
 				
-			<p style="margin-top:10px">
+			<p style="margin-top:10px; display:none">
 			После даты: <input type="text" name="event_after" id="event_after"/>
 			</p>
 			<hr/> <!-- -------------------------------- -->
