@@ -14,9 +14,9 @@ $end = @$_POST['end'];
 $after = @$_POST['after'];
 $type = @$_POST['type'];
 $op = @$_POST['op'];
-$repeat = @$_POST['repeat'];
+$repeat = @$_POST['repeat']; 
 $finish = @$_POST['finish'];
-
+$remind = @$_POST['remind'];
 $b = 1;
 $color = 'red';
 
@@ -123,6 +123,7 @@ switch ($op) {
 						AND owner_wp = '.$_SESSION['WP_USER']['user_wp'];
 				$json = Array();
 				$result = mysql_query($sql);
+				$data_after = date("Y-m-d", strtotime($after));
 				$color = '#94d11f'; 
 				while ($row = mysql_fetch_assoc($result)) {
 					if(isset($row['repeat']) && $row['repeat']!=0){ //Если повторять
@@ -144,6 +145,12 @@ switch ($op) {
 									'textColor' => 'white',
 									'editable' => true,
 									'allDay' => false,
+									
+									'after' =>  $data_after,
+									'repeat' => $row['repeat'],
+									'finish' => $row['finish'],
+									'remind' => $row['napominanie'],
+									
 								);
 								$i++;
 							}
@@ -162,6 +169,12 @@ switch ($op) {
 									'textColor' => 'white',
 									'editable' => true,
 									'allDay' => false,
+									
+									'after' =>  $data_after,
+									'repeat' => $row['repeat'],
+									'finish' => $row['finish'],
+									'remind' => $row['napominanie'],
+
 								);
 							}
 							
@@ -180,6 +193,12 @@ switch ($op) {
 									'textColor' => 'white',
 									'editable' => true,
 									'allDay' => false,
+									
+									'after' =>  $data_after,
+									'repeat' => $row['repeat'],
+									'finish' => $row['finish'],
+									'remind' => $row['napominanie'],
+
 								);
 							}
 						break;
@@ -200,6 +219,12 @@ switch ($op) {
 									'textColor' => 'white',
 									'editable' => true,
 									'allDay' => false,
+									
+									'after' =>  $data_after,
+									'repeat' => $row['repeat'],
+									'finish' => $row['finish'],
+									'remind' => $row['napominanie'],
+
 								);
 								$i++;
 							}
@@ -214,6 +239,12 @@ switch ($op) {
 								'textColor' => 'white',
 								'editable' => true,
 								'allDay' => false,
+								
+								'after' =>  $data_after,
+								'repeat' => $row['repeat'],
+								'finish' => $row['finish'],
+								'remind' => $row['napominanie'],
+	
 							);
 						}
 					}
@@ -227,6 +258,12 @@ switch ($op) {
 							'textColor' => 'white',
 							'editable' => true,
 							'allDay' => false,
+							
+							'after' =>  $data_after,
+							'repeat' => $row['repeat'],
+							'finish' => $row['finish'],
+							'remind' => $row['napominanie'],
+
 						);
 					}
 				}

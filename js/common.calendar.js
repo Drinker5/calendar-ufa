@@ -4,6 +4,10 @@
 	var event_end = $('#event_end');
 	var event_after = $('#event_after');
 	var event_type = $('#event_type');
+	var event_repeat = $("#event_repeat");
+	var event_finish = $("#event_finish");
+	var event_reminder = $("#event_reminder");
+	
 	var calendar = $('#calendar');
 	var form = $('#dialog-form');
 	var event_id = $('#event_id');
@@ -59,13 +63,26 @@
 	
 	/* функция очистки формы */
 	function emptyForm() {
-		event_start.val('Событие...');
+		event_start.val("");
 		event_end.val("");
-		event_after.val("99.99.9999");
+		event_after.val("");
 		event_type.val("");
 		event_id.val("");
+		event_repeat.selectBox("value", 0);
+		event_finish.selectBox("value", 0);
+		event_reminder.selectBox("value", 0);
 		
-	} 
+	};
+	
+	/* изменение завершения */
+	$("#event_finish").change( function() {
+		if($(this).val() == 1) event_after.parent().css("display","block");
+			else { 
+				event_after.parent().css("display","none"); 
+				event_after.datepicker("hide"); 
+			}
+			
+	});
 	/* режимы открытия формы */
 	function formOpen(mode) {
 		if(mode == 'add') {
@@ -80,9 +97,8 @@
 			$('#add').hide();
 			$("#delete").button("option", "disabled", false);
 		}
-		
 		form.dialog('open');
-	}
+	};
 	/* инициализируем Datetimepicker */
 	$.datepicker.regional['ru'] = {
 		closeText: 'Закрыть',
@@ -179,6 +195,8 @@
 			var newDate = $.fullCalendar.formatDate(event, format);
 			event_start.val(newDate);
 			event_end.val(newDate);
+			
+
 			var Month = parseInt($.fullCalendar.formatDate(event, format_month),10);
 			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(event, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(event, format_year));
 			formOpen('add');
@@ -193,6 +211,13 @@
 			event_type.val(event.title);
 			event_start.val(DateStart);
 			event_end.val(DateEnd);
+
+			event_repeat.selectBox("value", event.repeat);
+			event_finish.selectBox("value", event.finish);
+			event_reminder.selectBox("value", event.remind);
+			
+			event_after.val(event.after);
+			
 			var Month = parseInt($.fullCalendar.formatDate(event.start, format_month),10);
 			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(event.start, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(event.start, format_year));
 			formOpen('edit');
