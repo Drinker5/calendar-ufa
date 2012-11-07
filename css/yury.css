@@ -535,6 +535,8 @@ h4:before {
  width: 200px;
  display: block;
  float: left;
+ margin-right: 60px;
+ margin-bottom: 10px;
 }
 
 .info-row p {
@@ -547,9 +549,11 @@ h4:before {
  font-weight: bold;
 }
 
+/*
 .info-rows .middle {
  padding: 0 90px;
 }
+*/
 
 .info-controls {
  position: absolute;
@@ -630,6 +634,7 @@ h4:before {
  padding: 1px 20px 0px 20px;
  float: left;
  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ -webkit-font-smoothing: antialiased;
  font-weight: 500;
  letter-spacing: 1px;
  font-size: 11px !important;
@@ -869,6 +874,7 @@ input[type="search"]::-webkit-search-results-decoration {
  font-family: Tahoma, sans-serif;
  color: #fff;
  height: 21px;
+ text-shadow: 1px 1px 0px rgba(0,0,0,.2);
  line-height: 21px;
  display: block;
  text-align: center;
@@ -881,6 +887,21 @@ input[type="search"]::-webkit-search-results-decoration {
  background-image: -ms-linear-gradient(bottom, #5ba316, #73d31a);
  background-image: linear-gradient(to top, #5ba316, #73d31a);
  position: relative;
+}
+
+#gift_info .disabled {
+ font-family: Tahoma, sans-serif;
+ color: #fff;
+ text-shadow: 1px 1px 0px #aaa;
+ height: 21px;
+ line-height: 21px;
+ display: block;
+ text-align: center;
+ border-radius: 2px;
+ border: solid 1px #aab6c4;
+ background: #c5cfdb;
+ position: relative;
+ margin-top: 5px;
 }
 
 .wish_make {
@@ -1158,6 +1179,10 @@ input[type="search"]::-webkit-search-results-decoration {
  display: block;
 }
 
+.choose-list {
+ clear: both;
+}
+
 .choose-list .px13 {
  margin-bottom: 10px;
 }
@@ -1315,23 +1340,6 @@ input[type="search"]::-webkit-search-results-decoration {
  color: #75849c;
 }
 
-.tipsy { padding-top: 4px; font-size: 11px; position: absolute; z-index: 1000; }
-.tipsy-inner { padding: 2px 10px 2px 10px; background-color: #6f7b87; color: white; max-width: 200px; text-align: center; }
-.tipsy-inner { border-radius: 2px; -moz-border-radius:2px; -webkit-border-radius:2px; }
-.tipsy-arrow { position: absolute; background: url('../pic/tipsy.gif') no-repeat top left; width: 9px; height: 5px; }
-.tipsy-n .tipsy-arrow { top: 0; left: 50%; margin-left: -4px; }
-.tipsy-nw .tipsy-arrow { top: 0; left: 10px; }
-.tipsy-ne .tipsy-arrow { top: 0; right: 10px; }
-.tipsy-s { margin-top: -5px; }
-.tipsy-w { margin-left: 5px; }
-.tipsy-e { margin-left: -5px; }
-.tipsy-n { margin-top: 5px; }
-.tipsy-s .tipsy-arrow { bottom: 0; left: 50%; margin-left: -4px; background-position: bottom left; }
-.tipsy-sw .tipsy-arrow { bottom: 0; left: 10px; background-position: bottom left; }
-.tipsy-se .tipsy-arrow { bottom: 0; right: 10px; background-position: bottom left; }
-.tipsy-e .tipsy-arrow { top: 50%; margin-top: -4px; right: 0; width: 5px; height: 9px; background-position: top right; }
-.tipsy-w .tipsy-arrow { top: 50%; margin-top: -4px; left: 0; width: 5px; height: 9px; }
-
 .m_header {
  height: 30px;
  background: #98c21e url(../pic/map_leather.png) repeat-x bottom;
@@ -1388,37 +1396,6 @@ input[type="search"]::-webkit-search-results-decoration {
  position: relative;
 }
 
-.b-icons {
- clear: both;
- display: inline-block;
- margin-top: 10px;
-}
-
-.b-icons div {
- line-height: 42px;
- height: 42px;
- float: left;
- margin-right: 25px;
-}
-
-/*
-.b-icons div .category-icon-eat {
- background-position: -42px 0;
-}
-
-.b-icons div .category-icon-eat:hover {
- background-position: -84px 0;
-}
-*/
-
-.b-icons div .b {
- font-weight: bold;
-}
-
-.b-icons div span {
- margin-left: 5px;
-}
-
 .invite-form {
  clear: both;
  display: block;
@@ -1451,13 +1428,13 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .invite-form .searchbox input[type=submit] {
- background: url(../pic/search.png) no-repeat right;
+ background: url(../pic/icons/g-loc.png) no-repeat right;
  position: absolute;
- top: 6px;
- right: 0px;
+ top: 4px;
+ right: -1px;
  cursor: pointer;
- width: 11px;
- height: 14px;
+ width: 17px;
+ height: 18px;
  border: none;
 }
 
@@ -1480,4 +1457,129 @@ input[type="search"]::-webkit-search-results-decoration {
  font: bold 13px Helvetica, Arial, sans-serif !important;
  color: #4f72ab !important;
  background: #fff url(../pic/icons/g-clock.png) no-repeat 55px center;
+}
+
+.i-desc {
+ color: #75849c;
+ text-align: center;
+ width: 550px;
+ margin: 15px 0 5px 0;
+}
+
+.b-icons {
+ clear: both;
+ display: inline-block;
+ text-align: center;
+}
+
+.b-icons .active {
+ font-weight: bold;
+}
+
+.b-icon {
+ float: left;
+ margin-right: 11px;
+}
+
+.b-desc {
+ display: block;
+ text-align: center;
+ font-size: 10px;
+}
+
+.category-icon-eat:hover {
+	background-position: 0 0;
+}
+.category-icon-eat.active {
+	background-position: -42px 0 !important;
+}
+
+.hint {
+ font-family: 'Festus';
+ -webkit-font-smoothing: antialiased;
+ font-size: 22px;
+ color: #009ad7;
+}
+
+.geo_icon {
+ background: url(../pic/icons/geo_bg.png) no-repeat;
+ width: 24px;
+ height: 25px;
+ display: inline-block;
+ position: relative;
+ top: 7px;
+ cursor: pointer;
+}
+
+.geo_arrow {
+ background: url(../pic/icons/geo_arrow.png) no-repeat;
+ width: 34px;
+ height: 12px;
+ display: inline-block;
+ position: relative;
+ bottom: 15px;
+}
+
+.geo_rotate {
+ background: url(../pic/icons/geo_rotate.png) no-repeat;
+ width: 15px;
+ height: 13px;
+ position: absolute;
+ left: 4px;
+ top: 7px;
+ -webkit-animation: geo_icon 2s ease infinite;
+ -moz-animation: geo_icon 2s ease infinite;
+ -ms-animation: geo_icon 2s ease infinite;
+ -o-animation: geo_icon 2s ease infinite;
+}
+
+.geo {
+ padding-top: 10px !important;
+ border-top: 1px solid #edeff3;
+ border-bottom: none;
+}
+
+@-webkit-keyframes geo_icon {
+ 0% { -webkit-transform: rotate(0deg); }
+ 50% { -webkit-transform: rotate(20deg);  }
+ 100% { -webkit-transform: rotate(0deg); }
+}
+@-moz-keyframes geo_icon {
+ 0% { -moz-transform: rotate(0deg); }
+ 50% { -moz-transform: rotate(20deg); }
+ 100% { -moz-transform: rotate(0deg); }
+}
+@-o-keyframes geo_icon {
+ 0% { -o-transform: rotate(0deg); }
+ 50% { -o-transform: rotate(20deg); }
+ 100% { -o-transform: rotate(0deg); }
+}
+@-ms-keyframes geo_icon {
+ 0% { -ms-transform: rotate(0deg); }
+ 50% { -ms-transform: rotate(20deg); }
+ 100% { -ms-transform: rotate(0deg); }
+}
+
+/* ===== Tipsy ===== */
+
+.tipsy { padding: 4px; font-size: 11px; position: absolute; z-index: 1000; }
+.tipsy-inner { padding: 5px 7px; background-color: #6f7b87; color: white; max-width: 200px; text-align: center; }
+.tipsy-inner { border-radius: 2px; -moz-border-radius:2px; -webkit-border-radius:2px; }
+.tipsy-arrow { position: absolute; background: url('../pic/tipsy.gif') no-repeat top left; width: 9px; height: 5px; }
+.tipsy-n .tipsy-arrow { top: 0; left: 50%; margin-left: -4px; }
+.tipsy-nw .tipsy-arrow { top: 0; left: 10px; }
+.tipsy-ne .tipsy-arrow { top: 0; right: 10px; }
+.tipsy-s { margin-top: -5px; }
+.tipsy-w { margin-left: 5px; }
+.tipsy-e { margin-left: -5px; }
+.tipsy-n { margin-top: 5px; }
+.tipsy-s .tipsy-arrow { bottom: 0; left: 50%; margin-left: -4px; background-position: bottom left; }
+.tipsy-sw .tipsy-arrow { bottom: 0; left: 10px; background-position: bottom left; }
+.tipsy-se .tipsy-arrow { bottom: 0; right: 10px; background-position: bottom left; }
+.tipsy-e .tipsy-arrow { top: 50%; margin-top: -4px; right: 0; width: 5px; height: 9px; background-position: top right; }
+.tipsy-w .tipsy-arrow { top: 50%; margin-top: -4px; left: 0; width: 5px; height: 9px; }
+
+#actions a {
+ position: relative;
+ padding-left: 10px;
 }

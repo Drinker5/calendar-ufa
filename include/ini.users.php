@@ -102,9 +102,10 @@ class T_USERS {
 	    $tbusers  = "pfx_users";
 
 	    if(strlen($session) == 32){
-	    	$result = $MYSQL->query("SELECT Count(*) FROM $tbusers WHERE session='".mysql_real_escape_string($session)."'");
+	    	$result = $MYSQL->query("SELECT `user_wp` FROM $tbusers WHERE session='".mysql_real_escape_string($session)."'");
 	    	if(is_array($result) && count($result) == 1){
 	    		$MYSQL->query("UPDATE $tbusers SET everif=1 WHERE session='".mysql_real_escape_string($session)."'");
+	    		$this->CreateAvatarsAlbum($result['user_wp']);
 	    		return $this->WPin($session);
 	    	}
 	    	return -2; // Нет пользователя с такой сессией
@@ -2817,12 +2818,13 @@ class T_USERS {
 		$GLOBALS['PHP_FILE'] = __FILE__;
 		$GLOBALS['FUNCTION'] = __FUNCTION__;
 
-		$tbphotos = "pfx_users_photos";
-		$user_wp  = varr_int($user_wp);
+		$tbphotos      = "pfx_users_photos";
+		$tbphotosalbum = "pfx_users_photos_album";
+		$user_wp       = varr_int($user_wp);
 
-		if($user_wp == 0) $user_wp = $_SESSION['WP_USER']['user_wp'];
+		if($user_wp == 0) $user_wp = varr_int($_SESSION['WP_USER']['user_wp']);
 
-		$result = $MYSQL->query("SELECT id, header, logo FROM $tbphotos WHERE user_wp=$user_wp ORDER BY `id` DESC LIMIT 0,".$count."");
+		$result = $MYSQL->query("SELECT $tbphotos.`id`, $tbphotos.`header`, $tbphotos.`logo` FROM $tbphotos INNER JOIN $tbphotosalbum ON $tbphotos.album_id=$tbphotosalbum.id WHERE $tbphotos.user_wp=$user_wp AND $tbphotosalbum.type<>1 ORDER BY $tbphotos.`id` DESC LIMIT 0,".$count."");
 		if(is_array($result)){
 			foreach($result as $key2=>$value2){
 				$arrPhotos[] = array(
@@ -2845,28 +2847,83 @@ class T_USERS {
 		}
 		return @$array;
 	}
+	function CreateAvatarsAlbum($user_wp)
+	{
+		global $MYSQL;
+		$GLOBALS['PHP_FILE'] = __FILE__;
+	    $GLOBALS['FUNCTION'] = __FUNCTION__;
+		$tbl = "pfx_users_photos_album";
+		$result = $MYSQL->query("INSERT INTO $tbl (`data_add`, `user_wp`, `header`, `type`) VALUES (NOW(),$user_wp,'Мои аватары',1)");
+		return $result;
+
+	}
+	function ShowAvatarAlbum($user_wp=0,$count = 0)
+	{
+		global $MYSQL;
+		if($user_wp == 0) $user_wp = (int)$_SESSION['WP_USER']['user_wp'];
+		$w = 190;
+		$h = 190;
+		$album_id = $this->GetAvatarsAlbumId($user_wp);
+		$photo = ShowAvatarsAlbum($user_wp);
+			return (is_array($photo))?$photo:0;
+	}
+	function GetAvatarsAlbumId($user_wp)
+	{
+		global $MYSQL;
+		$user_wp = (int)$user_wp;
+		$avatar_type = 1;
+		$tbl = "pfx_users_photos_album";
+		if($user_wp == 0) $user_wp = (int)$_SESSION['WP_USER']['user_wp'];
+		$album_id = $MYSQL->query("SELECT `id` FROM $tbl WHERE `user_wp` =$user_wp AND `type` =$avatar_type ");
+		return (is_array($album_id))?(int)$album_id[0]['id']:0;
+
+	}
 	/** ФОТОАЛЬБОМЫ КОНЕЦ **/
 
-//!Желания — добавление
-	function AddHochu($akcia_id){
-		global $MYSQL;
+    function CheckHochu($akcia_id){
+        global $MYSQL;
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
 		$akcia_id           =(int)$akcia_id;
-		$tbhochu            ="pfx_users_hochu";
-		$tbusers_deystvie   ="pfx_users_deystvie";
+        $tbhochu            = "pfx_users_hochu";
 
-		$result=$MYSQL->query("SELECT Count(*) FROM $tbhochu WHERE akcia_id=$akcia_id AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
-		if($result[0]['count']==0){
-			$hochu_id = $MYSQL->query("INSERT INTO $tbhochu (adddata,user_wp,akcia_id) VALUES (now(),".(int)$_SESSION['WP_USER']['user_wp'].",$akcia_id)");
-			//$this->AddDeystvie(0, (int)$_SESSION['WP_USER']['user_wp'], 6, $hochu_id);
-			$MYSQL->query("INSERT INTO `".$tbusers_deystvie."` (`data_add`, `user_wp`, `deystvie`, `id_deystvie`) VALUES (now(), ".(int)$_SESSION['WP_USER']['user_wp'].", 6, ".$hochu_id.")");
+        $result=$MYSQL->query("SELECT Count(*) FROM $tbhochu WHERE akcia_id=$akcia_id AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
+
+        if ($result[0]['count'] == 0) return false;
+        else return true;
+    }
+
+//!Желания — добавление
+	function AddHochu($akcia_id, $shop_id=0){
+		global $MYSQL, $USER;
+		$GLOBALS['PHP_FILE']=__FILE__;
+		$GLOBALS['FUNCTION']=__FUNCTION__;
+		$akcia_id           =(int)$akcia_id;
+        $shop_id            =(int)$shop_id;
+        $adress_id          =0;
+
+        $tbhochu            = "pfx_users_hochu";
+		$tbusers_deystvie   = "pfx_users_deystvie";
+        $tbakcia            = "pfx_akcia";
+		$tbshops            = "pfx_shops";
+        $tbshops_adress     = "pfx_shops_adress";
+
+		if(!($USER->CheckHochu($akcia_id))){
+		    $result = $MYSQL->query("SELECT id FROM $tbshops_adress WHERE shop_id=$shop_id LIMIT 1;");
+            if (is_array($result) && count($result)){
+                $adress_id = $result[0]['id'];
+                $hochu_id = $MYSQL->query("INSERT INTO $tbhochu (adddata,user_wp,akcia_id,adress_id) VALUES (now(),".(int)$_SESSION['WP_USER']['user_wp'].",$akcia_id, $adress_id)");
+    			//$this->AddDeystvie(0, (int)$_SESSION['WP_USER']['user_wp'], 6, $hochu_id);
+    			$MYSQL->query("INSERT INTO `".$tbusers_deystvie."` (`data_add`, `user_wp`, `deystvie`, `id_deystvie`) VALUES (now(), ".(int)$_SESSION['WP_USER']['user_wp'].", 6, ".$hochu_id.")");
+            }
 		}
+        else return false;
+
 	}
 
 //!Желания — удаление
 	function DeleteHochu($akcia_id){
-		global $MYSQL;
+		global $MYSQL, $USER;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
 	    $GLOBALS['FUNCTION'] = __FUNCTION__;
@@ -2875,9 +2932,29 @@ class T_USERS {
 	    $tbhochu  = "pfx_users_hochu";
 	    $tbusers_deystvie = "pfx_users_deystvie";
 
-	    $result = $MYSQL->query("SELECT id FROM $tbhochu WHERE akcia_id=$akcia_id AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
-	    $MYSQL->query("DELETE FROM $tbhochu WHERE akcia_id=$akcia_id AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
-	    $MYSQL->query("DELETE FROM $tbusers_deystvie WHERE deystvie=6 AND id_deystvie=".(int)$result[0]['id']." AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
+        if($USER->CheckHochu($akcia_id)){
+            $result = $MYSQL->query("SELECT id FROM $tbhochu WHERE akcia_id=$akcia_id AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
+	        $MYSQL->query("DELETE FROM $tbhochu WHERE akcia_id=$akcia_id AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
+	        $MYSQL->query("DELETE FROM $tbusers_deystvie WHERE deystvie=6 AND id_deystvie=".(int)$result[0]['id']." AND user_wp = ".(int)$_SESSION['WP_USER']['user_wp']);
+        }
+        else return false;
+
+	}
+
+    function UpdateHochu($akcia_id, $reason){
+		global $MYSQL, $USER;
+
+		$GLOBALS['PHP_FILE'] = __FILE__;
+	    $GLOBALS['FUNCTION'] = __FUNCTION__;
+
+	    $akcia_id = (int) $akcia_id;
+	    $tbhochu  = "pfx_users_hochu";
+
+        if($USER->CheckHochu($akcia_id)){
+		    $result=$MYSQL->query("UPDATE $tbhochu SET `reason`='$reason' WHERE `user_wp`=".(int)$_SESSION['WP_USER']['user_wp']." AND `akcia_id`=".$akcia_id);
+        }
+        else return false;
+
 	}
 
 //!Желания — количество
@@ -3196,6 +3273,39 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         return true;
 	}
 
+     function GetWlistData($id, $user_wp=0){
+        global $MYSQL, $USER;
+
+        if ($user_wp == 0)
+            $user_wp = $_SESSION['WP_USER']['user_wp'];
+
+        $tbhochu = "pfx_users_hochu";
+        $id      = (int)$id;
+        $result  = $MYSQL->query("SELECT * FROM $tbhochu WHERE id=".$id." AND user_wp=$user_wp;");
+
+        if(is_array($result) && count($result))
+            return $result[0];
+        else return false;
+    }
+
+    function CountWlist($user_wp=0,$par=''){
+        global $MYSQL;
+
+        if ($user_wp == 0)
+            $user_wp = $_SESSION['WP_USER']['user_wp'];
+        $tbhochu = "pfx_users_hochu";
+
+        if ($par == 'perf')
+            $sql = "SELECT COUNT(*) FROM $tbhochu WHERE user_wp=$user_wp AND is_wlist=1;";
+        else
+            $sql = "SELECT COUNT(*) FROM $tbhochu WHERE user_wp=$user_wp AND is_wlist=1 AND status=1;";
+
+        $result  = $MYSQL->query($sql);
+        if(is_array($result) && count($result))
+            return $result[0]['count'];
+        else return false;
+    }
+
     function ShowPlace($adress_id){
    		global $MYSQL;
 
@@ -3234,6 +3344,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 
         if(is_array($result) && count($result)){
           foreach($result as $key=>$value){
+            $value['adress'] = str_replace("::",", ",$value['adress']);
           	$array[] = array(
                  'shop_id'  => $value['shop_id'],
                  'name'     => $value['name'],
@@ -3241,7 +3352,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
           	);
           }
 		}
-        return @$array;
+        return @$array[0];
 
     }
 

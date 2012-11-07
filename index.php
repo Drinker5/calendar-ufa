@@ -26,7 +26,6 @@
 	require_once(path_root.'js/facebook/facebook.php');
 	require_once(path_modules.'ini.users.php');//Создание объекта Пользователь
 	require_once(path_modules.'ini.akcia.php');
-	require_once(path_modules.'ini.shop.php');
 
 	switch($_URLP[0]){
 		case 'active'://Активация нового пользователя
@@ -77,7 +76,7 @@
 				/* Для странички смены аватара НАЧАЛО */
 				$w=0; $h=0;
 				if(isset($_URLP[0]) && $_URLP[0] == 'my' && isset($_URLP[1]) && $_URLP[1] == 'avatar'){
-					$w=129; $h=129;
+					$w=190; $h=190;
 				}
 				/* Для странички смены аватара КОНЕЦ */
 				$_SESSION['WP_USER'] = $USER->Info($_SESSION['WP_USER']['user_wp'],$w,$h);

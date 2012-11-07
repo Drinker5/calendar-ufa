@@ -21,8 +21,8 @@
              </div>
              <div class=\"nav-panel group\">
                 <ul class=\"fl_l left\">
-                    <li><a href=\"#\"><i class=\"small-icon icon-add-wish\"></i>Добавить желание</a></li>
-                    <li><a href=\"#\"><i class=\"small-icon icon-wish-list\"></i>Добавить wishlist</a></li>
+                    <li><a href=\"/type-5\"><i class=\"small-icon icon-add-wish\"></i>Добавить желание</a></li>
+                    <!--<li><a href=\"#\"><i class=\"small-icon icon-wish-list\"></i>Добавить wishlist</a></li>-->
                 </ul>
 
                 <ul class=\"fl_r right\">";

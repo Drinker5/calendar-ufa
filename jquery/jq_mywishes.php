@@ -229,7 +229,10 @@
 
         return $return_array;
       }
-      else echo "У Вас нет исполненных желаний!";
+      else{
+        if (!empty($par)) echo "У Вас нет исполненных желаний!";
+        else echo "У Вас нет желаний!";
+      }
     }
 
     if(isset($_POST['list'])){
@@ -238,20 +241,13 @@
 
 //удалить желание
 	if(isset($_POST['del'])){
-		$GLOBALS['PHP_FILE']=__FILE__;
-		$GLOBALS['FUNCTION']=__FUNCTION__;
-		$tbusers = "pfx_users_hochu";
-		$result=$MYSQL->query("DELETE FROM `".$tbusers."` WHERE `user_wp`=".(int)$_SESSION['WP_USER']['user_wp']." AND `akcia_id`=".(int)$_POST['del']);
+		$USER->DeleteHochu($_POST['del']);;
         echo "ok";
 	}
 
 //сохранение изменений
     if(isset($_POST['wish'])){
-		$GLOBALS['PHP_FILE']=__FILE__;
-		$GLOBALS['FUNCTION']=__FUNCTION__;
-		$tbusers = "pfx_users_hochu";
-        $reason = $_POST['w_reason'];
-		$result=$MYSQL->query("UPDATE $tbusers SET `reason`='$reason' WHERE `user_wp`=".(int)$_SESSION['WP_USER']['user_wp']." AND `akcia_id`=".(int)$_POST['wish']);
+        $USER->UpdateHochu($_POST['wish'], $_POST['w_reason']);
         echo "ok";
 	}
 

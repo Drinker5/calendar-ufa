@@ -1,0 +1,26 @@
+div.old_avatars
+{
+    margin-top: 15px;
+    overflow: hidden;
+}
+div.simple_old_avatar
+{
+    float:left;
+    width:95px;
+    text-align: center;
+}
+div.simple_old_avatar img
+{
+    width:75px;
+}
+div.error_messages
+{
+    color:red;
+    margin-top: 15px;
+    font-size: 12px;
+    display: none;
+}
+a.set_to_default_avatar
+{
+    display: block;
+}

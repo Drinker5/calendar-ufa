@@ -224,6 +224,11 @@
 		return $catFull;
 	}
 
+    if(isset($_POST['type']) and ($_POST['type'] == 'add')){
+        $USER->AddHochu($_POST['wish_id'], $_POST['shop_id']);
+        echo "ok";
+    }
+
 	if(isset($_POST['list'])){
 		searchGifts($_POST['type_id'],$_POST['gr_id'],$_POST['items'],$_POST['list'],$_POST['order'],'json',$_POST['cat'],$_POST['currency'],$_POST['cFrom']*100,$_POST['cTo']*100,$_POST['name'],$_POST['region'],$_POST['mR'],$_POST['mP'],$_POST['oA']);
 	}

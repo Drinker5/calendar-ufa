@@ -19,7 +19,7 @@ switch(@$_POST['type'])
 					$_html.='
                             <div class="wishlist-comment group" id="comments-'.$v['id'].'-id">
                                 <img src="'.$v['user']['photo'].'" class="small-avatar-img fl_l">
-                                <a href="javascript:;" onclick="CommentsAction('.varr_int($_POST['id']).',\'delete\','.$v['id'].')" class="opacity_link fl_r">
+                                <a href="javascript:;" onclick="CommentsAction('.varr_int($_POST['id']).',\'delete\','.$v['id'].',1)" class="opacity_link fl_r">
                                     <i class="small-icon icon-delete active"></i>
                                 </a>
                                 <div class="comment-content wrapped">
