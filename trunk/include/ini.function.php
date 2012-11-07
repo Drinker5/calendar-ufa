@@ -583,6 +583,86 @@ function ShowAvatar($user_wp=array(),$w=70,$h=70,$center=false){
 }
 
 
+function ShowAvatarsAlbum($user_wp,$w=190,$h=190,$center=false,$count=0){
+    global $MYSQL;
+    global $USER;
+    $album_id = $USER -> GetAvatarsAlbumId($user_wp);
+    $GLOBALS['PHP_FILE'] = __FILE__;
+    $GLOBALS['FUNCTION'] = __FUNCTION__;
+    if($w == 0 or $h == 0) return '';
+    $limit = ($count > 0)?" LIMIT 0, $count ":'';
+    $photos = $MYSQL->query("SELECT domen, photo, id FROM pfx_users_photos WHERE user_wp = $user_wp AND `album_id` = $album_id  $limit ORDER BY `id` DESC ");
+    if(is_array($photos)){
+       $domen = upload_url; //$photos[0]['domen'];
+       foreach($photos as $key2=>$value2){
+            if(strlen($value2['photo']) > 0)
+              $arrAvatars[] = array(
+                 'user_wp'  => $user_wp,
+                 'avatar'   => $value2['photo'],
+                 'photo_id' => $value2['id'],
+                 'w'        => $w,
+                 'h'        => $h,
+                 'center'   => $center,
+              );
+             else
+              $arrAvatars[] = array(
+                 'user_wp'  => $user_wp,
+                 'avatar'   => no_foto,
+                 'photo_id' => 0,
+                 'w'        => $w,
+                 'h'        => $h,
+                 'center'   => $center,
+              );
+       }
+
+        if(isset($arrAvatars) && is_array($arrAvatars))
+        {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $domen);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, 'avatar='.urlencode(serialize($arrAvatars)));
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = objectToArray(json_decode(curl_exec($ch)));
+            if(curl_errno($ch) != 0)
+            {
+                $result  = "errno: ".curl_errno($ch)."\n";
+                $result .= "error: ".curl_error($ch)."\n";
+                curl_close($ch);
+            } 
+            else 
+            {
+                curl_close($ch);
+                if(is_array($result))
+                {
+                    $n = count($result);
+                    for ($i=0;$i<$n;$i++)
+                    {
+                        $array[] = array(
+                        'user_wp'  => $result[$i]['user_wp'],
+                        'avatar'   => $result[$i]['avatar'],
+                        'file'     => $result[$i]['file'],
+                        'photo_id' => $arrAvatars[$i]['photo_id'],
+                      );
+                    }
+                }
+            }
+        }
+        else 
+        {
+            $array[] = array(
+                 'user_wp'  => 0,
+                 'avatar'   => no_foto,
+                 'file'     => no_foto,
+                 'photo_id' => 0,
+            );
+        }
+    }
+    return @$array;
+}
+
 // Выводит путь к фото
 function ShowPhotoAlbums($user_wp,$album=array(),$photo=array()){
 	global $MYSQL;
@@ -1030,18 +1110,21 @@ function ScanErrorFiles($directory){
         return $date_rus;
     }
 
-//Массив валют
-	function curArray(){
+   	function curArray(){
 		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
 		$GLOBALS['FUNCTION'] = __FUNCTION__;
 
-		$cur=$MYSQL->query("SELECT id, currency, mask FROM `pfx_currency`");
+		$cur=$MYSQL->query("SELECT id, mask FROM `pfx_currency`");
 		if(is_array($cur))
 		{
-			return $cur;
+			$curFull=array();
+			foreach($cur as $key=>$value)
+			{
+				$curFull[]=array('id'=>$value['id'],'mask'=>$value['mask']);
+			}
 		}
-		else return array();
-	}
+		return $curFull;
+   	}
 ?>

@@ -88,12 +88,6 @@ jQuery(document).ready(function($) {
         .popover('setOption', 'horizontalOffset', -31)
         .popover('setClasses', 'friend-action-popover');
 
-    $(".friend-item .my-friend-actions-short")
-        .popover('content', $('#my-friend-action-template-short').html(), true)
-        .popover('setOption', 'position', 'bottom')
-        .popover('setOption', 'horizontalOffset', -31)
-        .popover('setClasses', 'friend-action-popover');
-
     $(".friend-item .find-friend-actions")
         .popover('content', $('#find-friend-action-template').html(), true)
         .popover('setOption', 'position', 'bottom')
@@ -108,7 +102,7 @@ jQuery(document).ready(function($) {
 
     $('.small-avatar, .small-avatar i')
         .popover('content', $('#common-actions').html())
-        .popover('setOption', 'horizontalOffset', -24)
+        .popover('setOption', 'horizontalOffset', -45)
         .popover('setClasses', 'personal-settings-popover')
         .popover('setOption', 'position', 'bottom');
 
@@ -260,4 +254,11 @@ jQuery(document).ready(function($) {
     });
 
     $('#content select').not('#country,#user_townid').selectBox();
+
+    //===== Tooltips =====//
+
+    $('.tipN').tipsy({gravity: 'n',fade: true, html:true});
+    $('.tipS').tipsy({gravity: 's',fade: true, html:true});
+    $('.tipW').tipsy({gravity: 'w',fade: true, html:true});
+    $('.tipE').tipsy({gravity: 'e',fade: true, html:true});
 });

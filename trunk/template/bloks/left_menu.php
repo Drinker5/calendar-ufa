@@ -1,5 +1,26 @@
 			<div id="sidebar" class="fl_l">
 <?php
+function showAvatarsSlider($user_id)
+	{
+		global $USER;
+		$limit = 5;
+		$photos = $USER -> ShowAvatarAlbum($user_id,$limit);
+
+		if ($photos == 0)
+			return '<img width="190" src="'.no_foto.'" />';
+		$default_avatar = $_SESSION['WP_USER']['photo'];
+		//общий output
+		$output = '';
+		//временный output, пишем сюда все аватары, кроме дефолтной
+		$tmp_output = '';
+		foreach ($photos as $value) {
+			if ($default_avatar == $value['avatar'])
+				$output .= "<img width='190' class='rsImg' src='{$value['avatar']}' />";
+			else
+				$tmp_output .= "<img width='190' class='rsImg' src='{$value['avatar']}' />";
+		}
+		return $output.$tmp_output;
+	}
 	switch($left_menu){
 		//!Страница пользователя но не моя
 		case 0:
@@ -11,9 +32,14 @@
 				if(strlen($USER_INFO['url'])>5)$of_site='<tr><td><img src="/pic/official_site.png" width="13" height="17" />&nbsp;</td><td><a href="'.$USER_INFO['url'].'" target="_blank">'.LANG_OF_SITE.'</a></td></tr>';
 			}
 
+
 ?>
 				<div class="sidebar-inner">
-					<div class="profile-avatar"><img src="<?=$USER_INFO['photo']?>" width="190" /></div>
+					<div class="profile-avatar">
+						<div class="royalSlider rsDefault">
+	                        <?=showAvatarsSlider($USER_INFO['user_wp'])?>
+                     	</div>
+                     </div>
 					<div class="profile-bottom">
 						<div class="status-wrap">
 							<?=OnlineStatus($USER_INFO['status_chat'],'')?>
@@ -63,14 +89,13 @@
 		//!Моя страница
 		case 1:
 			//Маленький аватар
-			$avatar_big=ShowAvatar(array($_SESSION['WP_USER']['user_wp']),190,190);
-			if(is_array($avatar_big))$avatar_big=$avatar_big[0]['avatar'];
-			else $avatar_big=no_foto;
+			
 ?>
 				<div class="sidebar-inner">
 					<div class="profile-avatar">
-						<img src="<?=$avatar_big?>" width="190" />
-						<!--i class="popover-btn info-icon"></i-->
+						<div class="royalSlider rsDefault">
+							<?=showAvatarsSlider($_SESSION['WP_USER']['user_wp'])?>
+						</div>
 					</div>
 					<div class="profile-bottom">
 						<div class="status-wrap">
@@ -118,42 +143,42 @@
 					</div><!--end of .profile-bottom-->
 
 					<ul class="sidebar-menu">
-						<li>
+						<li<?php if(@$_URLP[1]=='gifts')echo ' class="active"'; ?>>
 							<a href="/my-gifts"><i class="small-icon icon-gift"></i> Мои подарки</a>
 							<span class="notice-wrap"><?=$USER->CountPodarki(0,0,'new')?></span>
 						</li>
-						<li>
+						<li<?php if(@$_URLP[1]=='friends')echo ' class="active"'; ?>>
 							<a href="/my-friends"><i class="small-icon icon-whos-near"></i> Мои друзья</a>
 							<span class="notice-wrap popover-btn" id="add-friend"><i class="small-icon icon-green-plus"></i></span>
 						</li>
-						<li>
+						<li<?php if(@$_URLP[1]=='wishes')echo ' class="active"'; ?>>
 							<a href="/my-wishes"><i class="small-icon icon-wish"></i> Мои желания</a>
 						</li>
-						<li>
+						<!--li<?php if(@$_URLP[1]=='calendar')echo ' class="active"'; ?>>
 							<a href="/my-calendar"><i class="small-icon icon-calendar"></i> Мой календарь</a>
-						</li>
-						<li>
+						</li-->
+						<li<?php if(@$_URLP[1]=='subscribes')echo ' class="active"'; ?>>
 							<a href="/my-subscribes"><i class="small-icon icon-subscription"></i> Мои подписки</a>
 						</li>
-						<li>
+						<li<?php if(@$_URLP[1]=='photoalbums')echo ' class="active"'; ?>>
 							<a href="/my-photoalbums"><i class="small-icon icon-photoalbum"></i> Мои фотоальбомы</a>
 						</li>
 						<div class="separator"></div>
-						<li>
+						<li<?php if(@$_URLP[1]=='feed')echo ' class="active"'; ?>>
 							<a href="/my-feed"><i class="small-icon icon-address"></i> Лента новостей</a>
 						</li>
-						<li>
+						<li<?php if(@$_URLP[1]=='announcements')echo ' class="active"'; ?>>
 							<a href="/my-announcements"><i class="small-icon icon-notice"></i> Мои уведомления</a>
 							<span class="notice-wrap"><?=$USER->CountUvedom()?></span>
 						</li>
 						<div class="separator"></div>
-						<li>
+						<li<?php if(@$_URLP[1]=='profile' or @$_URLP[1]=='phones' or @$_URLP[1]=='alerts' or @$_URLP[1]=='avatar' or @$_URLP[1]=='password')echo ' class="active"'; ?>>
 							<a href="/my-profile"><i class="small-icon icon-settings"></i> Мои настройки</a>
 						</li>
 					</ul>
 				</div><!--end of .sidebar-inner-->
 
-				<table class="online-count">
+				<!--table class="online-count">
 					<tr>
 						<td><div class="bubble bordered">сейчас on-line <?=lang_friends_online($USER->CountFriends(0,$_SESSION['WP_USER']['user_wp'],1),$_SESSION['lang'])?></div></td>
 						<td><a href="#" class="btn btn-green">Чат</a></td>
@@ -449,4 +474,8 @@
 
 }
 ?>
-			</div><!--end of #sidebar-->
+			</div>
+<script>
+
+</script>
+<!--end of #sidebar-->

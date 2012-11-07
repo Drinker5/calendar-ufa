@@ -93,7 +93,7 @@
 .popover .wrap {
     border: 1px solid #bfbfbf;
     background-color: #f9fafa;
-    padding: 2px;
+/*     padding: 0; */
     -webkit-border-radius: 2px;
        -moz-border-radius: 2px;
          -o-border-radius: 2px;

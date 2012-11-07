@@ -2,6 +2,7 @@
 class webimgUploadedFileXhr{
     function save($file){
     	global $par;
+      global $USERS;
     	    	
     	if(!is_array($par)) return false;
     	
@@ -193,9 +194,13 @@ class webimgFileUploader {
         
     }    
 }
+global $USER;
 
 	$allowedExtensions=array('jpg', 'jpeg', 'png', 'gif');
-	$par=array('type' => @$_GET['type'], 'user_wp' => varr_int(@$_SESSION['WP_USER']['user_wp']), 'avatar_orig' => @$_POST['avatar_orig'], 'w' => @$_POST['w'], 'h' => @$_POST['h'], 'x' => @$_POST['x'], 'y' => @$_POST['y']/*,  'album_id' => varr_int(@$_GET['album_id'])*/);
+  //если не передан альбом - грузим в альбом для аватар
+  $user_wp = (int)$_SESSION['WP_USER']['user_wp'];
+  $album_id = (isset($_GET['album_id']) && strlen($_GET['album_id']) > 0)?$_GET['album_id']:$USER -> GetAvatarsAlbumId($user_wp);
+	$par=array('type' => @$_GET['type'], 'user_wp' => varr_int(@$_SESSION['WP_USER']['user_wp']), 'avatar_orig' => @$_POST['avatar_orig'], 'w' => @$_POST['w'], 'h' => @$_POST['h'], 'x' => @$_POST['x'], 'y' => @$_POST['y'],  'album_id' => $album_id);
 	if(@$_GET['type']!='avatar'){
 		$uploader = new webimgFileUploader($allowedExtensions, max_file_size);
 		$result = $uploader->handleUpload();
@@ -220,7 +225,16 @@ class webimgFileUploader {
 
 		if($error==0 && is_array($result)){
 			$result=$result[0];
-			if($result['error_id']==0)$MYSQL->query("UPDATE `pfx_users` SET `domen`='".upload_url."', `photo`='".$result['avatar']."' WHERE `user_wp` = ".varr_int(@$_SESSION['WP_USER']['user_wp']));
+			if($result['error_id']==0)
+      {
+        $MYSQL->query("UPDATE `pfx_users` SET `domen`='".upload_url."', `photo`='".$result['avatar']."' WHERE `user_wp`=$user_wp ");
+        $photo_tbl = 'pfx_users_photos';
+        if ($album_id == 0)
+          $album_id = $USER -> CreateAvatarsAlbum($user_wp);
+        $MYSQL->query("INSERT INTO $photo_tbl  (`album_id`,`user_wp`,`domen`, `photo`) VALUES ($album_id,$user_wp,'".upload_url."','{$result['avatar']}')");
+
+
+      }
 		}
 	}
 	header('Content-type: application/json');

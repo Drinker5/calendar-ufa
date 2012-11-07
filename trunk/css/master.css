@@ -291,12 +291,11 @@ a {
 }
 
 .sidebar-menu li:hover {
-    background-color: #f3f9fd;
+    background-color: #f0f6ff;
 }
 
-.sidebar-menu li.active {
-    background-color: #75849c;
-    background-color: rgba(117, 132, 156, 0.15);
+.sidebar-menu li.active, .sidebar-menu li:active {
+    background-color: #ecf0f6;
 }
 
 .sidebar-menu li a {
@@ -309,7 +308,7 @@ a {
 }
 
 .sidebar-menu li.active a {
-    font-weight: bold;
+/*     font-weight: bold; */
     color: #4f72ab;
 }
 
@@ -325,6 +324,13 @@ a {
     font-weight: bold;
     color: #94d600;
     padding: 0;
+}
+
+.notice-wrap.count {
+ background: #98c21d;
+ color: #fff !important;
+ padding: 1px 5px !important;
+ border-radius: 5px;
 }
 
 .sidebar-menu li #add-friend {
@@ -602,10 +608,11 @@ a {
 
 ul#actions li a {
     display: block;
-    padding: 4px 6px 4px 10px;
+    padding: 4px 6px 4px 7px;
     text-decoration: none;
     color: #5b6880;
-    text-align: right;
+    text-align: left;
+    width: 80px;
     font-weight: bold;
     -webkit-transition: background-color 0.3s ease;
        -moz-transition: background-color 0.3s ease;
@@ -613,17 +620,15 @@ ul#actions li a {
             transition: background-color 0.3s ease;
 }
 
-ul#actions li:last-child a {
+ul#actions li:last-child {
     color: #7FB71A;
 }
 
-ul#actions li a:hover {
+ul#actions li:hover {
     background-color: #EAECEF;
-    border-bottom: 1px solid #CCD0DA;
-    padding-bottom: 3px;
 }
 
-ul#actions li:last-child a:hover {
+ul#actions li:last-child {
     border: none;
     padding-bottom: 4px;
 }

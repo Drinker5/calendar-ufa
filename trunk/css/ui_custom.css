@@ -467,8 +467,8 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-datepicker td a{ margin-bottom:0px; border:0px; }
 .ui-datepicker td:hover{ color:white; }
 .ui-datepicker td .ui-state-default { border:0px; background:none; margin-bottom:0px; padding:6px; color: #505050; text-align: center; filter:none; }
-.ui-datepicker td .ui-state-active{ background:#67919d; margin-bottom:0px; font-size:normal; text-shadow: 0px; color:white;   -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
-.ui-datepicker td .ui-state-default:hover{ background:#476981; color:white; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+.ui-datepicker td .ui-state-active{ background:#7392bc; margin-bottom:0px; font-size:normal; text-shadow: 0px; color:white;   -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+.ui-datepicker td .ui-state-default:hover{ background:#7392bc; color:white; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
 
 
 /* ===== UI Progress bar ===== */

@@ -27,6 +27,10 @@ switch($_URLP[1]){
 		//require_once(path_root."jquery/jq_chat.php");
 		require_once(path_root."jquery/chat/ini.jquery.php");
 	break;
+	case 'avatar':
+		if(isset($_SESSION['WP_USER']))
+		require_once(path_root."jquery/jq_profile_avatar.php");
+	break;
 
 	case 'gbnchat': // Чат
 		if(isset($_SESSION['WP_USER']))
@@ -69,6 +73,11 @@ switch($_URLP[1]){
 	case 'wingift': // ОКНО Подарить подарок
 	    if(isset($_SESSION['WP_USER']))
 		require_once(path_root."jquery/jq_win_gift.php");
+	break;
+
+	case 'listfriends': // Выводит список моих друзей для подарка
+	    if(isset($_SESSION['WP_USER']))
+		require_once(path_root."jquery/jq_friends.php");
 	break;
 
 	case 'listmyfriends': // Выводит список моих друзей для подарка

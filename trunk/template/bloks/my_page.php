@@ -10,7 +10,7 @@
 	$fPhoto=$USER->ShowLastPhoto($USER_INFO['user_wp'],9,53,53);
 	if(is_array($fPhoto))
 		foreach($fPhoto as $k=>$v)
-			$photos.='<img src="'.$v['photo'].'" alt="'.$v['header'].'" width="53" height="53">'."\r\n";
+			$photos.='<a rel="lastPhoto" href="'.$v['photo_original'].'"><img src="'.$v['photo'].'" alt="'.$v['header'].'" width="53" height="53"></a>'."\r\n";
 	else
 		$photos='Список фотографий пуст!';
 
@@ -112,6 +112,11 @@
                 </div>
 
 				<script type="text/javascript">
+					$("a[rel=lastPhoto]").fancybox({
+						'transitionIn'		: 'none',
+						'transitionOut'		: 'none',
+					});
+
 					function myStatus()
 					{
 						var status = $("#status-input").val(),
@@ -167,15 +172,10 @@
                                     <p>Пол: <?php echo ($USER_INFO['sex']==2)?'Женский':'Мужской'; ?></p>
                                     <p>Семейное положение: <?=$uMaritalSatus[$USER_INFO['marital_status']]?></p>
                                     <?php echo empty($USER_INFO['about'])?"":"<p>О себе: ".$USER_INFO['about']."</p>"; ?>
-<?php if(!empty($uContactInfo)){ ?>
-                                    <br>
-                                    <p class="name">Контактная информация:</p>
-<?php echo $uContactInfo; ?>
-<?php } ?>
                                 </div>
 <?php if(!empty($USER_INFO['education'])){ ?>
 
-                                <div class="info-row middle">
+                                <div class="info-row">
                                     <p class="name">Образование:</p>
                                     <p><?php echo ToText($USER_INFO['education']); ?></p>
                                 </div>
@@ -185,6 +185,13 @@
                                 <div class="info-row">
                                     <p class="name">Карьера:</p>
                                     <p><?php echo ToText($USER_INFO['career']); ?></p>
+                                </div>
+<?php } ?>
+<?php if(!empty($uContactInfo)){ ?>
+
+                                <div class="info-row">
+                                    <p class="name">Контактная информация:</p>
+<?php echo $uContactInfo; ?>
                                 </div>
 <?php } ?>
                                 
@@ -258,7 +265,10 @@
 				<div id='pointselector-text'></div>
 
 				<script>
-					var map=mapbox.map('map').zoom(<?=$zoom?>).center({lat: <?=$lat?>, lon: <?=$lon?>});
+					var map=mapbox.map('map', null, null, [
+						easey_handlers.DragHandler(),
+						easey_handlers.DoubleClickHandler()
+					]).zoom(<?=$zoom?>).center({lat: <?=$lat?>, lon: <?=$lon?>});
 					map.addLayer(mapbox.layer().id('jam-media.map-tckxnm3s'));
 					map.ui.zoomer.add();
 
@@ -337,7 +347,10 @@
 				<div id='pointselector-text'></div>
 
 				<script>
-					var map=mapbox.map('map').zoom(<?=$zoom?>).center({<?=$map_cnt?>});
+					var map=mapbox.map('map', null, null, [
+						easey_handlers.DragHandler(),
+						easey_handlers.DoubleClickHandler()
+					]).zoom(<?=$zoom?>).center({<?=$map_cnt?>});
 					map.addLayer(mapbox.layer().id('jam-media.map-tckxnm3s'));
 					map.ui.zoomer.add();
 
@@ -404,12 +417,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="group">
+                        <!-- <div class="group">
                             <label class="fl_r"><input type="checkbox">Только друзья</label>
                             <div class="fl_l toggle-link pointer">
                                 <span>Поиск по новостям</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="toggle-group hide-elem hide group">
@@ -487,9 +500,10 @@
 					function NewEvent(){
 					}
 
-					function CommentsAction(id,type,n){
+					function CommentsAction(id,type,n,t){
 						var msg    = $("#comments-" + id + "-add").val(),
-							count  = $("#comments-" + id + "-count").get(0);
+							count  = $("#comments-" + id + "-count").get(0),
+							count0 = $("#comments-" + id + "-count-other").get(0);
 
 						$.ajax({
 							url:'/jquery-comments',
@@ -499,20 +513,24 @@
 							success: function(data){
 								var html,
 									nCount         = count.innerHTML,
+									nCountOther    = count0.innerHTML,
 									idComments     = $('#comments-' + id);
 
 								if(data){
 									if(type=='add'){
 										nCount++;
+										nCountOther++;
 										html = jQuery.parseJSON(data);
 										idComments.append(html.html);
-										//idComments.find('.wishlist-comment group:last').slideDown('slow');
 										$("#comments-" + id + "-add").val('');
 									} else if(type=='delete'){
 										nCount--;
+										nCountOther--;
 										$('#comments-' + n + '-id').slideUp('slow',function(){
 											$(this).remove();
 										});
+										if(t==1)
+											$('<span id="comments-' + id + '-count-other">' + nCountOther +'</span>').replaceAll('span#comments-' + id + '-count-other');
 									}
 									$('#comments-' + id + '-count').html(nCount);
 								}
@@ -523,7 +541,7 @@
 					function CommentsShow(id,num){
 						var idCommentsFull = $('#comments-' + id + '-full');
 
-						$(this).toggle(function(){
+						//$(this).toggle(function(){
 							if(cToggle==1){
 								$.ajax({
 									url:'/jquery-comments',
@@ -542,11 +560,13 @@
 								});
 							}
 							else
-								idCommentsFull.slideDown('slow');
-						},
-						function(){
-							idCommentsFull.slideUp('slow');
-						});
+								idCommentsFull.slideToggle('slow');
+							//else
+							//	idCommentsFull.slideDown('slow');
+						//},
+						//function(){
+							//idCommentsFull.slideUp('slow');
+						//});
 					}
 
 					$(window).scroll(function(){

@@ -164,7 +164,8 @@
 						$scripts .='
 							<script src="js/jcrop/jquery.Jcrop.min.js"></script>
 							<link rel="stylesheet" href="js/jcrop/jquery.Jcrop.css" type="text/css" />
-							<link rel="stylesheet" href="css/upload.css" type="text/css" />';
+							<link rel="stylesheet" href="css/upload.css" type="text/css" />
+							<link rel="stylesheet" href="css/profile-avatar-page.css" type="text/css" />';
 					break;
 
 					//!Телефоны
@@ -310,22 +311,22 @@
 
 		//!Подарки
 		case 'gift':
-			$left_menu=4;
+			$left_menu=1;
 			require_once(path_modules.'ini.groups.php');
 			$akcia_id = varr_int(@$_URLP[1]);
 			$AKCIA_INFO = $AKCIA->Show($akcia_id,183,128);
 			if(!is_array($AKCIA_INFO)) header("Location: /".@$_SESSION['WP_USER']['user_wp']);
 			$TITLE = $AKCIA_INFO['header'];
 			$file = 'bloks/gift.php';
-
-			$scripts .= "
-			  <link type=\"text/css\" rel=\"stylesheet\" href=\"css/colorbox.css\">
-			  <script type=\"text/javascript\" src=\"js/jquery.colorbox.js\"></script>
-			  <script type=\"text/javascript\" src=\"js/jquery.mousewheel.js\"></script>
-			  <link type=\"text/css\" href=\"css/jquery.jscrollpane.css\" rel=\"stylesheet\" media=\"all\" />
-			  <script type=\"text/javascript\" src=\"js/jquery.jscrollpane.min.js\"></script>
-			  <script type=\"text/javascript\" src=\"js/photoview.js\"></script>
-			";
+            $scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>';
+			//$scripts .= "
+			//  <link type=\"text/css\" rel=\"stylesheet\" href=\"css/colorbox.css\">
+			//  <script type=\"text/javascript\" src=\"js/jquery.colorbox.js\"></script>
+			//  <script type=\"text/javascript\" src=\"js/jquery.mousewheel.js\"></script>
+			//  <link type=\"text/css\" href=\"css/jquery.jscrollpane.css\" rel=\"stylesheet\" media=\"all\" />
+			//  <script type=\"text/javascript\" src=\"js/jquery.jscrollpane.min.js\"></script>
+			//  <script type=\"text/javascript\" src=\"js/photoview.js\"></script>
+			//";
 		break;
 
         //Просмотр вишлиста
@@ -400,7 +401,10 @@
 						$file = 'bloks/my_page.php';
 						$scripts .='
 							<script src="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.js"></script>
-							<link href="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.css" rel="stylesheet" />';
+							<link href="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.css" rel="stylesheet" />
+							<script type="text/javascript" src="js/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+							<script type="text/javascript" src="js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+							<link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />';
 					break;
 				}
 			}

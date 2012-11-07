@@ -545,10 +545,6 @@
  cursor: pointer;
 }
 
-.big-circle-icon:hover {
-
-}
-
 .circle-icon-check-in {
  background-position: 0 0;
 }
@@ -735,4 +731,78 @@
 }
 .category-icon-people.active {
  background-position: -84px -336px;
+}
+
+.menu-icon {
+ display: -moz-inline-stack;
+ display: inline-block;
+ width: 14px;
+ height: 14px;
+ line-height: 14px;
+ vertical-align: top;
+ background-image: url("../pic/icons/menu-sprite.png");
+ background-repeat: no-repeat;
+ margin-right: 4px;
+}
+
+.menu-icon.icon-gift {
+ background-position: 0 0;
+}
+
+.menu-icon.icon-man-near {
+ background-position: -1px -15px;
+}
+
+.menu-icon.icon-add-friend {
+ background-position: -1px -44px;
+}
+
+.menu-icon.icon-add {
+ background-position: -1px -60px;
+}
+
+.icon-calendar.icon-calendar {
+ background-position: 0px -76px;
+}
+
+.menu-icon.icon-subscription {
+ background-position: 0px -90px;
+}
+
+.menu-icon.icon-photoalbum {
+ background-position: 0px -105px;
+}
+
+.menu-icon.icon-address {
+ background-position: -1px -120px;
+}
+
+.menu-icon.icon-notice {
+ background-position: -2px -135px;
+}
+
+.menu-icon.icon-settings {
+ background-position: -1px -150px;
+}
+
+.menu-icon.icon-certificate {
+ background-position: 0px -166px;
+}
+
+.menu-icon.icon-sale {
+ background-position: -2px -182px;
+}
+
+.menu-icon.icon-review {
+ background-position: 0px -210px;
+}
+
+.i-logout {
+ background: url(../pic/icons/logout.png) no-repeat;
+ width: 14px;
+ height: 14px;
+ float: left;
+ position: relative;
+ top: 4px;
+ left: 7px;
 }

@@ -1323,3 +1323,48 @@ error
     font-size: 12px;
     margin: 20px 0px 10px 0px;
 }
+
+.place-search .title
+{
+    height: 60px;
+}
+.place-search .title .geo_icon
+{
+    position: relative;
+    top: -5px;
+}
+.place-search .title .separator
+{
+    margin-top: 10px;
+}
+.place-search .gift-search-block .col3
+{
+    width: 220px;
+}
+.place-search .recipient
+{
+    width: 100%;
+}
+
+.geo_arrow-down
+{
+     background: url(../pic/icons/geo_arrow-down.png) no-repeat;
+     width: 27px;
+     height: 25px;
+     display: inline-block;
+     position: relative;
+     bottom: -18px;
+}
+.place-search .geo_arrow-down
+{
+    margin-left: 20px;
+}
+
+.percent 
+{
+    background: url(../pic/icons/percent.png) no-repeat;
+    width: 37px;
+    height: 37px;
+    display: inline-block;
+    float: none!important;
+}

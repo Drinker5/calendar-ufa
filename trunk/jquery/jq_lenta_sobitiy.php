@@ -27,7 +27,7 @@
                         $_comments.='
                             <div class="wishlist-comment group" id="comments-'.$v['id'].'-id">
                                 <img src="'.$v['user']['photo'].'" class="small-avatar-img fl_l">
-                                <a href="javascript:;" onclick="CommentsAction('.$massFeed[$i]['id'].',\'delete\','.$v['id'].')" class="opacity_link fl_r">
+                                <a href="javascript:;" onclick="CommentsAction('.$massFeed[$i]['id'].',\'delete\','.$v['id'].',0)" class="opacity_link fl_r">
                                     <i class="small-icon icon-delete active"></i>
                                 </a>
                                 <div class="comment-content wrapped">
@@ -47,6 +47,7 @@
                         <div class="p_r">
                         <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
@@ -57,7 +58,7 @@
                                         </strong>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-whos-near active fl_l"></i>
@@ -84,6 +85,7 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
                                     <strong>
@@ -91,12 +93,12 @@
                                         Мне нравится
                                     </strong>
                                 </a>
-                            </li>
+                            </li>').'
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count0">'.$_comCount.'</span>)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
                             </li>
@@ -106,12 +108,12 @@
                             '.($_comCount>$maxCount?'
                             <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count1">'.$_numBegin.'</span>)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
                                 <span class="c-control-text imp-hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
@@ -120,7 +122,7 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\')">Отправить</button>
+                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
                                 <div class="feed-status2 wrapped">
                                     <div class="group">
                                         <span class="arrow_box2 fl_l">Комментировать</span>
@@ -139,6 +141,7 @@
                         <div class="p_r">
                         <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
@@ -164,7 +167,7 @@
                                         </strong>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-5 fl_l"></i>
@@ -203,6 +206,7 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
                                     <strong>
@@ -210,12 +214,12 @@
                                         Мне нравится
                                     </strong>
                                 </a>
-                            </li>
+                            </li>').'
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count0">'.$_comCount.'</span>)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
                             </li>
@@ -225,12 +229,12 @@
                             '.($_comCount>$maxCount?'
                             <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count1">'.$_numBegin.'</span>)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
                                 <span class="c-control-text imp-hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
@@ -239,7 +243,7 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\')">Отправить</button>
+                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
                                 <div class="feed-status2 wrapped">
                                     <div class="group">
                                         <span class="arrow_box2 fl_l">Комментировать</span>
@@ -266,6 +270,7 @@
                         <div class="p_r">
                         <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
@@ -283,7 +288,7 @@
                                         </strong>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-photoalbum fl_l"></i>
@@ -303,6 +308,7 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
                                     <strong>
@@ -310,12 +316,12 @@
                                         Мне нравится
                                     </strong>
                                 </a>
-                            </li>
+                            </li>').'
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count0">'.$_comCount.'</span>)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
                             </li>
@@ -325,12 +331,12 @@
                             '.($_comCount>$maxCount?'
                             <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count1">'.$_numBegin.'</span>)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
                                 <span class="c-control-text imp-hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
@@ -339,7 +345,7 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\')">Отправить</button>
+                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
                                 <div class="feed-status2 wrapped">
                                     <div class="group">
                                         <span class="arrow_box2 fl_l">Комментировать</span>
@@ -361,6 +367,7 @@
                         <div class="p_r">
                         <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
@@ -381,13 +388,13 @@
                                 <li>
                                     <a href="#" class="opacity_link">
                                         <strong>
-                                            <i class="small-icon active icon-invite"></i>
+                                            <i class="small-icon active icon-wish"></i>
                                             Добавить себе
-                                            <i class="small-icon icon-green-plus"></i>
+                                            <i class="small-icon active icon-green-plus"></i>
                                         </strong>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-wish fl_l"></i>
@@ -423,6 +430,7 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
                                     <strong>
@@ -430,12 +438,12 @@
                                         Мне нравится
                                     </strong>
                                 </a>
-                            </li>
+                            </li>').'
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count0">'.$_comCount.'</span>)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
                             </li>
@@ -445,12 +453,12 @@
                             '.($_comCount>$maxCount?'
                             <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count1">'.$_numBegin.'</span>)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
                                 <span class="c-control-text imp-hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
@@ -459,7 +467,7 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\')">Отправить</button>
+                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
                                 <div class="feed-status2 wrapped">
                                     <div class="group">
                                         <span class="arrow_box2 fl_l">Комментировать</span>
@@ -481,6 +489,7 @@
                         <div class="p_r">
                         <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
@@ -507,7 +516,7 @@
                                         </strong>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-check-in active fl_l"></i>
@@ -538,6 +547,7 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
                                     <strong>
@@ -545,12 +555,12 @@
                                         Мне нравится
                                     </strong>
                                 </a>
-                            </li>
+                            </li>').'
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count0">'.$_comCount.'</span>)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
                             </li>
@@ -560,12 +570,12 @@
                             '.($_comCount>$maxCount?'
                             <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count1">'.$_numBegin.'</span>)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
                                 <span class="c-control-text imp-hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
@@ -574,7 +584,7 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\')">Отправить</button>
+                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
                                 <div class="feed-status2 wrapped">
                                     <div class="group">
                                         <span class="arrow_box2 fl_l">Комментировать</span>
@@ -615,6 +625,7 @@
                                 </div>
                             </div>
                             <ul class="sub-action">
+                                '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                                 <li>
                                     <a href="#" class="opacity_link">
                                         <strong>
@@ -622,12 +633,12 @@
                                             Мне нравится
                                         </strong>
                                     </a>
-                                </li>
+                                </li>').'
                                 <li>
                                     <a href="#" class="opacity_link toggle-control">
                                         <strong>
                                             <i class="small-icon active icon-comments"></i>
-                                            Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count0">'.$_comCount.'</span>)
+                                            Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                         </strong>
                                     </a>
                                 </li>
@@ -637,12 +648,12 @@
                             '.($_comCount>$maxCount?'
                             <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count1">'.$_numBegin.'</span>)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
                                 <span class="c-control-text imp-hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count2">'.$_numBegin.'</span>)</span>
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
@@ -651,7 +662,7 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\')">Отправить</button>
+                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
                                 <div class="feed-status2 wrapped">
                                     <div class="group">
                                         <span class="arrow_box2 fl_l">Комментировать</span>

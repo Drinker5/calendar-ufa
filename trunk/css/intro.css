@@ -1,16 +1,5 @@
-@import url(http://fonts.googleapis.com/css?family=Headland+One);
+/* @import url(http://fonts.googleapis.com/css?family=Headland+One); */
 @import url(avgrund.css);
-
-@font-face {
- font-family: 'WebSymbolsRegular';
- src: url('/fonts/websymbols-regular-webfont.eot');
- src: url('/fonts/websymbols-regular-webfont.eot?#iefix') format('embedded-opentype'),
-   url('/fonts/websymbols-regular-webfont.woff') format('woff'),
-   url('/fonts/websymbols-regular-webfont.ttf') format('truetype'),
-   url('/fonts/websymbols-regular-webfont.svg#WebSymbolsRegular') format('svg');
- font-weight: normal;
- font-style: normal;
-}
 
 body {
 /*  background: #ededed url(../pic/intro/light.png) no-repeat center top; */
@@ -413,7 +402,6 @@ iframe {
  font-size: 50px;
  cursor: pointer;
  position: absolute;
- z-index:20;
 }
 
 .back:hover {

@@ -1,4 +1,25 @@
 //Операции с желаниями
+//добавление нового желания
+$('.wish_add').live('click', function(){
+    var wish_id = $(this).data('id');
+    var shop_id = $(this).data('shop');
+    if (typeof wish_id == 'undefined') return false;
+    else{
+        $.ajax({
+            url:'/jquery-gifts',
+            type:'POST',
+            data:{type:'add', wish_id:wish_id, shop_id:shop_id},
+            cache:false,
+            success:function(data){
+                if(data){
+                    $('.wish_add').removeClass('wish_add').addClass('disabled');
+                    $('.wish_add').html("<span class='wa_icon'></span>Добавлено в желания");
+                }
+            }
+        });
+    }
+});
+
 // сохранение изменений
 function SaveWish(id, that){
   reason = $('#wish_reason'+id).val();
