@@ -26,7 +26,7 @@ form{
 	padding: 10px; 
 }
 
-#event_type{
+#event_title{
 	margin-top:10px;
 	padding-left:10px;
 	
@@ -130,7 +130,7 @@ padding-left:10px;
 /* Выпадающий список в css/ui_custom.css 294 строка */
 /* строка 296: z-index там был 1000 и рисовалось за окошком */
 
-#event_note{
+#event_notes{
 	padding-left:10px;
 	outline: none; 
 	resize: none; 

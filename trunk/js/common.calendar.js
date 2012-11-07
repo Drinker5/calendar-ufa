@@ -3,11 +3,11 @@
 	var event_start = $('#event_start');
 	var event_end = $('#event_end');
 	var event_after = $('#event_after');
-	var event_type = $('#event_type');
+	var event_title = $('#event_title');
 	var event_repeat = $("#event_repeat");
 	var event_finish = $("#event_finish");
 	var event_reminder = $("#event_reminder");
-	
+	var event_notes = $("#event_notes");
 	var calendar = $('#calendar');
 	var form = $('#dialog-form');
 	var event_id = $('#event_id');
@@ -66,22 +66,24 @@
 		event_start.val("");
 		event_end.val("");
 		event_after.val("");
-		event_type.val("");
+		event_title.val("");
 		event_id.val("");
+		event_notes.val("");
 		event_repeat.selectBox("value", 0);
 		event_finish.selectBox("value", 0);
 		event_reminder.selectBox("value", 0);
 		
 	};
 	
-	/* изменение завершения */
+	/* отображение формы После даты: */
+	function finish_afterdata_display(param){
+		if(param==1){ event_after.parent().css("display","block"); }
+		else { event_after.parent().css("display","none"); } 
+	};
+	
 	$("#event_finish").change( function() {
-		if($(this).val() == 1) event_after.parent().css("display","block");
-			else { 
-				event_after.parent().css("display","none"); 
-				event_after.datepicker("hide"); 
-			}
-			
+			finish_afterdata_display($(this).val());
+			event_after.datepicker("hide"); 
 	});
 	/* режимы открытия формы */
 	function formOpen(mode) {
@@ -90,6 +92,7 @@
 			$('#add').show();
 			$('#edit').hide();
 			$("#delete").button("option", "disabled", true);
+			finish_afterdata_display(0);
 		}
 		else if(mode == 'edit') {
 			/* скрываем кнопку Добавить, отображаем Изменить и Удалить*/
@@ -97,6 +100,7 @@
 			$('#add').hide();
 			$("#delete").button("option", "disabled", false);
 		}
+		
 		form.dialog('open');
 	};
 	/* инициализируем Datetimepicker */
@@ -183,6 +187,7 @@
 			var DateEnd = $.fullCalendar.formatDate(end, format);
 			event_start.val(DateStart);
 			event_end.val(DateEnd);
+			event_after.val($.fullCalendar.formatDate(end, "MM/dd/yyyy"));
 			var Month = parseInt($.fullCalendar.formatDate(start, format_month),10);
 			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(start, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(start, format_year));
 			formOpen('add');
@@ -195,8 +200,7 @@
 			var newDate = $.fullCalendar.formatDate(event, format);
 			event_start.val(newDate);
 			event_end.val(newDate);
-			
-
+			event_after.val($.fullCalendar.formatDate(event, "MM/dd/yyyy"));
 			var Month = parseInt($.fullCalendar.formatDate(event, format_month),10);
 			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(event, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(event, format_year));
 			formOpen('add');
@@ -208,16 +212,15 @@
 			var DateStart = $.fullCalendar.formatDate(event.start, format);
 			var DateEnd = $.fullCalendar.formatDate(event.end, format);
 			event_id.val(event.id);
-			event_type.val(event.title);
+			event_title.val(event.title);
 			event_start.val(DateStart);
 			event_end.val(DateEnd);
-
+			finish_afterdata_display(event.finish);
 			event_repeat.selectBox("value", event.repeat);
 			event_finish.selectBox("value", event.finish);
 			event_reminder.selectBox("value", event.remind);
-			
 			event_after.val(event.after);
-			
+			event_notes.val(event.notes);
 			var Month = parseInt($.fullCalendar.formatDate(event.start, format_month),10);
 			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(event.start, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(event.start, format_year));
 			formOpen('edit');
@@ -376,19 +379,20 @@
 						start: event_start.val(),
 						end: event_end.val(),
 						after: event_after.val(),
-						type: event_type.val(),
+						title: event_title.val(),
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
+						notes: event_notes.val(),
 						op: 'add'
 					},
 					success: function(id){
-						calendar.fullCalendar('renderEvent', {
+/*						calendar.fullCalendar('renderEvent', {
 																id: id,
-																title: event_type.val(),
+																title: event_title.val(),
 																start: event_start.val(),
 																end: event_end.val(),
 																allDay: false,
-															});
+															});*/
 						calendar.fullCalendar('refetchEvents');
 					},
 				});
@@ -407,9 +411,10 @@
 						start: event_start.val(),
 						end: event_end.val(),
 						after: event_after.val(),
-						type: event_type.val(),
+						title: event_title.val(),
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
+						notes: event_notes.val(),
 						op: 'edit'
 					},
 					success: function(id){

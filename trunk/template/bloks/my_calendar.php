@@ -29,7 +29,7 @@
 		<form>
 			<hr/> <!-- -------------------------------- -->
 		   
-			<input type="text" id="event_type" name="event_type" placeholder="Событие...">
+			<input type="text" id="event_title" name="event_title" placeholder="Событие...">
 			<input type="text" id="event_place" name="event_place" placeholder="Место...">
 
 			<label for="event_start" id="lbl">c</label> <input type="text" name="event_start" id="event_start"/>
@@ -79,7 +79,7 @@
 					<input placeholder="Работает!" id="to" type="text">
 				</div>
 			</div>
-			<textarea name="event_note" id="event_note" placeholder="Заметки..."></textarea>
+			<textarea name="event_notes" id="event_notes" placeholder="Заметки..."></textarea>
 			<input type="hidden" name="event_id" id="event_id" value="">
 		</form>
 	</div>
