@@ -13,7 +13,9 @@ $start = @$_POST['start'];
 $end = @$_POST['end'];
 $after = @$_POST['after'];
 $type = @$_POST['type'];
+$title = @$_POST['title'];
 $op = @$_POST['op'];
+$notes = @$_POST['notes'];
 $repeat = @$_POST['repeat']; 
 $finish = @$_POST['finish'];
 $remind = @$_POST['remind'];
@@ -42,6 +44,7 @@ switch ($op) {
 			`data_start`, 
 			`data_end`, 
 			`data_after`,
+			`zametki`,
 			`title`,
 			`repeat`,
 			`finish`) 
@@ -49,8 +52,9 @@ switch ($op) {
 			("' . $_SESSION['WP_USER']['user_wp'] . '",
 			 "' . date("Y-m-d H:i:s", strtotime($start)) . '",
 			 "' . date("Y-m-d H:i:s", strtotime($end)) . '", 
-			 "' . date("Y-m-d", strtotime($after)) . '", 
-			 "' . $type . '",
+			 "' . date("Y-m-d", strtotime($after)) . '",
+			 "' . $notes . '",			 
+			 "' . $title . '",
 			 "' . $repeat . '",
 			 "' . $finish . '")';
 
@@ -68,10 +72,11 @@ switch ($op) {
 		break;
 	case 'edit':
 		$sql = 'UPDATE `discount_users_events` SET 	
-				`data_start` = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
+				`data_start`  = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
 				`data_end`	  = "' . date("Y-m-d H:i:s", strtotime($end)) . '",
-				`data_after`	  = "' . date("Y-m-d", strtotime($after)) . '",
-				`title`  = "' . $type . '",
+				`data_after`  = "' . date("Y-m-d", strtotime($after)) . '",
+				`title`  = "' . $title . '",
+				`zametki`  = "' . $notes . '",
 				`repeat` = "' . $repeat .'",
 				`finish` = "' . $finish .'"
 				WHERE `id` = "' . $id . '"';
@@ -123,64 +128,17 @@ switch ($op) {
 						AND owner_wp = '.$_SESSION['WP_USER']['user_wp'];
 				$json = Array();
 				$result = mysql_query($sql);
-				$data_after = date("Y-m-d", strtotime($after));
+				$data_after = date("m/d/Y", strtotime($after));
 				$color = '#94d11f'; 
 				while ($row = mysql_fetch_assoc($result)) {
 					if(isset($row['repeat']) && $row['repeat']!=0){ //Если повторять
 						switch ($row['finish']) //Завершение
 						{
 						case 0: //Не завершать
-							$count = 365*2; //На 2 года
-							$i=0;
-							while($i*$row['repeat'] <= $count){
-								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
-								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
-								
-								$json[] = array(
-									'id' => $row['id'],
-									'title' => $row['title'],
-									'start' => $data_start,
-									'end' => $data_end,
-									'color' => $color,
-									'textColor' => 'white',
-									'editable' => true,
-									'allDay' => false,
-									
-									'after' =>  $data_after,
-									'repeat' => $row['repeat'],
-									'finish' => $row['finish'],
-									'remind' => $row['napominanie'],
-									
-								);
-								$i++;
-							}
-						break;
+							$row['finish'] = 365*2; //На 2 года
 						case 2: //После 2-х раз
-							for($i=0;$i<=2;$i++){
-								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
-								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
-								
-								$json[] = array(
-									'id' => $row['id'],
-									'title' => $row['title'],
-									'start' => $data_start,
-									'end' => $data_end,
-									'color' => $color,
-									'textColor' => 'white',
-									'editable' => true,
-									'allDay' => false,
-									
-									'after' =>  $data_after,
-									'repeat' => $row['repeat'],
-									'finish' => $row['finish'],
-									'remind' => $row['napominanie'],
-
-								);
-							}
-							
-						break;
 						case 3: //После 3-х раз
-							for($i=0;$i<=3;$i++){
+							for($i=0;$i<=$row['finish'];$i++){
 								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
 								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
 								
@@ -198,13 +156,14 @@ switch ($op) {
 									'repeat' => $row['repeat'],
 									'finish' => $row['finish'],
 									'remind' => $row['napominanie'],
-
+									'notes'  => $row['zametki'],
 								);
 							}
 						break;
-						
+												
 						case 1: //После даты
 							$data_end = date("Y-m-d",strtotime($row['data_end']));
+							$event_after = date("m/d/Y",strtotime($row['data_after'])); 
 							$data_after = date("Y-m-d",strtotime($row['data_after']));
 							$i=0;
 							while($data_end <= $data_after){
@@ -220,11 +179,11 @@ switch ($op) {
 									'editable' => true,
 									'allDay' => false,
 									
-									'after' =>  $data_after,
+									'after' =>  $event_after,
 									'repeat' => $row['repeat'],
 									'finish' => $row['finish'],
 									'remind' => $row['napominanie'],
-
+									'notes'  => $row['zametki'],
 								);
 								$i++;
 							}
@@ -244,7 +203,7 @@ switch ($op) {
 								'repeat' => $row['repeat'],
 								'finish' => $row['finish'],
 								'remind' => $row['napominanie'],
-	
+								'notes'  => $row['zametki'],
 							);
 						}
 					}
@@ -263,7 +222,7 @@ switch ($op) {
 							'repeat' => $row['repeat'],
 							'finish' => $row['finish'],
 							'remind' => $row['napominanie'],
-
+							'notes'  => $row['zametki'],
 						);
 					}
 				}
