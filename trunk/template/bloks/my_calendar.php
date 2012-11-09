@@ -57,10 +57,10 @@
 											<option value="3">После 3 раз</option>
 											<option value="1">После даты:</option>
 											</select>
-				 <select id="event_reminder">
-											<option value="not_remind">Не напоминать</option>
-											<option value="by_email">По e-mail</option>
-											<option value="in_notif">В уведомлениях</option>
+				 <select id="event_remind">
+											<option value="0">Не напоминать</option>
+											<option value="1">По e-mail</option>
+											<option value="2">В уведомлениях</option>
 											</select>
 				
 			<p style="margin-top:10px; display:none">

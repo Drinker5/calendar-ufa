@@ -6,16 +6,16 @@
 	var event_title = $('#event_title');
 	var event_repeat = $("#event_repeat");
 	var event_finish = $("#event_finish");
-	var event_reminder = $("#event_reminder");
+	var event_remind = $("#event_remind");
 	var event_notes = $("#event_notes");
 	var calendar = $('#calendar');
 	var form = $('#dialog-form');
 	var event_id = $('#event_id');
-	var format = "MM/dd/yyyy HH:mm";
+	var format = "dd/MM/yyyy HH:mm";
 	var format_day = "dd";
 	var format_month = "MM";
-	var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 	var format_year = "yyyy";
+	var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 	var lastView;
 	/* Источники данных */
 	var fcSources = { 
@@ -71,7 +71,7 @@
 		event_notes.val("");
 		event_repeat.selectBox("value", 0);
 		event_finish.selectBox("value", 0);
-		event_reminder.selectBox("value", 0);
+		event_remind.selectBox("value", 0);
 		
 	};
 	
@@ -80,10 +80,16 @@
 		if(param==1){ event_after.parent().css("display","block"); }
 		else { event_after.parent().css("display","none"); } 
 	};
-	
-	$("#event_finish").change( function() {
+	function repeat_finish_activate(param){
+		if(param!=0){ event_finish.selectBox('enable');}
+		else { event_finish.selectBox('disable');}
+	};
+	event_finish.change( function() {
 			finish_afterdata_display($(this).val());
 			event_after.datepicker("hide"); 
+	});
+	event_repeat.change( function() {
+			repeat_finish_activate($(this).val());
 	});
 	/* режимы открытия формы */
 	function formOpen(mode) {
@@ -93,6 +99,7 @@
 			$('#edit').hide();
 			$("#delete").button("option", "disabled", true);
 			finish_afterdata_display(0);
+			repeat_finish_activate(0);			
 		}
 		else if(mode == 'edit') {
 			/* скрываем кнопку Добавить, отображаем Изменить и Удалить*/
@@ -138,9 +145,9 @@
 		ampm: false
 	};
 	$.timepicker.setDefaults($.timepicker.regional['ru']);
-	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
-	event_end.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'mm/dd/yy', hourMin:8});
-	event_after.datepicker({dateFormat: 'mm/dd/yy', showButtonPanel: true});
+	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'dd/mm/yy', hourMin:8});
+	event_end.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'dd/mm/yy', hourMin:8});
+	event_after.datepicker({dateFormat: 'dd/mm/yy', showButtonPanel: true});
 	/* инициализируем FullCalendar */
 	calendar.fullCalendar({
 		firstDay: 1,
@@ -187,7 +194,7 @@
 			var DateEnd = $.fullCalendar.formatDate(end, format);
 			event_start.val(DateStart);
 			event_end.val(DateEnd);
-			event_after.val($.fullCalendar.formatDate(end, "MM/dd/yyyy"));
+			event_after.val($.fullCalendar.formatDate(end, "dd/MM/yyyy"));
 			var Month = parseInt($.fullCalendar.formatDate(start, format_month),10);
 			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(start, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(start, format_year));
 			formOpen('add');
@@ -200,7 +207,8 @@
 			var newDate = $.fullCalendar.formatDate(event, format);
 			event_start.val(newDate);
 			event_end.val(newDate);
-			event_after.val($.fullCalendar.formatDate(event, "MM/dd/yyyy"));
+			
+			event_after.val($.fullCalendar.formatDate(event, "dd/MM/yyyy"));
 			var Month = parseInt($.fullCalendar.formatDate(event, format_month),10);
 			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(event, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(event, format_year));
 			formOpen('add');
@@ -215,10 +223,11 @@
 			event_title.val(event.title);
 			event_start.val(DateStart);
 			event_end.val(DateEnd);
+			repeat_finish_activate(event.repeat);
 			finish_afterdata_display(event.finish);
 			event_repeat.selectBox("value", event.repeat);
 			event_finish.selectBox("value", event.finish);
-			event_reminder.selectBox("value", event.remind);
+			event_remind.selectBox("value", event.remind);
 			event_after.val(event.after);
 			event_notes.val(event.notes);
 			var Month = parseInt($.fullCalendar.formatDate(event.start, format_month),10);
@@ -382,6 +391,7 @@
 						title: event_title.val(),
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
+						remind: $("#event_remind :selected").val(),
 						notes: event_notes.val(),
 						op: 'add'
 					},
@@ -414,6 +424,7 @@
 						title: event_title.val(),
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
+						remind: $("#event_remind :selected").val(),
 						notes: event_notes.val(),
 						op: 'edit'
 					},
