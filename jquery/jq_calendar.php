@@ -26,12 +26,6 @@ $color = 'red';
 $tbakcia = 'pfx_akcia';
 
 function DayAdd($old_date,$days){
-/*	$date_time = explode(' ',$old_date);
-	$date = explode('-',$date_time[0]);
-	$time = explode(':',$date_time[1]);
-								// mktime(hour, minute, second, month, day, year);
-	$new_date = date("Y-m-d H:i:s",mktime($time[0],$time[1],$time[2], $date[1],$date[2]+$days,$date[0]));
-*/
 	$date_time = strtotime($old_date);
 	$new_date = strtotime("+$days day", $date_time);
 	return date("Y-m-d H:i:s",$new_date);
@@ -75,11 +69,12 @@ switch ($op) {
 				`data_start`  = "' . date("Y-m-d H:i:s", strtotime($start)) . '",
 				`data_end`	  = "' . date("Y-m-d H:i:s", strtotime($end)) . '",
 				`data_after`  = "' . date("Y-m-d", strtotime($after)) . '",
-				`title`  = "' . $title . '",
-				`zametki`  = "' . $notes . '",
-				`repeat` = "' . $repeat .'",
-				`finish` = "' . $finish .'"
-				WHERE `id` = "' . $id . '"';
+				`title`   	  = "' . $title . '",
+				`repeat`  	  = "' . $repeat .'",
+				`finish`  	  = "' . $finish .'",
+				`napominanie` = "' . $remind . '",
+				`zametki`	  = "' . $notes . '"
+				WHERE `id` 	  = "' . $id . '"';
 		if (mysql_query($sql)) { echo $id; }
 		break;
 	case 'source':
@@ -97,6 +92,9 @@ switch ($op) {
 				$result = mysql_query($sql);
 				$json = Array();
 				
+				$textcolor = 'white';
+				$editable = false;
+				
 				while ($row = mysql_fetch_assoc($result)) {
 					switch($row['idtype'])
 					{
@@ -113,8 +111,8 @@ switch ($op) {
 						'start' => $row['DiscData1'],
 						'end' => $row['DiscData2'],
 						'color' => $color,
-						'textColor' => 'white',
-						'editable' => false,
+						'textColor' => $textcolor,
+						'editable' => $editable,
 						'allDay' => false,
 					);
 					
@@ -128,9 +126,12 @@ switch ($op) {
 						AND owner_wp = '.$_SESSION['WP_USER']['user_wp'];
 				$json = Array();
 				$result = mysql_query($sql);
-				$data_after = date("m/d/Y", strtotime($after));
+				
 				$color = '#94d11f'; 
+				$textcolor = 'white';
+				$editable = true;
 				while ($row = mysql_fetch_assoc($result)) {
+					$data_after = date("Y-m-d", strtotime($row['data_after']));
 					if(isset($row['repeat']) && $row['repeat']!=0){ //Если повторять
 						switch ($row['finish']) //Завершение
 						{
@@ -148,8 +149,8 @@ switch ($op) {
 									'start' => $data_start,
 									'end' => $data_end,
 									'color' => $color,
-									'textColor' => 'white',
-									'editable' => true,
+									'textColor' => $textcolor,
+									'editable' => $editable,
 									'allDay' => false,
 									
 									'after' =>  $data_after,
@@ -163,8 +164,6 @@ switch ($op) {
 												
 						case 1: //После даты
 							$data_end = date("Y-m-d",strtotime($row['data_end']));
-							$event_after = date("m/d/Y",strtotime($row['data_after'])); 
-							$data_after = date("Y-m-d",strtotime($row['data_after']));
 							$i=0;
 							while($data_end <= $data_after){
 								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
@@ -175,11 +174,11 @@ switch ($op) {
 									'start' => $data_start,
 									'end' => $data_end,
 									'color' => $color,
-									'textColor' => 'white',
-									'editable' => true,
+									'textColor' => $textcolor,
+									'editable' => $editable,
 									'allDay' => false,
 									
-									'after' =>  $event_after,
+									'after' =>  $data_after,
 									'repeat' => $row['repeat'],
 									'finish' => $row['finish'],
 									'remind' => $row['napominanie'],
@@ -195,8 +194,8 @@ switch ($op) {
 								'start' => $row['data_start'],
 								'end' => $row['data_end'],
 								'color' => $color,
-								'textColor' => 'white',
-								'editable' => true,
+								'textColor' => $textcolor,
+								'editable' => $editable,
 								'allDay' => false,
 								
 								'after' =>  $data_after,
@@ -214,8 +213,8 @@ switch ($op) {
 							'start' => $row['data_start'],
 							'end' => $row['data_end'],
 							'color' => $color,
-							'textColor' => 'white',
-							'editable' => true,
+							'textColor' => $textcolor,
+							'editable' => $editable,
 							'allDay' => false,
 							
 							'after' =>  $data_after,
@@ -237,19 +236,79 @@ switch ($op) {
 						OR (discount_users_events.visible_all = 1 AND discount_users_friends.user_wp = '.$_SESSION['WP_USER']['user_wp'].'))';
 				$json = Array();
 				$result = mysql_query($sql);
-				$color = '#469ad7'; 
 				
+				$color = '#469ad7'; 
+				$textcolor = 'white';
+				$editable = false;
 				while ($row = mysql_fetch_assoc($result)) {
-					$json[] = array(
-						'id' => $row['id'],
-						'title' => $row['title'],
-						'start' => $row['data_start'],
-						'end' => $row['data_end'],
-						'color' => $color,
-						'textColor' => 'white',
-						'editable' => false,
-						'allDay' => false,
-					);
+					$data_after = date("Y-m-d", strtotime($row['data_after']));
+					if(isset($row['repeat']) && $row['repeat']!=0){ //Если повторять
+						switch ($row['finish']) //Завершение
+						{
+						case 0: //Не завершать
+							$row['finish'] = 365*2; //На 2 года
+						case 2: //После 2-х раз
+						case 3: //После 3-х раз
+							for($i=0;$i<=$row['finish'];$i++){
+								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
+								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
+								
+								$json[] = array(
+									'id' => $row['id'],
+									'title' => $row['title'],
+									'start' => $data_start,
+									'end' => $data_end,
+									'color' => $color,
+									'textColor' => $textcolor,
+									'editable' => $editable,
+									'allDay' => false,
+								);
+							}
+						break;
+												
+						case 1: //После даты
+							$data_end = date("Y-m-d",strtotime($row['data_end']));
+							$i=0;
+							while($data_end <= $data_after){
+								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
+								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
+								$json[] = array(
+									'id' => $row['id'],
+									'title' => $row['title'],
+									'start' => $data_start,
+									'end' => $data_end,
+									'color' => $color,
+									'textColor' => $textcolor,
+									'editable' => $editable,
+									'allDay' => false,
+								);
+								$i++;
+							}
+						default: 
+							$json[] = array(
+								'id' => $row['id'],
+								'title' => $row['title'],
+								'start' => $row['data_start'],
+								'end' => $row['data_end'],
+								'color' => $color,
+								'textColor' => $textcolor,
+								'editable' => $editable,
+								'allDay' => false,
+							);
+						}
+					}
+					else {
+						$json[] = array(
+							'id' => $row['id'],
+							'title' => $row['title'],
+							'start' => $row['data_start'],
+							'end' => $row['data_end'],
+							'color' => $color,
+							'textColor' => $textcolor,
+							'editable' => $editable,
+							'allDay' => false,
+						);
+					}	
 				}
 			break;
 			
@@ -260,6 +319,9 @@ switch ($op) {
 						WHERE discount_users_friends.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
 						AND discount_users_friends.good =1';
 				$result = mysql_query($sql);
+				$color = '#ddd';
+				$textcolor = 'black';
+				$editable = false;
 				$json = Array();
 				while ($row = mysql_fetch_assoc($result)) {
 					if(!isset($row['birthday'])) continue;
@@ -270,10 +332,10 @@ switch ($op) {
 						//'id' => $row['id'],
 						'title' => $row['firstname'].' '.$row['lastname'].' празднует день рождения!',
 						'start' => $year.'-'.$month.'-'.$day,
-						'color' => '#ddd',
-						'textColor' => 'black',
+						'color' => $color,
+						'textColor' => $textcolor,
+						'editable' => $editable,
 						'allDay' => false,
-						'editable' => false,
 						'url' => ''.$row['user_wp'].''
 					);
 				}
