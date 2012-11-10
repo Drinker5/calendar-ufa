@@ -476,17 +476,55 @@
 		}]
 	});
 	
-	var priv_friends;
-	var first_run = true;
+	var friends;
+	$.ajax({
+		type: 'POST',
+		url: '/jquery-calendar',cache:false, 
+		data: {	op: 'friendsearch'	},
+		success:  function(obj){
+			friends = eval(obj);
+			
+			$(function(){
+				//Присоединяем автозаполнение
+				$("#to").autocom(friends, {
+					width: 320,
+					minChars: 0,
+					multiple: true,
+					//autoFill: true,
+					//max: 4,
+					scroll: true,
+					scrollHeight: 300,
+					formatItem: function(row, i, max) {
+						//if(row.added  == false)
+						return row.name;
+					},
+					formatMatch: function(row, i, max) {
+						//row.added = true;
+						return row.name;
+					},
+					formatResult: function(row) {
+						//row.added = true;
+						return row.id;
+					},
+					select: function(row){
+						row.added = true;
+					},
+				})	
+			});
+			
+		}, 
+		error: function(){ alert('Ошибка соединения, приватность'); }
+	});
+	
+	
 	//Автозаполнение поля выбора друзей для приватности
-	$(function(){
-		//Присоединяем автозаполнение
-		$("#to").autocomplete({
+	
 			//Определяем обратный вызов к результатам форматирования
+			/*
 			minLength:0,
 			
-			source: function(req, add){
-				if (first_run) {
+			source: function(req, add){/jquery-calendar
+			if (first_run) {
 					first_run = false;
 					//Передаём запрос на сервер
 					$.getJSON("/jquery-calendar?callback=?", req, function(data) {
@@ -548,8 +586,9 @@
 			if($("#privacy_friends span").length === 0) {
 				$("#to").css("top", 0);
 			}				
-		});				
-	});	
+		});		
+		*/		
+	
 	
 	$("#privacy_nobody").click(function(){
 		$("#privacy_friends_div").hide();
