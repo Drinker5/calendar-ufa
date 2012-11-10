@@ -8,6 +8,7 @@
 	var event_finish = $("#event_finish");
 	var event_remind = $("#event_remind");
 	var event_notes = $("#event_notes");
+	var textsearch = $("#textforsearch");
 	var calendar = $('#calendar');
 	var form = $('#dialog-form');
 	var event_id = $('#event_id');
@@ -18,33 +19,31 @@
 	var format_month = "MM";
 	var format_year = "yyyy";
 	var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-	var lastView,textforsearch='';
+	var lastView; 
 	/* Источники данных */
 	var fcSources = { 
 		akcia : { 
 			type: 'POST',
 			url: '/jquery-calendar',cache:true, 
-			data: {	op: 'source',	type: 'akcia' },
+			data: {	op: 'source',	type: 'akcia', textsearch: ''},
 			error: function(){ alert(' Ошибка соединения, акции'); }
 		},
 		user_events : {
 			type: 'POST',
 			url: '/jquery-calendar',cache:false, 
-			data: {	op: 'source', type: 'user_events', searchtext: $("#textforsearch").val()  },
-			beforeSend: function(){  },
-			success: function(){ alert($("#textforsearch").val()); },
+			data: {	op: 'source', type: 'user_events', textsearch: ''},
 			error: function(){ alert(' Ошибка соединения, события пользователя'); }
 		},
 		user_friends_events : {
 			type: 'POST',
 			url: '/jquery-calendar',cache:false, 
-			data: {	op: 'source',	type: 'user_friends_events' },
+			data: {	op: 'source',	type: 'user_friends_events', textsearch: ''},
 			error: function(){ alert('Ошибка соединения, события друзей'); }
 		},
 		birthdays : {
 			type: 'POST',
 			url: '/jquery-calendar',cache:false, 
-			data: {	op: 'source',	type: 'birthday' },
+			data: {	op: 'source',	type: 'birthday', textsearch: ''},
 			error: function(){ alert('Ошибка соединения, дни рождения'); }
 		}
 	};
@@ -544,22 +543,23 @@
 	});
 	
 	$("#textforsearch").keyup(function(){
-		textforsearch = $("#textforsearch").val();
-		if(textforsearch.length >= 3) 
+		/*if(textsearch.val().length >= 3) 
+		{*/
+			fcSources.akcia.data['textsearch'] = textsearch.val();
+			fcSources.user_events.data['textsearch'] = textsearch.val();
+			fcSources.user_friends_events.data['textsearch'] = textsearch.val();
+			fcSources.birthdays.data['textsearch'] = textsearch.val();
 			calendar.fullCalendar('refetchEvents');
-		else textforsearch="";
+		/*}
+		else
+		{
+			fcSources.akcia.data['textsearch'] = "";
+			fcSources.user_events.data['textsearch'] = "";
+			fcSources.user_friends_events.data['textsearch'] = "";
+			fcSources.birthdays.data['textsearch'] = "";
+			calendar.fullCalendar('refetchEvents');
+		}*/
 		
-		/*if(loading==false){
-			loading=true;
-			//Убрать все эвенты
-			calendar.fullCalendar( 'removeEventSources' );
-			calendar.fullCalendar( 'removeEvents' );
-			calendar.fullCalendar( 'addEventSource', fcSources.search );
-			
-			loading=false;
-			search =false;
-		}
-		*/
 	});
 
 });
