@@ -36,6 +36,7 @@
 									<script type=\"text/javascript\" src=\"js/common.calendar.js\"></script>
 									<script type=\"text/javascript\" src=\"js/plugins/others/jquery.fullcalendar.js\"></script>
 									<script type=\"text/javascript\" src=\"js/plugins/others/jquery-ui-timepicker-addon.js\"></script>
+									<script type=\"text/javascript\" src=\"js/plugins/others/jquery.autocom.js\"></script>
 								   ";
 					break;
 
