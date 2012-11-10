@@ -15,7 +15,7 @@
 	<hr/>
 	<div class="search-events group">
 		<div class="p_r fl_l">
-			<input type="text" class="bordered" placeholder="Введите имя или название события" id="fio" onkeyup="/*this.value=this.value.replace(/[^a-zA-Zа-я-А-ЯёЁ0-9 ]+/ig,'');*/ search=true; friends(); return false;" />
+			<input type="text" class="bordered" placeholder="Введите имя или название события" id="textforsearch" />
 			<i class="small-icon icon-search"></i>
 		</div>
 	</div>

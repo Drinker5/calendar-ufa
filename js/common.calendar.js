@@ -18,20 +18,22 @@
 	var format_month = "MM";
 	var format_year = "yyyy";
 	var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-	var lastView;
+	var lastView,textforsearch='';
 	/* Источники данных */
 	var fcSources = { 
-		akcia: { 
+		akcia : { 
 			type: 'POST',
-			url: '/jquery-calendar',cache:false, 
+			url: '/jquery-calendar',cache:true, 
 			data: {	op: 'source',	type: 'akcia' },
 			error: function(){ alert(' Ошибка соединения, акции'); }
 		},
 		user_events : {
 			type: 'POST',
 			url: '/jquery-calendar',cache:false, 
-			data: {	op: 'source',	type: 'user_events' },
-			error: function(){ alert('Ошибка соединения, события пользователя'); }
+			data: {	op: 'source', type: 'user_events', searchtext: $("#textforsearch").val()  },
+			beforeSend: function(){  },
+			success: function(){ alert($("#textforsearch").val()); },
+			error: function(){ alert(' Ошибка соединения, события пользователя'); }
 		},
 		user_friends_events : {
 			type: 'POST',
@@ -540,4 +542,25 @@
 	$("#privacy_all").click(function(){
 		$("#privacy_friends_div").show();
 	});
+	
+	$("#textforsearch").keyup(function(){
+		textforsearch = $("#textforsearch").val();
+		if(textforsearch.length >= 3) 
+			calendar.fullCalendar('refetchEvents');
+		else textforsearch="";
+		
+		/*if(loading==false){
+			loading=true;
+			//Убрать все эвенты
+			calendar.fullCalendar( 'removeEventSources' );
+			calendar.fullCalendar( 'removeEvents' );
+			calendar.fullCalendar( 'addEventSource', fcSources.search );
+			
+			loading=false;
+			search =false;
+		}
+		*/
+	});
+
 });
+
