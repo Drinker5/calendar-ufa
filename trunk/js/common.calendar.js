@@ -476,26 +476,43 @@
 		}]
 	});
 	
+	var priv_friends;
+	var first_run = true;
 	//Автозаполнение поля выбора друзей для приватности
-	$(function(){	
+	$(function(){
 		//Присоединяем автозаполнение
 		$("#to").autocomplete({
 			//Определяем обратный вызов к результатам форматирования
 			minLength:0,
 			
 			source: function(req, add){
-				//Передаём запрос на сервер
-				$.getJSON("/jquery-calendar?callback=?", req, function(data) {
+				if (first_run) {
+					first_run = false;
+					//Передаём запрос на сервер
+					$.getJSON("/jquery-calendar?callback=?", req, function(data) {
+						//Создаем массив для объектов ответа
+						var suggestions = [];
+						//Обрабатываем ответ
+						priv_friends  = data;
+						$.each(priv_friends, function(i, val){
+							if (true)
+								suggestions.push(val.name);
+						});
+						//Передаем массив обратному вызову
+						add(suggestions);
+					});
+				}
+				else
+				{
 					//Создаем массив для объектов ответа
 					var suggestions = [];
-					//Обрабатываем ответ
-					$.each(data, function(i, val){
+					$.each(priv_friends, function(i, val){
 						if (true)
 							suggestions.push(val.name);
 					});
 					//Передаем массив обратному вызову
 					add(suggestions);
-				});
+				}
 			},
 			//Определяем обработчик селектора
 			select: function(e, ui) {
