@@ -30,6 +30,7 @@ function DayAdd($old_date,$days){
 	$new_date = strtotime("+$days day", $date_time);
 	return date("Y-m-d H:i:s",$new_date);
 }
+/*
 if(isset($start)){
 	$date = explode('/',$start);	$start = @$date[1] .'/'. @$date[0] .'/'. @$date[2];
 }
@@ -39,6 +40,7 @@ if(isset($_POST['end'])){
 if(isset($_POST['after'])){
 	$date = explode('/',$after);	$after = @$date[1] .'/'. @$date[0] .'/'. @$date[2];
 }
+*/
 switch ($op) {
 	case 'add':
 		$sql = 'INSERT INTO `discount_users_events` (

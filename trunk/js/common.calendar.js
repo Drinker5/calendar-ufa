@@ -11,8 +11,8 @@
 	var calendar = $('#calendar');
 	var form = $('#dialog-form');
 	var event_id = $('#event_id');
-	var format = "dd/MM/yyyy HH:mm";
-	var format_for_after = "dd/mm/yy";
+	var format = "dd.MM.yyyy HH:mm";
+	var format_for_after = "dd.mm.yy";
 	var format_day = "dd";
 	var format_month = "MM";
 	var format_year = "yyyy";
@@ -146,16 +146,16 @@
 		ampm: false
 	};
 	$.timepicker.setDefaults($.timepicker.regional['ru']);
-	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'dd/mm/yy', hourMin:8, hour: 8});
+	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'dd.mm.yy', hourMin:8, hour: 8});
 	event_end.datetimepicker(
-		{hourGrid: 4, minuteGrid: 10, dateFormat: 'dd/mm/yy', hourMin:8, hour: 8,
+		{hourGrid: 4, minuteGrid: 10, dateFormat: 'dd.mm.yy', hourMin:8, hour: 8,
 		beforeShow: function(input, inst) {
 			var mindate = event_start.datepicker('getDate');
 			$(this).datepicker('option', 'minDate', mindate);
 		}
 		}
 	);
-	event_after.datepicker({dateFormat: 'dd/mm/yy', showButtonPanel: true});
+	event_after.datepicker({dateFormat: 'dd.mm.yy', showButtonPanel: true});
 	/* инициализируем FullCalendar */
 	calendar.fullCalendar({
 		firstDay: 1,
