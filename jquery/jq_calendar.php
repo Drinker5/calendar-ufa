@@ -30,7 +30,15 @@ function DayAdd($old_date,$days){
 	$new_date = strtotime("+$days day", $date_time);
 	return date("Y-m-d H:i:s",$new_date);
 }
-
+if(isset($start)){
+	$date = explode('/',$start);	$start = @$date[1] .'/'. @$date[0] .'/'. @$date[2];
+}
+if(isset($_POST['end'])){
+	$date = explode('/',$end);		$end = @$date[1] .'/'. @$date[0] .'/'. @$date[2];
+}
+if(isset($_POST['after'])){
+	$date = explode('/',$after);	$after = @$date[1] .'/'. @$date[0] .'/'. @$date[2];
+}
 switch ($op) {
 	case 'add':
 		$sql = 'INSERT INTO `discount_users_events` (
@@ -106,7 +114,7 @@ switch ($op) {
 						default:$color = '#94d11f';break;//зеленый	
 					}
 					$json[] = array(
-						'id' => $row['id'],
+						//'id' => $row['id'],
 						'title' => $row['header'],
 						'start' => $row['DiscData1'],
 						'end' => $row['DiscData2'],
@@ -163,9 +171,9 @@ switch ($op) {
 						break;
 												
 						case 1: //После даты
-							$data_end = date("Y-m-d",strtotime($row['data_end']));
+							$data_start = date("Y-m-d",strtotime($row['data_end']));
 							$i=0;
-							while($data_end <= $data_after){
+							while($data_start <= $data_after){
 								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
 								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
 								$json[] = array(
@@ -267,9 +275,9 @@ switch ($op) {
 						break;
 												
 						case 1: //После даты
-							$data_end = date("Y-m-d",strtotime($row['data_end']));
+							$data_start = date("Y-m-d",strtotime($row['data_end']));
 							$i=0;
-							while($data_end <= $data_after){
+							while($data_start <= $data_after){
 								$data_start = DayAdd($row['data_start'],$i*$row['repeat']);
 								$data_end = DayAdd($row['data_end'],$i*$row['repeat']);
 								$json[] = array(
