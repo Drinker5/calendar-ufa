@@ -20,7 +20,7 @@ $notes = @$_POST['notes'];
 $repeat = @$_POST['repeat']; 
 $finish = @$_POST['finish'];
 $remind = @$_POST['remind'];
-$search = @$_POST['searchtext'];
+$textsearch = @$_POST['textsearch'];
 
 $color = 'red';
 
@@ -92,6 +92,8 @@ switch ($op) {
 	case 'source':
 		switch($type){
 			case 'akcia':
+				if(strlen($textsearch) >= 1) $searchtask = " AND `header` LIKE '%".$textsearch."%' ";
+					else $searchtask = "";
 				$sql = 'SELECT DISTINCT discount_akcia.* 
 						FROM discount_podpiska_view
 						INNER JOIN discount_akcia ON discount_akcia.id = discount_podpiska_view.akcia_id
@@ -100,7 +102,8 @@ switch ($op) {
 						AND discount_akcia.Moderator = 1
 						AND adminview = 1
 						AND discount_podpiska_view.user_wp = '.$_SESSION['WP_USER']['user_wp'].'
-						AND discount_podpiska_ban.user_wp <> '.$_SESSION['WP_USER']['user_wp'].'';
+						AND discount_podpiska_ban.user_wp <> '.$_SESSION['WP_USER']['user_wp'].''
+						.$searchtask;
 				$result = mysql_query($sql);
 				$json = Array();
 				
@@ -132,13 +135,13 @@ switch ($op) {
 
 			break;
 			case 'user_events':
-				
-				/*if(strlen($search) >= 3) */$searchtask = " AND `title` LIKE '%$search%' ";
-					//else $searchtask = "";
+				if(strlen($textsearch) >= 1) $searchtask = " AND `title` LIKE '%".$textsearch."%' ";
+					else $searchtask = "";
 				$sql = "SELECT *
 						FROM `discount_users_events`
-						WHERE `deleted` = 0 $searchtask
-						AND `owner_wp` = ".$_SESSION['WP_USER']['user_wp'];
+						WHERE `deleted` = 0 
+						AND `owner_wp` = ".$_SESSION['WP_USER']['user_wp']
+						.$searchtask;
 				$json = Array();
 				$result = mysql_query($sql);
 				
@@ -242,13 +245,16 @@ switch ($op) {
 				}
 			break;
 			case 'user_friends_events':
+				if(strlen($textsearch) >= 1) $searchtask = " AND `discount_users_events`.`title` LIKE '%".$textsearch."%' ";
+					else $searchtask = "";
 				$sql = 'SELECT DISTINCT discount_users_events.*
 						FROM discount_users_events
 						LEFT OUTER JOIN discount_users_friends ON discount_users_friends.friend_wp = discount_users_events.owner_wp AND discount_users_friends.good = 1
 						LEFT OUTER JOIN discount_users_events_visible ON discount_users_events_visible.event_id = discount_users_events.id 
 						WHERE discount_users_events.deleted = 0 
 						AND (discount_users_events_visible.friend_wp = '.$_SESSION['WP_USER']['user_wp'].'
-						OR (discount_users_events.visible_all = 1 AND discount_users_friends.user_wp = '.$_SESSION['WP_USER']['user_wp'].'))';
+						OR (discount_users_events.visible_all = 1 AND discount_users_friends.user_wp = '.$_SESSION['WP_USER']['user_wp'].'))'
+						.$searchtask;
 				$json = Array();
 				$result = mysql_query($sql);
 				
@@ -328,11 +334,15 @@ switch ($op) {
 			break;
 			
 			case 'birthday':
+				if(strlen($textsearch) >= 1) $searchtask = " AND (`discount_users`.`firstname` LIKE '%".$textsearch."%' 
+															OR `discount_users`.`lastname` LIKE '%".$textsearch."%') ";
+					else $searchtask = "";
 				$sql = 'SELECT DISTINCT discount_users.*, discount_users_friends.good
 						FROM discount_users_friends
 						INNER JOIN discount_users ON discount_users.user_wp = discount_users_friends.friend_wp
 						WHERE discount_users_friends.user_wp ='.$_SESSION['WP_USER']['user_wp'].'
-						AND discount_users_friends.good =1';
+						AND discount_users_friends.good =1'
+						.$searchtask;
 				$result = mysql_query($sql);
 				$color = '#ddd';
 				$textcolor = 'black';
