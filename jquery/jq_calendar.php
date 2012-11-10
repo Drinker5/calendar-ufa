@@ -391,11 +391,11 @@ if(isset($_GET["term"])){
 	$query = mysql_query("SELECT DISTINCT `discount_users`.* 
 						FROM `discount_users_friends` 
 						INNER JOIN `discount_users` ON `discount_users`.`user_wp` = `discount_users_friends`.`friend_wp` 
-						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']."
+						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']);/*."
 						AND (UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param') 
 						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param')
 						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_en') 
-						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_en'))");/*
+						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_en'))"
 						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_rus') 
 						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_rus'))");*/
 	
