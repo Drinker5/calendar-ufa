@@ -86,7 +86,7 @@ padding-left:10px;
 	width: 190px;
 	height:30px;
 }
-#event_reminder{
+#event_remind{
 padding-left:10px;
 	color:grey;
 	margin-left:0px;
@@ -127,9 +127,13 @@ padding-left:10px;
 #privacy_friends span a { position:absolute; right:8px; top:2px; color:#666; font:bold 12px Verdana, Sans-serif; text-decoration:none; }
 #privacy_friends span a:hover { color:#ff0000; }
 .ui-menu .ui-menu-item { white-space:nowrap; padding:0 10px 0 0; }
+
 /* Выпадающий список в css/ui_custom.css 294 строка */
 /* строка 296: z-index там был 1000 и рисовалось за окошком */
-
+.ui-autocomplete {
+	z-index:1500 !important;
+	width: 600px;
+}
 #event_notes{
 	padding-left:10px;
 	outline: none; 
