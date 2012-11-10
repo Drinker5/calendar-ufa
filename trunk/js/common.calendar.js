@@ -12,6 +12,7 @@
 	var form = $('#dialog-form');
 	var event_id = $('#event_id');
 	var format = "dd.MM.yyyy HH:mm";
+	var format_for_datepicker = "dd.mm.yy";
 	var format_for_after = "dd.mm.yy";
 	var format_day = "dd";
 	var format_month = "MM";
@@ -146,16 +147,16 @@
 		ampm: false
 	};
 	$.timepicker.setDefaults($.timepicker.regional['ru']);
-	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: 'dd.mm.yy', hourMin:8, hour: 8});
+	event_start.datetimepicker({hourGrid: 4, minuteGrid: 10, dateFormat: format_for_datepicker, hourMin:8, hour: 8});
 	event_end.datetimepicker(
-		{hourGrid: 4, minuteGrid: 10, dateFormat: 'dd.mm.yy', hourMin:8, hour: 8,
+		{hourGrid: 4, minuteGrid: 10, dateFormat: format_for_datepicker, hourMin:8, hour: 8,
 		beforeShow: function(input, inst) {
 			var mindate = event_start.datepicker('getDate');
 			$(this).datepicker('option', 'minDate', mindate);
 		}
 		}
 	);
-	event_after.datepicker({dateFormat: 'dd.mm.yy', showButtonPanel: true});
+	event_after.datepicker({dateFormat: format_for_datepicker, showButtonPanel: true});
 	/* инициализируем FullCalendar */
 	calendar.fullCalendar({
 		firstDay: 1,
@@ -171,9 +172,9 @@
 		 /* формат времени выводимый перед названием события */
 		timeFormat: '',
 		header: {
-		left: 'prev,next',
-		center: 'title',
-		right: 'month,agendaWeek,agendaDay'
+			left: 'prev,next',
+			center: 'title',
+			right: 'month,agendaWeek,agendaDay'
 		},
 		columnFormat: {
 			month: 'ddd',
@@ -196,31 +197,28 @@
 		},
 		selectable: true,
 		selectHelper: true,
-		/* обработчик выбора промежутка для создания эвента */
+		
+		/* обработчик события клика по определенному дню */
+		dayClick: function(event, allDay, jsEvent, view) {
+
+		},
+		
+		/* обработчик клика по дню/выбора промежутка для создания эвента */
 		select: function(start, end, allDay) {
+			emptyForm();
 			var DateStart = $.fullCalendar.formatDate(start, format);
 			var DateEnd = $.fullCalendar.formatDate(end, format);
-			event_start.val(DateStart);
-			event_end.val(DateEnd);
+			event_start.datetimepicker('setDate', start);
+			event_end.datetimepicker('setDate', end);
 			event_after.val($.datepicker.formatDate(format_for_after, end));
+			var Day = parseInt($.fullCalendar.formatDate(start, format_day),10);
 			var Month = parseInt($.fullCalendar.formatDate(start, format_month),10);
-			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(start, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(start, format_year));
+			var Year = $.fullCalendar.formatDate(start, format_year);
+			$('#dialog-form').dialog('option', 'title', 'Событие '+ Day + ' ' + Months[Month] + ' ' + Year);
 			formOpen('add');
 			calendar.fullCalendar('unselect');
 		},
-		/* обработчик события клика по определенному дню */
 
-		dayClick: function(event, allDay, jsEvent, view) {
-			emptyForm();
-			var newDate = $.fullCalendar.formatDate(event, format);
-			event_start.val(newDate);
-			event_end.val(newDate);
-			event_after.val($.datepicker.formatDate(format_for_after, event));
-			var Month = parseInt($.fullCalendar.formatDate(event, format_month),10);
-			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(event, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(event, format_year));
-			formOpen('add');
-		},
-		
 		/* обработчик кликов по событию */
 		eventClick: function(event, jsEvent, view) {
 			if(event.editable == false) return;
@@ -238,8 +236,11 @@
 			event_finish.selectBox("value", event.finish);
 			event_remind.selectBox("value", event.remind);
 			event_notes.val(event.notes);
+			
+			var Day = parseInt($.fullCalendar.formatDate(event.start, format_day),10);
 			var Month = parseInt($.fullCalendar.formatDate(event.start, format_month),10);
-			$('#dialog-form').dialog('option', 'title', 'Событие '+parseInt($.fullCalendar.formatDate(event.start, format_day),10) + ' ' + Months[Month] + ' ' + $.fullCalendar.formatDate(event.start, format_year));
+			var Year = $.fullCalendar.formatDate(event.start, format_year);
+			$('#dialog-form').dialog('option', 'title', 'Событие '+ Day + ' ' + Months[Month] + ' ' + Year);
 			formOpen('edit');
 		},
 		/* событие мышка навелась на эвент */
