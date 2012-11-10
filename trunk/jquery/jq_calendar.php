@@ -1,4 +1,5 @@
-﻿<?php
+﻿
+<?php
 //$db = mysql_pconnect('localhost', 'root', '');
 //mysql_select_db('discount',$db);
 //mysql_query("SET NAMES 'utf8'");
@@ -19,7 +20,8 @@ $notes = @$_POST['notes'];
 $repeat = @$_POST['repeat']; 
 $finish = @$_POST['finish'];
 $remind = @$_POST['remind'];
-$b = 1;
+$search = @$_POST['searchtext'];
+
 $color = 'red';
 
 
@@ -130,10 +132,13 @@ switch ($op) {
 
 			break;
 			case 'user_events':
-				$sql = 'SELECT *
-						FROM discount_users_events
-						WHERE deleted = 0 
-						AND owner_wp = '.$_SESSION['WP_USER']['user_wp'];
+				
+				/*if(strlen($search) >= 3) */$searchtask = " AND `title` LIKE '%$search%' ";
+					//else $searchtask = "";
+				$sql = "SELECT *
+						FROM `discount_users_events`
+						WHERE `deleted` = 0 $searchtask
+						AND `owner_wp` = ".$_SESSION['WP_USER']['user_wp'];
 				$json = Array();
 				$result = mysql_query($sql);
 				
