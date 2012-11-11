@@ -361,7 +361,7 @@ switch ($op) {
 						'textColor' => $textcolor,
 						'editable' => $editable,
 						'allDay' => false,
-						'url' => ''.$row['user_wp'].''
+						'url' => $row['user_wp']
 					);
 				}
 			break;
@@ -381,34 +381,22 @@ switch ($op) {
 		break;
 }
 
-if(isset($_GET["term"])){
-	$param = $_GET["term"];
-	
-	require_once("include/translit_ru.php");
-	$param_en = translit_ru($param);
-	/*$param_rus = translit_lat($param);*/
-	//Заправшиваем базу данных
-	$query = mysql_query("SELECT DISTINCT `discount_users`.* 
+if(isset($_GET["friendlist"])){
+
+	$result = mysql_query("SELECT DISTINCT `discount_users`.* 
 						FROM `discount_users_friends` 
 						INNER JOIN `discount_users` ON `discount_users`.`user_wp` = `discount_users_friends`.`friend_wp` 
-						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']);/*."
-						AND (UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param') 
-						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param')
-						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_en') 
-						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_en'))"
-						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_rus') 
-						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_rus'))");*/
-	
-	//строим массив результата/ы
-	for ($x = 0, $numrows = mysql_num_rows($query); $x < $numrows; $x++) {
-		$row = mysql_fetch_assoc($query);
-    
-		$friends[$x] = array("friend_wp" => $row["user_wp"],
-							"name" => $row["firstname"].' '.$row['lastname']);		
+						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']);
+	$json = Array();
+	while ($row = mysql_fetch_assoc($result)) {
+		$json[] = array( 
+			"friend_wp" => $row["user_wp"],
+			"name" => $row["firstname"].' '.$row['lastname'],
+			"userpic" => $row['photo']
+		);		
 	}
-	
-	//Выводим JSON на страницу
-	$response = $_GET["callback"] . "(" . json_encode($friends) . ")";
+
+	$response = json_encode($json);
 	echo $response;
 }
 
