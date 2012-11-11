@@ -8,6 +8,7 @@
 	var event_finish = $("#event_finish");
 	var event_remind = $("#event_remind");
 	var event_notes = $("#event_notes");
+	var privacy_friends = $("#privacy_friends");
 	var textsearch = $("#textforsearch");
 	var calendar = $('#calendar');
 	var form = $('#dialog-form');
@@ -72,6 +73,8 @@
 		event_title.val("");
 		event_id.val("");
 		event_notes.val("");
+		privacy_friends.children('span').remove()
+
 		event_repeat.selectBox("value", 0);
 		event_finish.selectBox("value", 0);
 		event_remind.selectBox("value", 0);
@@ -477,47 +480,19 @@
 	});
 	
 	var priv_friends;
-	var first_run = true;
-	//Автозаполнение поля выбора друзей для приватности
+
 	$(function(){
+		var suggestions = [];
+		$.getJSON("/jquery-calendar?friendlist", function(data) { suggestions = data; });
 		//Присоединяем автозаполнение
 		$("#to").autocomplete({
-			//Определяем обратный вызов к результатам форматирования
 			minLength:0,
-			
-			source: function(req, add){
-				if (first_run) {
-					first_run = false;
-					//Передаём запрос на сервер
-					$.getJSON("/jquery-calendar?callback=?", req, function(data) {
-						//Создаем массив для объектов ответа
-						var suggestions = [];
-						//Обрабатываем ответ
-						priv_friends  = data;
-						$.each(priv_friends, function(i, val){
-							if (true)
-								suggestions.push(val.name);
-						});
-						//Передаем массив обратному вызову
-						add(suggestions);
-					});
-				}
-				else
-				{
-					//Создаем массив для объектов ответа
-					var suggestions = [];
-					$.each(priv_friends, function(i, val){
-						if (true)
-							suggestions.push(val.name);
-					});
-					//Передаем массив обратному вызову
-					add(suggestions);
-				}
-			},
+			source: function(req, add){	add(suggestions); },
+				
 			//Определяем обработчик селектора
 			select: function(e, ui) {
 				//Создаем форматированную переменную friend
-				var friend = ui.item.value,
+				var friend = ui.item.name,
 					span = $("<span>").text(friend),
 					a = $("<a>").addClass("remove").attr({
 						href: "javascript:",
@@ -526,6 +501,7 @@
 				
 				//Добавляем friend к div friend 
 				span.insertBefore("#to");
+				return false;
 			},
 			//Определяем обработчик выбора
 			change: function() {
@@ -533,9 +509,8 @@
 				$("#to").val("").css("top", 2);
 			}
 		}).data( "autocomplete" )._renderItem = function( ul, item ) {
-            return $( "<li>" )
-                .data( "item.autocomplete", item )
-                .append( "<a>" + item.value + "<br>" + "Ога, вторая строка"+ "</a>" )
+            return $( "<li>" ).data( "item.autocomplete", item )
+                .append( "<a>" + item.name + "<br>" + item.friend_wp + "</a>" )
                 .appendTo( ul );
         };
 		
