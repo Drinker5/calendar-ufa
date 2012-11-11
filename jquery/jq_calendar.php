@@ -373,49 +373,22 @@ switch ($op) {
 		if (mysql_query($sql)) {
 			echo $id;
 		}*/
-		
 		$sql = 'UPDATE discount_users_events SET deleted = 1 WHERE id = '.$id;
 		if (mysql_query($sql)) {
 			echo $id;
 		}
 		
 		break;
-	case 'friendsearch':
-		$result = mysql_query("SELECT DISTINCT `discount_users`.* 
-						FROM `discount_users_friends` 
-						INNER JOIN `discount_users` ON `discount_users`.`user_wp` = `discount_users_friends`.`friend_wp` 
-						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']);
-		
-		$json = Array();
-		while($row = mysql_fetch_assoc($result)){
-			$json[] = array(
-				'name' =>  $row["firstname"].' '.$row['lastname'],
-				'id' => $row['user_wp'],
-				'added' => false,
-			);	
-		}
-		echo json_encode($json);
-	break;
 }
-/*
-if(isset($_GET['friendsearch'])){
-	$param = $_REQUEST['q'];
-	
-	/*
-	$images = array_slice(scandir("images"), 2);
-	foreach($images as $value) {
-		if( strpos(strtolower($value), $param) === 0 ) {
-			echo $value . "\n"; 
-		}
-	}
-	
-		
+
+if(isset($_GET["term"])){
+	$param = $_GET["term"];
 	
 	require_once("include/translit_ru.php");
 	$param_en = translit_ru($param);
-	/*$param_rus = translit_lat($param);
+	/*$param_rus = translit_lat($param);*/
 	//Заправшиваем базу данных
-	$result = mysql_query("SELECT DISTINCT `discount_users`.* 
+	$query = mysql_query("SELECT DISTINCT `discount_users`.* 
 						FROM `discount_users_friends` 
 						INNER JOIN `discount_users` ON `discount_users`.`user_wp` = `discount_users_friends`.`friend_wp` 
 						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']);/*."
@@ -424,15 +397,10 @@ if(isset($_GET['friendsearch'])){
 						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_en') 
 						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_en'))"
 						OR UPPER(`discount_users`.`firstname`) REGEXP UPPER('^$param_rus') 
-						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_rus'))");
+						OR UPPER(`discount_users`.`lastname`) REGEXP UPPER('^$param_rus'))");*/
 	
 	//строим массив результата/ы
-	
-	while($row = mysql_fetch_assoc($result)){
-		echo $row["firstname"].' '.$row['lastname'].'\n';		
-	}
-	
-	/*for ($x = 0, $numrows = mysql_num_rows($query); $x < $numrows; $x++) {
+	for ($x = 0, $numrows = mysql_num_rows($query); $x < $numrows; $x++) {
 		$row = mysql_fetch_assoc($query);
     
 		$friends[$x] = array("friend_wp" => $row["user_wp"],
@@ -440,8 +408,8 @@ if(isset($_GET['friendsearch'])){
 	}
 	
 	//Выводим JSON на страницу
-	//$response = $_GET["callback"] . "(" . json_encode($friends) . ")";
-	//echo $response;
-}*/
+	$response = $_GET["callback"] . "(" . json_encode($friends) . ")";
+	echo $response;
+}
 
 ?>
