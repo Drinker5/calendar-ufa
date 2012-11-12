@@ -12,6 +12,78 @@ function getCountryList()
     }
     return $output;  
 }
+global $MYSQL;
+if (isset($_COOKIE['reg_mail']) && strlen($_COOKIE['reg_mail']) > 0)
+{
+  $mail = varr_str($_COOKIE['reg_mail']);
+  $tmp = $MYSQL->query("SELECT `firstname` FROM `pfx_users` WHERE `email`='$mail' ");
+  $name = $tmp[0]['firstname'];
+  setcookie('reg_mail','',1,'/');
+  echo '<!DOCTYPE html>
+<html>
+ <title>Tooeezzy</title>
+<head>
+ <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+ <link rel="stylesheet" type="text/css" media="screen, projection" href="css/reset.css" />
+ <link rel="stylesheet" type="text/css" media="screen, projection" href="css/screen.css" />
+ <!--[if lt IE 9]>
+  <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+ <![endif]-->
+ <script type="text/javascript" src="js/respond.js"></script>
+ <script type="text/javascript" src="js/jquery.min.js"></script>
+
+
+ <!--[if lte IE 8]>
+  <link rel="stylesheet" type="text/css" href="css/ie.css" />
+ <![endif]-->
+
+</head>
+
+<body class="message">
+ <div id="container">
+ 
+  <div class="logo"><a href="/"><img src="pic/logo-mail.png" alt=""/></a></div>
+  
+  <div class="clearfix">
+    <div class="text-block-1">
+      <p class="hint">Привет '.$name.'</p>
+      <strong>Регистрация прошла успешно</strong><br/>
+      Спасибо за регистрацию на нашем сайте!<br/>
+      На указаный электронный адрес мы отправили вам письмо с логином и паролем.
+    </div>
+    
+    <div class="text-block-2">
+      <img src="pic/tooeezzy-com.png" alt=""/><br/>
+      Виртуальный мир реальных подарков
+    </div>
+  </div>
+ </div><!--container ends here--> 
+ <div class="footer-position">
+    <footer>
+       <nav>
+      <ul>
+       <li><a href="javascript:;">О нас</a></li>
+       <li><a href="javascript:;">Условия использования</a></li>
+       <li><a href="javascript:;">Вакансии</a></li>
+       <li><a href="javascript:;">Партнерство</a></li>
+       <li><a href="javascript:;">Контакты</a></li>
+       <li><a href="javascript:;">Помощь</a></li>
+      </ul>
+       </nav>
+
+       <div class="social">
+        <ul>
+         <li><a href="javascript:;" class="first fb"></a></li>
+         <li><a href="javascript:;" class="tw"></a></li>
+         <li><a href="javascript:;" class="gp"></a></li>
+        </ul>
+       </div> 
+    </footer>
+  </div>
+</body>
+</html>';
+die();
+}
 ?>
 
 <!DOCTYPE html>
@@ -23,6 +95,7 @@ function getCountryList()
  <link rel="stylesheet" type="text/css" media="screen, projection" href="/css/reset.css" />
  <link rel="stylesheet" type="text/css" media="screen, projection" href="/css/intro.css" />
  <link href="/css/register.css" rel="stylesheet" type="text/css" />
+ <link rel="stylesheet" type="text/css" media="screen, projection" href="/css/intro-fix.css" />
  <!--[if lt IE 9]>
   <script type="text/javascript" src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
  <![endif]-->
@@ -152,7 +225,7 @@ $(document).ready(function() {
          <input type="text" class="half fl_r ie-r tipW" original-title="Фамилiя?" name="lastname" placeholder="Фамилия" />
          <input type="text" class="full clear loginEmail tipW" original-title="Телеграфъ?" name="email" placeholder="Электронная почта" />
          <input type="password" class="full clear loginPassword tipW" original-title="Не менее 5 символовъ" name="password" placeholder="Пароль" />
-         <span class="t-plus">+</span> <input type="text" class="t-code clear maskCode tipE" original-title="Код страны" name="phone_code" placeholder="Код" value="">
+         <span class="t-plus">+</span> <input type="text" class="t-code clear  tipE" original-title="Код страны" name="phone_code" placeholder="Код" value="">
          <input type="text" class="t-phone clear maskPhone loginPhone tipW" original-title="Телефонъ?" name="phone" placeholder="Номер телефона" value=""/>
          <div class="searchDrop half m1 fl_l">
                <select data-placeholder="Страна" class="select" name='country'>
@@ -341,9 +414,7 @@ $(document).ready(function() {
             }
             else
             {
-              $('div.reg_error').html('<p class="success_reg">Ваша регистрация успешно завершена! На указанный email выслано письмо со ссылкой на активацию</p>');
-              $('div.reg_error').css({'color':'green'});
-              setTimeout("window.location = '/'",4000);
+              location.href='/';
             }
 
           }

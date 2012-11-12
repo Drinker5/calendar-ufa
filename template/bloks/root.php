@@ -46,6 +46,7 @@
 
 					//!Мои желания - управление желаниями
 					case 'wishes':
+                        $user_wp = $_SESSION['WP_USER']['user_wp'];
 						$left_menu=1;
 						$file ='bloks/my_wishes.php';
 						$TITLE='Мои желания';
@@ -105,6 +106,9 @@
 									<link type="text/css" rel="stylesheet" href="css/colorbox.css" />
 									<script type="text/javascript" src="js/jquery.colorbox.js"></script>
 									<script type="text/javascript" src="js/photoview.js"></script>';*/
+                                $scripts .= '<script type="text/javascript" src="js/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+                 							 <script type="text/javascript" src="js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+                							 <link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />';
 							break;
 
 						}
@@ -213,6 +217,17 @@
 							<script src="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.js"></script>
 							<link href="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.css" rel="stylesheet" />';
 					break;
+
+					case 'findplaces':
+						$left_menu=1;
+						$file     ='bloks/my_find_places.php';
+						$TITLE    ='Куда пойти';
+						$scripts .='
+							<script src="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.js"></script>
+							<link href="http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.css" rel="stylesheet" />
+							<link href="css/ui_custom.css" type="text/css" rel="stylesheet" />';
+
+					break;
                                         //Оповещения
 					case 'alerts':
 						$left_menu=1;
@@ -225,13 +240,7 @@
 						$left_menu=1;
 						$file     ='bloks/my_feed.php';
 						$TITLE    ='Лента новостей';
-					break;
-
-					//!Лента новостей
-					case 'feed':
-						$left_menu=1;
-						$file     ='bloks/my_feed.php';
-						$TITLE    ='Лента новостей';
+                        $scripts .='<script type="text/javascript" src="js/common.wishes.js"></script>';
 					break;
 
 					//!Check-in
@@ -301,11 +310,13 @@
 			$left_menu=3;
 			$shop_id  =varr_int(@$_URLP[1]);
 			require_once(path_modules.'ini.groups.php');
+            require_once(path_modules.'ini.shop.php');
 			$SHOP_INFO=$SHOP->Info($shop_id,190,190);
 			if(!is_array($SHOP_INFO)) header("Location: /".@$_SESSION['WP_USER']['user_wp']);
 			$TITLE    =$SHOP_INFO['name'];
 			$file     ='bloks/shop.php';
-			$scripts .='<script type="text/javascript" src="js/common.subscribes.js"></script>';
+			$scripts .='<script type="text/javascript" src="js/common.subscribes.js"></script>
+                        <script type="text/javascript" src="js/common.comments.js"></script>';
 		break;
 
 		//!Подарки
@@ -313,10 +324,11 @@
 			$left_menu=1;
 			require_once(path_modules.'ini.groups.php');
 			$akcia_id = varr_int(@$_URLP[1]);
-			$AKCIA_INFO = $AKCIA->Show($akcia_id,183,128);
-			if(!is_array($AKCIA_INFO)) header("Location: /".@$_SESSION['WP_USER']['user_wp']);
+			$AKCIA_INFO = $AKCIA->Show($akcia_id,185,184);
+			//if(!is_array($AKCIA_INFO)) header("Location: /".@$_SESSION['WP_USER']['user_wp']);
 			$TITLE = $AKCIA_INFO['header'];
-			$file = 'bloks/gift.php';
+			if(strlen(@$_URLP[2])!=0)$file = 'bloks/gift-bring.php';
+			else                    $file = 'bloks/gift.php';
             $scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>';
 			//$scripts .= "
 			//  <link type=\"text/css\" rel=\"stylesheet\" href=\"css/colorbox.css\">
@@ -365,7 +377,8 @@
 			else{
 				$USER_INFO=$USER->Info_min($_URLP[0],190,190);
 				$left_menu=0;//Отобразить пользователя страницу
-				$scripts .='<script type="text/javascript" src="js/common.friends.js"></script>';
+				$scripts .='<script type="text/javascript" src="js/common.friends.js"></script>
+                            <script type="text/javascript" src="js/common.wishes.js"></script>';
 			}
 
 			//Страницы других пользоватеей
@@ -378,6 +391,15 @@
 
 						$TITLE.=' - Друзья';
 						$file  ='bloks/my_friends.php';
+					break;
+
+                    case 'wishes':
+                        $user_wp  = (int)$_URLP[0];
+						$left_menu= 1;
+						$file ='bloks/my_wishes.php';
+						$TITLE='Желания';
+						$scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>
+                                   <script type="text/javascript" src="js/common.comments.js"></script>';
 					break;
 
 					case 'photoalbums': // Фотоальбомы пользователя
@@ -396,6 +418,7 @@
 					break;
 
 					default:
+						$left_menu=$USER_INFO['zvezda']==1?11:$left_menu;
 						if(isset($varr['circle'])) $circle = varr_int($varr['circle']); else $circle = 1;
 						$file = 'bloks/my_page.php';
 						$scripts .='

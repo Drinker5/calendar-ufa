@@ -85,7 +85,7 @@ jQuery(document).ready(function($) {
     $(".friend-item .my-friend-actions")
         .popover('content', $('#my-friend-action-template').html(), true)
         .popover('setOption', 'position', 'bottom')
-        .popover('setOption', 'horizontalOffset', -31)
+        .popover('setOption', 'horizontalOffset', -56)
         .popover('setClasses', 'friend-action-popover');
 
     $(".friend-item .find-friend-actions")
@@ -100,15 +100,30 @@ jQuery(document).ready(function($) {
         .popover('setOption', 'horizontalOffset', -31)
         .popover('setClasses', 'friend-action-popover');
 
-    $('.small-avatar, .small-avatar i')
+    $('.small-avatar i')
         .popover('content', $('#common-actions').html())
-        .popover('setOption', 'horizontalOffset', -45)
+        .popover('setOption', 'horizontalOffset', -39)
+        .popover('setOption', 'verticalOffset', 14)
         .popover('setClasses', 'personal-settings-popover')
         .popover('setOption', 'position', 'bottom');
 
     $('.thank-link')
         .popover('content', $('#popover-thank').html(), true)
         .popover('setOption', 'position', 'bottom');
+
+    $('.message-link')
+        .popover('content', $('#popover-message').html(), true)
+        .popover('setOption', 'position', 'right')
+        .popover('setOption', 'verticalOffset', 63)
+        .popover('setOption', 'horizontalOffset', -136)
+        .popover('setClasses', 'payment-message');
+
+    $('.edit-message-link')
+        .popover('content', $('#popover-message-edit').html(), true)
+        .popover('setOption', 'position', 'left')
+        .popover('setOption', 'verticalOffset', -7)
+        // .popover('setOption', 'horizontalOffset', -136)
+        .popover('setClasses', 'payment-message edit');
         
     $('.all-info-link')
         .popover('content', $('#gift-all-info-template').html(), true)
@@ -129,6 +144,12 @@ jQuery(document).ready(function($) {
     $('.photoalbum .actions')
         .popover('content', $('#my-fotoalbum-template').html(), true)
         .popover('setOption', 'position', 'bottom');
+		
+		$('.album-descriptions .actions')
+        .popover('content', $('#my-fotoalbum-template').html(), true)
+		.popover('setOption', 'horizontalOffset', -4)
+        .popover('setOption', 'verticalOffset', 8)
+        .popover('setOption', 'position', 'bottom');
 
     $('.photoalbum .actionscomm')
         .popover('content', $('#album-can-comment-template').html(), true)
@@ -146,11 +167,24 @@ jQuery(document).ready(function($) {
         .popover('setOption', 'verticalOffset', -1)
         .popover('setOption', 'position', 'right');
 
+    $('.currency_info')
+        .popover('content', $('#currency_information').html(), true)
+        .popover('setOption', 'horizontalOffset', 5)
+        .popover('setOption', 'verticalOffset', -1)
+        .popover('setOption', 'position', 'right');
+
     $('.gift-exchange-button')
         .popover('content', $('#gift-exchange-list').html())
         .popover('setOption', 'horizontalOffset', -3)
         .popover('setOption', 'verticalOffset', 5)
         .popover('setOption', 'position', 'bottom');
+		
+	$('.circle-icon-favorite')
+        .popover('content', $('#favorite-place').html())
+        .popover('setOption', 'horizontalOffset',-6)
+        .popover('setOption', 'verticalOffset', 42)
+        .popover('setOption', 'position', 'right')
+        .popover('setClasses', 'favorite-place-popover');        
 
 
     $('body').on('click', '.popover-btn', function(e) {
@@ -240,25 +274,29 @@ jQuery(document).ready(function($) {
     });
 
     $("input:checkbox").uniform();
-
+    
     var rAmount = $("#rangeAmount");
-
+    
     $( ".uRange" ).slider({ /* Range slider */
         range: true,
         min: 0,
-        max: 500,
-        values: [ 75, 300 ],
+        max: $("#cTo").html(),
+        values: [ $("#cFrom").html(), $("#cTo").html() ],
         slide: function( event, ui ) {
-            rAmount.html( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+            rAmount.html( "<span id=\"cFrom\">" + ui.values[ 0 ] + "</span> <span id=\"currency\">" + $("#currency").html() + "</span> - <span id=\"cTo\">" + ui.values[ 1 ] + "</span> <span id=\"currency\">" + $("#currency").html() + "</span>" );
         }
     });
-
+    
+    var percent = $('#bar1').attr('title');
+    $('#bar1').animate({width: percent},2000); 
+    
     $('#content select').not('#country,#user_townid').selectBox();
 
-    //===== Tooltips =====//
 
-//    $('.tipN').tipsy({gravity: 'n',fade: true, html:true});
-//    $('.tipS').tipsy({gravity: 's',fade: true, html:true});
-//    $('.tipW').tipsy({gravity: 'w',fade: true, html:true});
-//    $('.tipE').tipsy({gravity: 'e',fade: true, html:true});
+    $('.tipN').tipsy({gravity: 'n',fade: true, html:true});
+    $('.tipS').tipsy({gravity: 's',fade: true, html:true});
+    $('.tipW').tipsy({gravity: 'w',fade: true, html:true});
+    $('.tipE').tipsy({gravity: 'e',fade: true, html:true});
+
+
 });

@@ -50,19 +50,18 @@ function getSimpleAvatarHtml($path,$id,$main=false)
 <div class="tools_block">
     <div class="modal_page_img" style="display: none">
         <div class="small-icon icon-close" id="close_but"></div>
-        
-        <div id="img"> 
-            <!--<img src="<?=$_SESSION['WP_USER']['photo']?>" width="190" height="190" id="preview" />-->                         
+        <p class='hint'>Выбранная область будет сохранена как фотография на твоей странице</p>
+        <div id="img">                   
             <div id="image_container" style=""></div>
         </div>
-        <div id="panel">
-            Укажите область, которая будет сохранена как фотография Вашей страницы.
+        <div id="button-group">
             <div class="btn btn-grey" id="save_buttonus">
-                <span class="clr-but clr-but-green"><sub></sub><a href="#" id="btnSaveAvatar">Сохранить</a><sup></sup></span>
-            </div>
-            <div class="btn btn-green" id="save_buttonus">
                 <span class="clr-but clr-but-red"><sub></sub><a href="#" id="btnCancelAvatar">Отмена</a><sup></sup></span>
             </div>
+            <div class="btn btn-green" id="save_buttonus">
+                <span class="clr-but clr-but-green"><sub></sub><a href="#" id="btnSaveAvatar">Сохранить</a><sup></sup></span>
+            </div>
+            
         </div>
     </div>
 
@@ -137,6 +136,7 @@ function action_to_avatar(element,action)
 }
     $("#close_but").click(function(){
         $(".modal_page_img").hide();
+        $(".tools").show();
     });
 	function createUploader(){
 		var uploader=new webimg.FileUploader({
@@ -149,6 +149,7 @@ function action_to_avatar(element,action)
 					multiple         :false,
 					onComplete       :function(id, fileName, responseJSON){
                                             $(".modal_page_img").show();
+                                            $(".tools").hide();
 						$('.webimg-upload-list').html('');
 						if(responseJSON.success){
 							CropAndSave(responseJSON);
@@ -216,6 +217,7 @@ function getFiles(files)
 function CropAndSave(response)
 {
     $(".modal_page_img").show();
+    $(".tools").hide();
     $('#image_container').html('<img src="'+response.photo+'" width="'+response.w+'" height="'+response.h+'" id="target">');
     $('#avatar_orig').val(response.photo);
     $("#preview").remove();
@@ -237,7 +239,7 @@ function CropAndSave(response)
         var overflow_div = $('#image_container > div');
     });
     $('#btnAvatars').show();
-    $('#btnCancelAvatar').live('click',function(){location.href='/<?=$_SESSION['WP_USER']['user_wp']?>'});
+    $('#btnCancelAvatar').live('click',function(){location.reload()});
     $('#btnSaveAvatar').live('click',function(){
         $('#btnAvatars').hide();
         $('#image_container').html('<center><br /><br /><br /><br /><?=loading_clock?></center>');

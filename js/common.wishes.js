@@ -1,9 +1,13 @@
 //Операции с желаниями
 //добавление нового желания
-$('.wish_add').live('click', function(){
+$('.add_me').live('click', function(){
     var wish_id = $(this).data('id');
     var shop_id = $(this).data('shop');
-    if (typeof wish_id == 'undefined') return false;
+    var status  = $(this).data('status');
+    var html, html_ico, text;
+    if (($('#wish-add-'+wish_id).attr('data-status') == 1) || (status == 1)){
+       return false;
+    }
     else{
         $.ajax({
             url:'/jquery-gifts',
@@ -11,10 +15,15 @@ $('.wish_add').live('click', function(){
             data:{type:'add', wish_id:wish_id, shop_id:shop_id},
             cache:false,
             success:function(data){
-                if(data){
-                    $('.wish_add').removeClass('wish_add').addClass('disabled');
-                    $('.wish_add').html("<span class='wa_icon'></span>Добавлено в желания");
-                }
+                    $('#wish-add-'+wish_id).addClass('disabled');
+                    $('#wish-add-'+wish_id).attr('data-status','1');
+                    /*
+                    html    = $('#wish-add-'+wish_id).html();
+                    text    = $('#wish-add-'+wish_id).text();
+                    html_ico = html.replace(text," ");
+                    */
+                    $('#wish-add-'+wish_id).html("Добавлено в желания");
+
             }
         });
     }

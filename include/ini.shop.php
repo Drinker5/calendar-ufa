@@ -19,7 +19,7 @@
 			else                          $where=" AND `moderator`=1";
 
 			$shop=$MYSQL->query("
-				SELECT `id`, `name`, `url`, `silver`, `gold`, `platinum`, `rate`, `special`, `preview`, `descbig`, `fio`, `phone`
+				SELECT `id`, `name`, `url`, `silver`, `gold`, `platinum`, `rate`, `special`, `preview`, `desc`, `descbig`, `fio`, `phone`
 				FROM `".$tbshops."`
 				WHERE `id`=".$id." ".$where
 			);
@@ -29,18 +29,20 @@
 
 				if(isset($_SESSION['WP_USER'])){
 					$my_discount=$PAYMENT->VIPDiscount(@$_SESSION['WP_USER']['user_wp'],$id);
-					if(is_array($my_discount))$vip_discount=$my_discount['Discount']['VIP'];
+					//if(is_array($my_discount))$vip_discount=$my_discount['Discount']['VIP'];    //убрать коментарий!!!!!!!!!!!
 				}
 
 				$podpisok=$MYSQL->query("SELECT Count(*) FROM `".$tbpodpiska."` WHERE `shop_id`=".$id);
-				$adrs    =$MYSQL->query("SELECT `id`, `adress` FROM `pfx_shops_adress` WHERE `shop_id`=".$id);
+				$adrs    =$MYSQL->query("SELECT `id`, `adress`, `latitude`, `longitude`  FROM `pfx_shops_adress` WHERE `shop_id`=".$id);
 				foreach($adrs as $key=>$value){
 					$value['adress'] = explode("::",$value['adress']);
 					$adressa[]=array(
-						'id'    => $value['id'],
-						'street'=> @$value['adress'][0],
-						'house' => @$value['adress'][1],
-						'town'  => @$value['adress'][2],
+						'id'        => $value['id'],
+						'street'    => @$value['adress'][0],
+						'house'     => @$value['adress'][1],
+						'town'      => @$value['adress'][2],
+                        'latitude'  => $value['latitude'],
+                        'longitude' => $value['longitude'],
 				  );
 				}
 
@@ -72,6 +74,7 @@
 					'special'       => $shop[0]['special'],
 					'preview'       => (int) $shop[0]['preview'],
 					'descbig'       => htmlspecialchars(stripslashes(trim($shop[0]['descbig']))),
+                    'desc'          => htmlspecialchars(stripslashes(trim($shop[0]['desc']))),
 					'fio'           => htmlspecialchars(stripslashes(trim($shop[0]['fio']))),
 					'adressa'       => $adressa,
 					'phone'         => htmlspecialchars(stripslashes(trim($shop[0]['phone']))),
@@ -215,6 +218,122 @@
 			$tbplaces = "pfx_users_places";
 
 			return $MYSQL->query("DELETE FROM $tbplaces WHERE `user_wp`=".varr_int($_SESSION['WP_USER']['user_wp'])." AND `address`=".varr_int($address_id));
+		}
+		//Сокращенная информация о группе заведений.
+		//$id_list - список $id в виде строки. (разделитель - запятая)
+		function ShopsInfoMin($id_list, $sort_param='name', $category=1, $sort_type='ASC', $w = 50, $h = 50)
+		{
+			global $MYSQL;
+
+			$GLOBALS['PHP_FILE'] = __FILE__;
+			$GLOBALS['FUNCTION'] = __FUNCTION__;
+			$user_lat=0;
+	        $user_lon=0;
+			if(function_exists('geoip_record_by_name'))
+	        {
+	            $rec=geoip_record_by_name($_SERVER['REMOTE_ADDR']);
+	            if($rec)
+	            {
+	                $user_lat=$rec['latitude'];
+	                $user_lon=$rec['longitude'];
+	            }
+	        }
+
+	        //невозможно отсортировать по дистанции.
+	        if ($sort_param == 'distance' && $user_lat == 0)
+	        	return 2;
+	        $sort_query = '';
+	        if ($sort_param == 'name')
+	        	$sort_query = " ORDER BY `shop_name` ".$sort_type;
+			$result = $MYSQL->query("SELECT  `shop`.`id` AS  `shop_id` , `adres`.`id` AS  `adres_id` , `adres`.`adress` AS  `adres` ,  `shop`.`name` AS  `shop_name` ,  `shop`.`DescBig` AS  `shop_info` ,  `shop`.`Logo` AS  `shop_logo` , IFNULL( `place`.`address` , 0 ) AS  `shop_favorite` , IFNULL(  `adres`.`latitude` , 0 ) AS  `lat` , IFNULL(  `adres`.`longitude` , 0 ) AS  `lon` 
+FROM  `discount_shops` AS  `shop` 
+LEFT JOIN  `discount_shops_adress` AS  `adres` ON  `shop`.`id`=`adres`.`shop_id` 
+LEFT JOIN  `discount_users_places` AS  `place` ON  `adres`.`id`=`place`.`address` AND `place`.`user_wp` ={$_SESSION['WP_USER']['user_wp']}
+WHERE `shop`.`id` IN ($id_list)
+GROUP BY  `shop`.`id` ".$sort_query);
+			if ( ! (is_array($result) && count($result) > 0))
+				return 0;
+
+			$shops = array();
+			$i = 0;
+			$logos = ShowLogoFast($result,$w,$h);
+			foreach ($result as $val) {
+				$shops[] = array(
+					'id' => $val['shop_id'],
+					'name' => $val['shop_name'],
+					'info' => $val['shop_info'],
+					'logo' => $logos[$i]['logo'],
+					'fav' => $val['shop_favorite'],
+					'lat' => $val['lat'],
+					'lon' => $val['lon'],
+					'adres_id'=> $val['adres_id'],
+					'adres' => $val['adres'],
+					'distance' => ($user_lat == 0 || $val['lat'] == 0)?0:calc_distance($user_lon, $user_lat, $val['lon'], $val['lat']),
+					);
+				$i++;
+			}
+			if ($sort_param == 'distance')
+				$shops = $this -> _SortByDistance($shops);
+			return $shops;
+		}
+		function _SortByDistance($shops)
+		{
+			$sort_shops = $shops;
+			$sortable = array();
+			foreach ($shops as $key => $value) {
+				$sortable[$key] = $value['distance'];
+			}
+			array_multisort($sortable, SORT_ASC, $sort_shops);
+			return $sort_shops;
+
+		}
+		function Search($query, $sort_param='name',$category=1, $sort_type='ASC', $limit=5, $offset=0)
+		{
+			global $MYSQL;
+			$GLOBALS['PHP_FILE'] = __FILE__;
+			$GLOBALS['FUNCTION'] = __FUNCTION__;
+
+			$query = varr_str(strtolower(trim($query)));
+			$list_of_query = explode(' ', $query);
+			$query = implode('%', $list_of_query);
+			$result = $MYSQL->query("SELECT  `shop`.`id` AS  `shop_id` FROM  `discount_shops` AS  `shop`
+LEFT JOIN  `discount_shops_adress` AS  `adres` ON  `shop`.`id` =  `adres`.`shop_id`
+LEFT JOIN  `discount_cat_to_shop` AS  `shop_cat` ON  `shop_cat`.`shop_id` =  `shop`.`id` 
+LEFT JOIN  `discount_categories` AS  `cat` ON  `cat`.`menu_id` =  `shop_cat`.`cat_id` 
+WHERE (LOWER(`shop`.`name`) LIKE '%{$query}%' OR LOWER(`adres`.`adress`) LIKE '%{$query}%') AND (`cat`.`menu_id`=$category OR `cat`.`menu_level`=$category) 
+GROUP BY  `shop`.`id` LIMIT {$offset},{$limit} ");
+			if ( ! (is_array($result) && count($result) > 0))
+				return 0;
+			$list_of_id = array();
+			foreach ($result as $val)
+				$list_of_id[] = $val['shop_id'];
+			$list_of_id = implode(',', $list_of_id);
+			$shops = $this -> ShopsInfoMin($list_of_id, $sort_param,$category);
+			if (is_array($shops))
+				return $shops;
+			else
+				return 0;
+		}
+		function AddToFavorite($adress_id)
+		{
+			global $MYSQL;
+			$GLOBALS['PHP_FILE'] = __FILE__;
+			$GLOBALS['FUNCTION'] = __FUNCTION__;
+			$user_wp = $_SESSION['WP_USER']['user_wp'];
+			$tbl = 'pfx_users_places';
+			$adress_id = varr_int($adress_id);
+			//кто-то пытается добавить несуществующее место.
+			if ($adress_id <= 0)
+				return 0;
+			$result = $MYSQL->query("SELECT `address` FROM $tbl WHERE `user_wp` =$user_wp AND `address`=$adress_id ");
+			if (count($result) == 0)
+			{
+				$MYSQL->query("INSERT INTO $tbl (`user_wp`,`address`,`added`) VALUES ($user_wp,$adress_id,NOW())");
+				return 1;
+			}
+			//запись уже присутствует
+			else
+				return 2;
 		}
 
 	}

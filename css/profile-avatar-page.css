@@ -24,3 +24,22 @@ a.set_to_default_avatar
 {
     display: block;
 }
+div.modal_page_img
+{
+    border: 1px solid #CFD4DF;
+    background: #F3F9FD;
+    padding: 15px 30px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+}
+#button-group
+{
+    float:right;
+}
+div#img
+{
+    margin: 15px 0;
+}

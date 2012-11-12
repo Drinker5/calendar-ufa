@@ -26,9 +26,9 @@
 	border-bottom-right-radius: 0;
 }
 
-.selectBox-dropdown .selectBox-label{
+.selectBox-dropdown .selectBox-label {
 	padding:4px 4px 5px;
-	display: inline-block;
+	display: block;
 	white-space: nowrap;
 	overflow: hidden;
 	font-weight: bold;

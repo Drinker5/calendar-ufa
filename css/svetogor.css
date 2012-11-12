@@ -5,7 +5,7 @@
 .photoalbum .album
 {
     width: 370px!important;
-    margin-right: 20px;
+    margin-right: 5px;
     background: none;
     padding: 10px 0px 10px 0px;
     -webkit-transition: background-color 0.5s ease;
@@ -13,11 +13,10 @@
          -o-transition: background-color 0.5s ease;
             transition: background-color 0.5s ease;
 }
-
+.photoalbum .album:nth-child(2n) {margin-right:0;}
 .photoalbum .album:hover
 {
-    background-color: #EFF0F3;
-    background-color: rgba(239, 240, 243, 0.4);
+    background-color: #f3f9fd;
 }
 
 .photoalbum .medium-avatar,.photoalbum .medium-avatar img
@@ -455,4 +454,159 @@
     -moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
     -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.5);
     box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.select_search-block-bottom
+{
+    padding: 10px;
+    height: 38px;
+    margin: -7px 0px 0px 0px;
+    background: #f3f9fd;
+    border-bottom: 1px solid rgba(192, 202, 214, 0.4);
+    margin-bottom: 11px;
+}
+
+.sort_block_friend
+{
+    margin-top: -10px;
+}
+.sort_block_friend .selectBox {margin-top: -2px;}
+.select_search-block-bottom .name, .sort_block_friend .name
+{
+    font-size: 13px;
+    font-weight: bold;
+    color: #8CB7E3;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.select_search-block-bottom select
+{
+    width: 68%;
+    margin-left: 2%;
+}
+
+.sort-places .info a.name
+{
+    width: 210px;
+    height: 14px;
+    display: block;
+    overflow: hidden;
+}
+
+.sort-places .places-list .place img
+{
+    width: 50px;
+    height: 50px;
+}
+.edit-places-container.sort-places .places-list .place:hover {
+    background: #f3f9fd;
+}
+
+.sort-places .action .small-icon
+{
+    width: 10px;
+    height: 10px;
+}
+
+.sort-places .icon-star.action
+{
+    width: 10px;
+    height: 10px;
+    margin: 0!important;
+    background-image: url("../pic/star.png");
+    background-position: 0px 0px;
+}
+
+.sort-places .icon-star
+{
+    width: 10px;
+    height: 10px;
+    background-image: url("../pic/star.png");
+    background-position: -10px 0px;
+}
+
+.sort-places .places-list .place .info
+{
+    width: 210px;
+}
+
+.place-love
+{
+    margin-top: 5px;
+    color: #75849c;
+}
+
+.place-love.green
+{
+    font-weight: normal!important;
+}
+
+.gift .where 
+{
+    font-size: 10px;
+    color: #92929C;
+    position: absolute;
+    left: 293px;
+    top: 60px;
+}
+.my_gift .from {left: 144px}
+.my_gift .from, .my_gift .where {font-weight: bold; font-size: 12px;}
+.my_gift .image-block {margin-left: 20px; margin-bottom: 10px;}
+.my_gift .image-block:first-child {margin-left: 0px; }
+.my_gift .gift {font-size: 11px;}
+.my_gift .gift .image-block {font-size: 11px ;color: #75849C}
+.my_gift .gift .info_block {width: 90%; padding: 20px 20px 15px 20px; border-right: 1px solid #fff;}
+.my_gift .info_block .cleared {padding: 10px 0px 0px 0px; width: 92%;}
+.my_gift .gift .info {width: 200px;}
+.my_gift .arrow-box {
+    position: relative;
+    background-color: #8BB8EA;
+    color: #fff;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 5px 0 6px 7px;
+    width: 80px;
+    line-height: 14px;
+}
+
+.my_gift .arrow-box:after {
+    position: absolute;
+    content: '';
+    width: 7px;
+    height: 100%;
+    top: 0px;
+    right: -7px;
+    background: url(../pic/blue-arrow.png) no-repeat 0 0;
+}
+.my_gift .big_text {margin-left: 15px; font-size: 14px;vertical-align: middle;}
+.my_gift .info .c_name 
+{
+    font-size: 11px; 
+    line-height: 15px; 
+    font-weight: bold; 
+    color: #358DC6;
+}
+.my_gift .gift 
+{
+    background: #fff; 
+    padding: 0px; 
+    -webkit-transition: background-color 0.3s ease; 
+    -moz-transition: background-color 0.3s ease; 
+    -o-transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
+}
+.my_gift .gift:hover {background: #f3f9fd;}
+.my_gift .gift:hover .info_block {border-right: 1px solid #ddd;}
+.my_gift .gift .actions ul {display: none; padding-left: 10px}
+.my_gift .gift .actions ul li {margin-top: 10px}
+.my_gift .gift:hover .actions ul {display: block}
+.my_gift .separator {margin: 0px;}
+.my_gift .date {font-size: 11px!important;}
+.my_gift .c_digit 
+{
+    font-size: 13px!important;
+    font-weight: bold;
+    color: #4F72AB;
 }

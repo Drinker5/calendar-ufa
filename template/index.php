@@ -18,9 +18,9 @@
 				<div id="menu" class="wrapped">
 					<div class="tabs">
 						<ul>
-							<a href="/type-5"><li<?php if($_URLP[0]=='type' && $_URLP[1]=='5')echo ' class="active"'; ?>><span class="m-icon m-apple"></span>Подарок</li></a>
-							<a href="/starslist"><li<?php if($_URLP[0]=='starslist')echo ' class="active"'; ?>><span class="m-icon m-apple"></span>Кумиры</li></a>
-							<a href="/type-3"><li<?php if($_URLP[0]=='type' && $_URLP[1]=='3')echo ' class="active"'; ?>><span class="m-icon m-apple"></span>Sale</li></a>
+							<a href="/type-5"><li<?php if($_URLP[0]=='type' && $_URLP[1]=='5')echo ' class="active"'; ?>><span class="m-icon m-gift"></span>Подарок</li></a>
+							<a href="/starslist"><li<?php if($_URLP[0]=='starslist')echo ' class="active"'; ?>><span class="m-icon m-stars"></span>Кумиры</li></a>
+							<a href="/type-3"><li<?php if($_URLP[0]=='type' && $_URLP[1]=='3')echo ' class="active"'; ?>><span class="m-icon m-sale"></span>Sale</li></a>
 						</ul>
 					</div>
 					<div class="r-tools">
@@ -40,8 +40,8 @@
 			<?php require_once('bloks/left_menu.php') ?>
 
 			<!--Контент-->
-			<div id="content" class="fl_r">
-				<?php require_once($file)?>
+			<div id="content" class="fl_r<?php if(@$_URLP[1]=='gifts')echo ' my_gift';?><?=$USER_INFO['zvezda']==1?' cumir':''?>">
+				<?php isset($file)?require_once($file):''; ?>
 			</div><!--end of content-->
 
 			<!--Подвал-->
@@ -57,5 +57,6 @@
 				}
 			</script>
 		</div><!--!end of #wrap-->
+		<script type="text/javascript" src="/js/bottom.js"></script>
 	</body>
 </html>

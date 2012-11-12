@@ -1,74 +1,111 @@
-<div id="center">
-	<h1><?=$TITLE?></h1>
-	
-	<div class="album-edit group">
-		<div class="desire-photo">
-				<img src="<?=$photos[0]['photo']?>" id="logo" width="113" height="95">
-			<span></span>
-		</div>
-		<div class="album-edit-controls">
-			<h4>Название</h4>
-			<input type="text" id="title" value="<?=$album['header']?>">
-			<h4>Описание</h4>
-			<textarea rows="3" id="albopis"><?=$album['opis']?></textarea>
-			<div class="but-container">
-			   <div id="add-photo-but">
-				<a href="#" id="add-photo-but" class="green-plus-but-small group">
-					<div id="plus"></div>
-					<span>Добавить фотографию</span>
-					<sup></sup>
-				</a>
-			   </div>
-				<div id="save-photo-changes" class="clr-but clr-but-blue-nb group">
-					<sub></sub>
-					<a href="#" onClick="return false;">Сохранить изменения</a>
-					<sup></sup>
-				</div>
-			</div>
-		</div>
-	</div>
+<?php
+require_once('jquery/jq_myphotoalbums.php');
+$rows      =20;
+if($_URLP[0]=='my')$user_wp=$_SESSION['WP_USER']['user_wp'];
+else               $user_wp=(int)$_URLP[0];
+$opt = Options($user_wp,1);
 
-	<h4>Редактирование фотографий</h4>
+?>
+<div class="title margin tx_r">
+	<h2 class="tx_l">Редактирование фотоальбома<h2>
+	<?php if($_URLP[0]=='my')echo '<a href="#" id="add-photo-but" class="btn btn-green" style="position: absolute; right: 0; top: 6px;"><i class="small-icon icon-white-plus"></i>Добавить фото</a>';?>
+	<div class="separator"></div>
+</div>
+<div class="photoalbum group">
+	<div class="bordered medium-avatar fl_l">
+		<img src="<?=$photos[0]['photo']?>" id="logo" width="113" height="95">
+	</div>
+	<div class="add-album-description wrapped">
+		<table>
+			<thead></thead>
+			<tbody>
+				<tr>
+					<td>Альбом:</td>
+					<td>
+						<input type="text" id="title" value="<?=$album['header']?>">
+					</td>
+				</tr>
+				<tr>
+					<td>Описание:</td>
+					<td>
+						<textarea rows="3" id="albopis"><?=$album['opis']?></textarea>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+	<?php $USER->ShowPhotosIsAlbum($rows);?>
+<div class="separator clear"></div>
+<div class="title margin group">
+	<h3>Редактирование фотографий</h3>
+</div>
+<div class="photoalbum group">
 	<div id="files"></div>
 	<div id="photos">
 	<?php
 	   foreach($photos as $key=>$value){
-	   	  echo "
-	   	    <div class=\"album-foto-edit group\" id=\"div".$value['photo_id']."\">
-		      <div class=\"desire-photo\">
+	   	  
+		  $html="
+	   	    <div class=\"photoalbum-elem\" id=\"div".$value['photo_id']."\">
+			<a id=\"delete\" class=\"fl_r opacity_link\" href=\"#\" rel=".$value['photo_id']." onClick=\"return false;\"><i class=\"small-icon\"><img src=\"pic/delete.png\"></i><strong>Удалить фотографию</strong></a>
+		      <div class=\"bordered big-avatar fl_l\">
 			    <a href=\"#\">
 				 <img class=\"photo\" id=\"".$value['photo_id']."\" src=\"".$value['photo']."\" width=\"113\" height=\"95\">
 			    </a>
 			    <span></span>
 		      </div>
-		      <div class=\"album-foto-description\">
-			    <h4>Описание</h4>
-			    <textarea rows=\"5\" class=\"opis\">".$value['header']."</textarea>
-		      </div>
-		      <ul class=\"album-foto-actions\">
-			   <li>
-				<a href=\"#\" class=\"delete\" rel=\"".$value['photo_id']."\" onClick=\"return false;\">
-					<img src=\"pic/delete-icon.png\">
-					Удалить
-				</a>
-			   </li>
-			   <li>
-				<label>
-					<input type=\"radio\" name=\"make-cover\" class=\"checkbox\" safari=\"1\" ".str_replace("0","checked",$value['logo'])." onClick=\"$('#logo').attr('src','".$value['photo']."')\">
-					Сделать обложкой
-				</label>
-			   </li>
-		     </ul>
+			  <div class=\"add-album-description wrapped\">
+				<table>
+					<thead></thead>
+					<tbody>
+						<tr>
+							<td>Описание:</td>
+							<td>  <textarea rows=\"5\" class=\"opis\">".$value['header']."</textarea></td>
+						</tr>
+						
+						<tr>
+							<td>Альбом:</td>
+							<td>
+								<select>";
+									foreach($opt as $key=>$value){
+										$html.= '<option value=\"'.$key.'\">'.$value.'</option>';
+									}
+								$html.="
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<label>
+									<input type=\"radio\" name=\"make-cover\" class=\"checkbox\" safari=\"1\" ".str_replace("0","checked",$value['logo'])." onClick=\"$('#logo').attr('src','".$value['photo']."')\">
+									Сделать обложкой
+								</label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			  </div>
+			  
 	        </div>
 	   	  ";
+		
+		echo $html;
 	   }
 	?>
 	</div>
+	<div class="tx_r">
+		<button type="submit" class="btn btn-green" name="add" id="save-photo-changes">Сохранить</button>
+	</div>
+	</div>
 </div>
+	
 <script src="js/fileuploader.js" type="text/javascript"></script>
 <script type="text/javascript">
  var j=0;
- $('input.frnchck').checkbox({cls:'jquery-safari-checkbox-box'});
+ //$('input.frnchck').checkbox({cls:'jquery-safari-checkbox-box'});
  function createUploader(){
    var uploader = new webimg.FileUploader({
        element: document.getElementById('files'),
@@ -90,8 +127,8 @@
  }
  window.onload = createUploader;
 
- $(document).ready(function(){
- 	$('.delete').live('click',function(){
+ //$(document).ready(function(){
+ 	$('#delete').live('click',function(){
  		if(confirm('Удалить выбранную Вами фотографию из альбома?')){
  		   var photo_id = parseInt($(this).attr('rel'));
  		   $('#div'+photo_id).remove();
@@ -128,5 +165,5 @@
 	      });
  	    }
  	});
- });
+ //});
 </script>

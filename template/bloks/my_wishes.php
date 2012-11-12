@@ -1,14 +1,23 @@
 <div id="center">
 <?php
-	$performed_wishes=0;
- $user_wp = $_SESSION['WP_USER']['user_wp'];
-
  require_once ('jquery/jq_mywishes.php');
+ $performed_wishes=0;
  $rows  = 10;
  $begin = 0;
 
- $wish_array = $USER -> CountIHochu();
- $wish_num   = $USER -> CountIHochu(0, 'all');
+ $wish_array = $USER -> CountIHochu($user_wp);
+ $wish_num   = $USER -> CountIHochu($user_wp, 'all');
+
+ if ($user_wp == $_SESSION['WP_USER']['user_wp']){
+   $header   = "Мои желания &nbsp;";
+   $link_wp  = "my";
+   $wish_add_link = "<li><a href=\"/type-5\"><i class=\"small-icon icon-add-wish\"></i>Добавить желание</a></li>";
+ }
+ else{
+   $header = "Желания &nbsp;";
+   $link_wp = $user_wp;
+   $wish_add_link = "";
+ }
 
  $perf_wishes_html = '';
  $my_wishes_html = '';
@@ -17,30 +26,30 @@
  if(is_array($wish_array)){
      echo "<div id=\"content\" class=\"fl_r\">
              <div class=\"title margin\">
-                <h2 id=\"count_wishes\">Мои желания &nbsp;<span class=\"title-count\">(".$wish_array['all'].")</span></h2>
+                <h2 id=\"count_wishes\">$header<span class=\"title-count\">(".$wish_array['all'].")</span></h2>
              </div>
              <div class=\"nav-panel group\">
                 <ul class=\"fl_l left\">
-                    <li><a href=\"/type-5\"><i class=\"small-icon icon-add-wish\"></i>Добавить желание</a></li>
+                    $wish_add_link
                     <!--<li><a href=\"#\"><i class=\"small-icon icon-wish-list\"></i>Добавить wishlist</a></li>-->
                 </ul>
 
                 <ul class=\"fl_r right\">";
 
                 if(isset($_REQUEST['t'])){
-                  $my_wishes_html = "<li class=\"opacity_link\"><a id=\"my_wish_mini\" href=\"/my-wishes\">Мои желания <span>(".$wish_array['all'].")</span></a></li>";
+                  $my_wishes_html = "<li class=\"opacity_link\"><a id=\"my_wish_mini\" href=\"/$link_wp-wishes\">$header<span>(".$wish_array['all'].")</span></a></li>";
                   if ($_REQUEST['t'] == 'performed'){
-                    $perf_wishes_html = "<li class=\"active\"><a id=\"perf_wish\" href=\"/my-wishes?t=performed\">Исполненные желания <span>(".$wish_array['performed'].")</span></a></li>";
+                    $perf_wishes_html = "<li class=\"active\"><a id=\"perf_wish\" href=\"/$link_wp-wishes?t=performed\">Исполненные желания <span>(".$wish_array['performed'].")</span></a></li>";
                     $par = 'performed';
                   }
                   else {
-                    $my_wishes_html = "<li class=\"active\"><a id=\"my_wish_mini\" href=\"/my-wishes\">Мои желания <span>(".$wish_array['all'].")</span></a></li>";
-                    $perf_wishes_html = "<li class=\"opacity_link\"><a id=\"perf_wish\" href=\"/my-wishes?t=performed\">Исполненные желания <span>(".$wish_array['performed'].")</span></a></li>";
+                    $my_wishes_html = "<li class=\"active\"><a id=\"my_wish_mini\" href=\"/$link_wp-wishes\">$header<span>(".$wish_array['all'].")</span></a></li>";
+                    $perf_wishes_html = "<li class=\"opacity_link\"><a id=\"perf_wish\" href=\"/$link_wp-wishes?t=performed\">Исполненные желания <span>(".$wish_array['performed'].")</span></a></li>";
                   }
                 }
                 else {
-                  $my_wishes_html = "<li class=\"active\"><a id=\"my_wish_mini\" href=\"/my-wishes\">Мои желания <span>(".$wish_array['all'].")</span></a></li>";
-                  $perf_wishes_html = "<li class=\"opacity_link\"><a id=\"perf_wish\" href=\"/my-wishes?t=performed\">Исполненные желания <span>(".$wish_array['performed'].")</span></a></li>";
+                  $my_wishes_html = "<li class=\"active\"><a id=\"my_wish_mini\" href=\"/$link_wp-wishes\">$header<span>(".$wish_array['all'].")</span></a></li>";
+                  $perf_wishes_html = "<li class=\"opacity_link\"><a id=\"perf_wish\" href=\"/$link_wp-wishes?t=performed\">Исполненные желания <span>(".$wish_array['performed'].")</span></a></li>";
                 }
 
                 echo $my_wishes_html, $perf_wishes_html;

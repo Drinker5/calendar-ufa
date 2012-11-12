@@ -401,6 +401,59 @@ function ShowLogo($shop_id=array(),$w=160,$h=104,$center=false){
 	return @$array;
 }
 
+function ShowLogoFast($shop_id,$w=160,$h=104,$center=false){
+    global $MYSQL;
+
+    $GLOBALS['PHP_FILE'] = __FILE__;
+    $GLOBALS['FUNCTION'] = __FUNCTION__;
+
+    $w        = varr_int($w);
+    $h        = varr_int($h);
+    if($w == 0 or $h == 0) return '';
+    $tbshops  = "pfx_shops";
+    $domen = upload_url;
+    if(is_array($shop_id)){
+        foreach($shop_id as $key=>$value)
+        {
+                   $arrShops[] = array(
+                      'shop_id'  => $value['shop_id'],
+                      'logo'     => $value['shop_logo'],
+                      'w'        => $w,
+                      'h'        => $h,
+                      'center'   => $center,
+                   );
+        }
+        if(isset($arrShops) && is_array($arrShops)){
+            $ch = curl_init();
+              curl_setopt($ch, CURLOPT_URL, $domen);
+              curl_setopt($ch, CURLOPT_HEADER, 0);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+              curl_setopt($ch, CURLOPT_POST, 1);
+              curl_setopt($ch, CURLOPT_POSTFIELDS, 'logo='.urlencode(serialize($arrShops)));
+              curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+              curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = objectToArray(json_decode(curl_exec($ch)));
+
+              if(curl_errno($ch) != 0){
+                 $result  = "errno: ".curl_errno($ch)."\n";
+                 $result .= "error: ".curl_error($ch)."\n";
+                 curl_close($ch);
+              } else {
+                curl_close($ch);
+
+                if(is_array($result))
+                foreach($result as $key=>$value)
+                  $array[] = array(
+                    'shop_id' => $value['shop_id'],
+                    'file'    => $value['file'],
+                    'logo'    => $value['logo'],
+                  );
+              }
+        }
+    }
+    return @$array;
+}
+
 
 function ShowFotoAkcia($akcia_id=array(),$w,$h,$count=1){
 	global $MYSQL;
@@ -753,8 +806,33 @@ function ShowPhotoAlbums($user_wp,$album=array(),$photo=array()){
 
 	return @$array;
 }
-
-
+//пропорциональный подбор ширины и высоты аватарок.
+// принимает максимум ширины и высоты, и реальную ширину высоту.
+function resizeAvatar($maxwidth,$maxheight,$realwidth,$realheight)
+{
+    $result = array();
+    $proportional = 1;
+    if ($realwidth <= $maxwidth  and $realheight <= $maxheight)
+    {
+        $result['width'] = $realwidth;
+        $result['height'] = $realheight;
+    }
+    else
+    {
+        $proportional = $realwidth / $realheight;
+        if ($realwidth >= $realheight)
+        {
+            $result['width'] = $maxwidth;
+            $result['height'] = $result['width'] / $proportional;
+        }
+        else
+        {
+            $result['height'] = $maxheight;
+            $result['width'] = $result['height'] * $proportional;
+        }
+    }
+    return $result;
+}
 
 function objectToArray($object){
    if(!is_object($object) && !is_array($object)){

@@ -425,7 +425,7 @@
 .rsDefault .rsPreloader {
 	width: 20px;
 	height: 20px;
-	background-image: url(../pic/preloader-white.gif);
+	background-image: url(../pic/loader-small.gif);
 	left: 50%;
 	top: 50%;
 	margin-left: -10px;

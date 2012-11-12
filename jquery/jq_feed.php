@@ -1,36 +1,63 @@
 <?php
-	function FeedList($rows=12,$begin=0,$circle=1,$what=''){
-		global $USER, $MYSQL;
+	function FeedList($user_wp,$rows=12,$begin=0,$online=0,$what=''){
+		global $USER, $COMMENTS, $MYSQL;
 
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
-		$html='<p>Нет событий</p>';
+		$html=''; //<p>Нет событий</p>
 		$stamp=time();
 
-		$massFeed=$USER->ShowMassHistoryLenta($circle,$rows,$begin);
+        //Комментарии
+        $maxCount=3; //Количество выводимых комментариев, если их больше заданного числа
+
+		$massFeed=$USER->ShowMassHistoryLenta($user_wp,$online,$rows,$begin);
 		if(is_array($massFeed) and !isset($massFeed['error_id'])){
 			$html='';
 
+			$photo=ShowAvatar(array($_SESSION['WP_USER']['user_wp']),50,50,false);
+			if(is_array($photo))$photo=$photo[0]['avatar'];
+
 			for($i=0; $i<count($massFeed); $i++){
+
+                //Комментарии
+                $_comments='';
+                $_comCount=$COMMENTS->CountComments(array('lenta_id'=>$massFeed[$i]['id']));
+                $_numBegin=$_comCount>$maxCount?$_comCount-$maxCount:0;
+                $_fullList=$COMMENTS->ShowComments(array('lenta_id'=>$massFeed[$i]['id']),$maxCount,$_numBegin,'ASC');
+
+                if(is_array($_fullList))
+                    foreach($_fullList as $k=>$v)
+                        $_comments.='
+                            <div class="wishlist-comment group" id="comments-'.$v['id'].'-id">
+                                <img src="'.$v['user']['photo'].'" class="small-avatar-img fl_l">
+                                '.($v['user']['user_wp']==$_SESSION['WP_USER']['user_wp']?'
+                                <a href="javascript:;" onclick="CommentsAction('.$massFeed[$i]['id'].',\'delete\','.$v['id'].',0)" class="opacity_link fl_r">
+                                    <i class="small-icon icon-close"></i>
+                                </a>':'').'
+                                <div class="comment-content wrapped">
+                                    <a href="/'.$v['user']['user_wp'].'" class="comment-author">'.$v['user']['firstname'].' '.$v['user']['lastname'].'</a><em class="comment-date">'.ShowDateRus($v['date']).'</em>
+                                    <br>
+                                    <span class="comment-text">
+                                        '.$v['msg'].'
+                                    </span>
+                                </div>
+                            </div>';
+
 				switch($massFeed[$i]['deystvie'])
 				{
 					case 1: // Друзья
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-whos-near"></i>
-                                            Добавить в друзья
-                                            <i class="small-icon active icon-green-plus"></i>
-                                        </strong>
+                                            <i class="tipE small-icon active icon-whos-near" original-title="Добавить в друзья"></i>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-whos-near active fl_l"></i>
@@ -40,10 +67,10 @@
                             '.OnlineStatus($massFeed[$i]['user1']['status_chat'],'-small fl_l').'
                             <div class="centered wrapped">
                                 <div class="group">
-                                    <h3 class="name fl_l"><a href="#">'.$massFeed[$i]['user1']['firstname'].' '.$massFeed[$i]['user1']['lastname'].'</a></h3>
-                                    <em class="date fl_r">'.$massFeed[$i]['data'].'</em>
+                                    <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user1']['user_wp'].'">'.$massFeed[$i]['user1']['firstname'].' '.$massFeed[$i]['user1']['lastname'].'</a></h3>
+                                    <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                 </div>
-                                <p class="action">теперь дружит с <strong><a href="/'.$massFeed[$i]['user1']['user_wp'].'">'.$massFeed[$i]['user2']['firstname'].' '.$massFeed[$i]['user2']['lastname'].'</a></strong></p>
+                                <p class="action">теперь дружит с <strong><a href="/'.$massFeed[$i]['user2']['user_wp'].'">'.$massFeed[$i]['user2']['firstname'].' '.$massFeed[$i]['user2']['lastname'].'</a></strong></p>
                                 <div class="content group">
                                     <a href="/'.$massFeed[$i]['user2']['user_wp'].'" class="bordered medium-avatar fl_l">
                                         <img src="'.$massFeed[$i]['user2']['photo'].'" alt="">
@@ -57,75 +84,56 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                        <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
+                                </a>
+                            </li>').'
+                            <li>
+                                <a href="#" class="opacity_link toggle-control">
+                                        <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (17)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                         </div>
                         <div class="wishlist-comments-container toggle-content no-margin-top">
-                            <a href="#" class="toggle-comments tx_c show-all-comments">
+                            '.($_comCount>$maxCount?'
+                            <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(17)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(17)</span>
+                                <span class="c-control-text imp-hide">
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
-                            </a>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
+                            </span>':'').'
+                            <div id="comments-'.$massFeed[$i]['id'].'-full"></div>
+                            '.$_comments.'
+                            <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" type="submit">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -134,34 +142,25 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-5"></i>
-                                            Ответный подарок
-                                        </strong>
+                                            <i class="tipE small-icon active icon-5" original-title="Ответный подарок"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-review"></i>
-                                            Поблагодарить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-review" original-title="Поблагодарить"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-invite"></i>
-                                            Пригласить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-invite" original-title="Пригласить"></i>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-5 fl_l"></i>
@@ -172,25 +171,25 @@
                             <div class="centered wrapped">
                                 <div class="group">
                                     <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user1']['user_wp'].'">'.$massFeed[$i]['user1']['firstname'].' '.$massFeed[$i]['user1']['lastname'].'</a></h3>
-                                    <em class="date fl_r">'.$massFeed[$i]['data'].'</em>
+                                    <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                 </div>
                                 <p class="action">Получен подарок</p>
                                 <div class="content group">
-                                    <a href="#" class="fl_l no-margin tx_c person-link">
+                                    <a href="/gift-'.$massFeed[$i]['podarok']['akcia_id'].'" class="fl_l no-margin tx_c person-link" style="width: 152px;">
                                         <div class="bordered">
                                             <img src="'.$massFeed[$i]['podarok']['photo'].'" alt="">
                                         </div>
                                         <span>'.$massFeed[$i]['podarok']['header'].'</span>
                                     </a>
                                     <span class="fl_l timeline-middle">от</span>
-                                    <a href="/'.$massFeed[$i]['user2']['user_wp'].'" class="fl_l no-margin tx_c person-link">
+                                    <a href="/'.$massFeed[$i]['user2']['user_wp'].'" class="fl_l no-margin tx_c person-link" style="width: 84px;">
                                         <div class="bordered">
                                             <img src="'.$massFeed[$i]['user2']['photo'].'" alt="">
                                         </div>
                                         <span>'.$massFeed[$i]['user2']['firstname'].' '.$massFeed[$i]['user2']['lastname'].'</span>
                                     </a>
                                     <span class="fl_l timeline-middle">в</span>
-                                    <a href="#" class="fl_l no-margin tx_c person-link">
+                                    <a href="/shop-'.$massFeed[$i]['podarok']['shop_id'].'" class="fl_l no-margin tx_c person-link" style="width: 152px;">
                                         <div class="bordered">
                                             <img src="'.$massFeed[$i]['podarok']['shop_logo'].'" alt="">
                                         </div>
@@ -200,75 +199,56 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                        <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
+                                </a>
+                            </li>').'
+                            <li>
+                                <a href="#" class="opacity_link toggle-control">
+                                        <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (17)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                         </div>
                         <div class="wishlist-comments-container toggle-content no-margin-top">
-                            <a href="#" class="toggle-comments tx_c show-all-comments">
+                            '.($_comCount>$maxCount?'
+                            <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(17)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(17)</span>
+                                <span class="c-control-text imp-hide">
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
-                            </a>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
+                            </span>':'').'
+                            <div id="comments-'.$massFeed[$i]['id'].'-full"></div>
+                            '.$_comments.'
+                            <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" type="submit">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -278,120 +258,96 @@
 					break;
 					case 4: // Фотоальбом
 						$fotki='';
-						foreach($massFeed[$i]['photoalbum']['photos'] as $k=>$v){
-							$fotki.='<img src="'.$v['photo'].'" alt="" class="fl_l">';
-						}
+                        if(is_array($massFeed[$i]['photoalbum']['photos']))
+                            foreach($massFeed[$i]['photoalbum']['photos'] as $k=>$v)
+						      $fotki.='<img src="'.$v['photo'].'" alt="" class="fl_l">';
+
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon icon-photoalbum active"></i>
-                                            Посмотреть
-                                        </strong>
+                                            <i class="tipE small-icon active icon-photoalbum" original-title="Посмотреть"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-to-me"></i>
-                                            Поместить себе
-                                        </strong>
+                                            <i class="tipE small-icon active icon-to-me" original-title="Поместить себе"></i>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-photoalbum fl_l"></i>
                             <a href="/'.$massFeed[$i]['user']['user_wp'].'" class="s-medium-avatar fl_l">
                                 <img src="'.$massFeed[$i]['user']['photo'].'" alt="">
                             </a>
-                            '.OnlineStatus($massFeed[$i]['user1']['status_chat'],'-small fl_l').'
+                            '.OnlineStatus($massFeed[$i]['user']['status_chat'],'-small fl_l').'
                             <div class="centered wrapped">
                                 <div class="group">
                                     <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
-                                    <em class="date fl_r">'.$massFeed[$i]['data'].'</em>
+                                    <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                 </div>
-                                <p class="action">Добавлен фотоальбом <strong><a href="#">"'.$massFeed[$i]['photoalbum']['header'].'" ('.CountPhotosIsAlbum($massFeed[$i]['photoalbum']['id']).')</a></strong></p>
+                                <p class="action">Добавлен фотоальбом <strong><a href="#">"'.$massFeed[$i]['photoalbum']['header'].'" ('.$USER->CountPhotosIsAlbum($massFeed[$i]['photoalbum']['id']).')</a></strong></p>
                                 <div class="content group">
                                     '.$fotki.'
                                 </div>
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                        <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
+                                </a>
+                            </li>').'
+                            <li>
+                                <a href="#" class="opacity_link toggle-control">
+                                        <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (17)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                         </div>
                         <div class="wishlist-comments-container toggle-content no-margin-top">
-                            <a href="#" class="toggle-comments tx_c show-all-comments">
+                            '.($_comCount>$maxCount?'
+                            <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(17)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(17)</span>
+                                <span class="c-control-text imp-hide">
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
-                            </a>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
+                            </span>':'').'
+                            <div id="comments-'.$massFeed[$i]['id'].'-full"></div>
+                            '.$_comments.'
+                            <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" type="submit">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -403,56 +359,55 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-5"></i>
-                                            Подарить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-5" original-title="Ответный подарок"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-watch"></i>
-                                            Посмотреть
-                                        </strong>
+                                            <i class="tipE small-icon active icon-watch" original-title="Посмотреть"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
+                                            <i class="tipE small-icon active icon-invite" original-title="Пригласить"></i>
+                                    </a>
+                                </li>
+                                <!-- <li>
+                                    <a class="opacity_link add_me" id="wish-add-'.$massFeed[$i]['akcia_id'].'" href="javascript:;" data-status="0" data-id="'.$massFeed[$i]['akcia_id'].'" data-shop="'.$massFeed[$i]['shop_id'].'">
                                         <strong>
-                                            <i class="small-icon active icon-invite"></i>
+                                            <i class="small-icon active icon-wish"></i>
                                             Добавить себе
-                                            <i class="small-icon icon-green-plus"></i>
+                                            <i class="small-icon active icon-green-plus"></i>
                                         </strong>
                                     </a>
-                                </li>
-                            </ul>
+                                </li> -->
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-wish fl_l"></i>
                             <a href="/'.$massFeed[$i]['user']['user_wp'].'" class="s-medium-avatar fl_l">
                                 <img src="'.$massFeed[$i]['user']['photo'].'" alt="">
                             </a>
-                            '.OnlineStatus($massFeed[$i]['user1']['status_chat'],'-small fl_l').'
+                            '.OnlineStatus($massFeed[$i]['user']['status_chat'],'-small fl_l').'
                             <div class="centered wrapped">
                                 <div class="group">
                                     <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
-                                    <em class="date fl_r">'.$massFeed[$i]['data'].'</em>
+                                    <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                 </div>
-                                <p class="action">Создано желание <strong><a href="#">"'.$massFeed[$i]['header'].'"</a></strong></p>
+                                <p class="action">Создано желание <strong><a href="/gift-'.$massFeed[$i]['akcia_id'].'">"'.$massFeed[$i]['header'].'"</a></strong></p>
                                 <div class="content group">
-                                    <a href="#" class="bordered fl_l">
-                                        <img src="pic/medium-avatar.png" alt="">
+                                    <a href="/gift-'.$massFeed[$i]['akcia_id'].'" class="bordered fl_l">
+                                        <img src="'.$massFeed[$i]['akcia_photo'].'" alt="">
                                     </a>
                                     <div class="info wrapped">
                                         <h3 class="name">
                                             <strong class="other">Желание: </strong>
-                                            <a href="#">"IPhone 4S"</a>
+                                            <a href="/gift-'.$massFeed[$i]['akcia_id'].'">"'.$massFeed[$i]['header'].'"</a>
                                         </h3>
                                         <span>
                                             Подарок к: <strong>13.08.2012</strong>
@@ -467,75 +422,56 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                        <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
+                                </a>
+                            </li>').'
+                            <li>
+                                <a href="#" class="opacity_link toggle-control">
+                                        <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (17)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                         </div>
                         <div class="wishlist-comments-container toggle-content no-margin-top">
-                            <a href="#" class="toggle-comments tx_c show-all-comments">
+                            '.($_comCount>$maxCount?'
+                            <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(17)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(17)</span>
+                                <span class="c-control-text imp-hide">
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
-                            </a>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
+                            </span>':'').'
+                            <div id="comments-'.$massFeed[$i]['id'].'-full"></div>
+                            '.$_comments.'
+                            <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" type="submit">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -547,51 +483,41 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-5"></i>
-                                            Подарить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-5" original-title="Ответный подарок"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-watch"></i>
-                                            Посмотреть
-                                        </strong>
+                                            <i class="tipE small-icon active icon-watch" original-title="Посмотреть"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
                                             <i class="small-icon active icon-wish"></i>
-                                            Добавить себе
-                                            <i class="small-icon active icon-green-plus"></i>
-                                        </strong>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul>').'
                         </div>
                         <div class="wrapped">
                             <i class="small-icon active icon-check-in active fl_l"></i>
                             <a href="/'.$massFeed[$i]['user']['user_wp'].'" class="s-medium-avatar fl_l">
                                 <img src="'.$massFeed[$i]['user']['photo'].'" alt="">
                             </a>
-                            '.OnlineStatus($massFeed[$i]['user1']['status_chat'],'-small fl_l').'
+                            '.OnlineStatus($massFeed[$i]['user']['status_chat'],'-small fl_l').'
                             <div class="centered wrapped">
                                 <div class="group">
                                     <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
-                                    <em class="date fl_r">'.$massFeed[$i]['data'].'</em>
+                                    <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                 </div>
                                 <p class="action">check-in в <strong><a href="#">'.$massFeed[$i]['shop_name'].'</a></strong></p>
                                 <div class="content group">
                                     <a href="#" class="bordered fl_l">
-                                        <img src="'.$massFeed[$i]['shop_name'].'" alt="">
+                                        <img src="'.$massFeed[$i]['shop_photo'].'" alt="">
                                     </a>
                                     <div class="info wrapped">
                                         <h3 class="name"><a href="#">'.$massFeed[$i]['shop_name'].'</a></h3>
@@ -606,75 +532,56 @@
                             </div>
                         </div>
                         <ul class="sub-action">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                        <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
+                                </a>
+                            </li>').'
+                            <li>
+                                <a href="#" class="opacity_link toggle-control">
+                                        <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="#" class="opacity_link toggle-control">
                                     <strong>
                                         <i class="small-icon active icon-comments"></i>
-                                        Комментировать (17)
+                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
                                     </strong>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                         </div>
                         <div class="wishlist-comments-container toggle-content no-margin-top">
-                            <a href="#" class="toggle-comments tx_c show-all-comments">
+                            '.($_comCount>$maxCount?'
+                            <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
                                 <span class="c-control-text">
-                                    Показать все комментарии <span class="c-control-text-2">(17)</span>
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow"></i>
                                 </span>
-                                <span class="c-control-text hide">
-                                    Скрыть все комментарии <span class="c-control-text-2">(17)</span>
+                                <span class="c-control-text imp-hide">
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
                                     <br>
                                     <i class="small-icon icon-green-arrow-down"></i>
                                 </span>
-                            </a>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="wishlist-comment group">
-                                <img src="pic/small-avatar.png" class="small-avatar-img fl_l">
-                                <a href="#" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
-                                <div class="comment-content wrapped">
-                                    <span class="comment-author">Леонид Р.</span><em class="comment-date">Июнь 12, 2012</em>
-                                    <br>
-                                    <span class="comment-text">
-                                        Легендарное место от А.Соркина и И.Ланцмана на Красном Октябре. Реки алкоголя, море девушек и
-                                        океан сумасшествия. Только для членов клуба DIVES: face control, 50% дисконт, гарантия наличия стола.
-                                    </span>
-                                </div>
-                            </div>
+                            </span>':'').'
+                            <div id="comments-'.$massFeed[$i]['id'].'-full"></div>
+                            '.$_comments.'
+                            <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" type="submit">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -682,8 +589,83 @@
 					case 9: // получил подарок
 						$html.='';
 					break;
-                    case 10: // Обновлен статус
-                        $html.='';
+                    case 10: // Обновлен статус/Оставил сообщение
+                        $html.='
+                    <div class="timeline-elem toggle-stop group">
+                        <div class="p_r">
+                            <div class="right-menu fl_r">
+                            </div>
+                            <div class="wrapped">
+                                <i class="small-icon active icon-status fl_l"></i>
+                                <a href="/'.$massFeed[$i]['user']['user_wp'].'" class="s-medium-avatar fl_l">
+                                    <img src="'.$massFeed[$i]['user']['photo'].'" alt="">
+                                </a>
+                                '.OnlineStatus($massFeed[$i]['user']['status_chat'],'-small fl_l').'
+                                <div class="centered wrapped">
+                                    <div class="group">
+                                        <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
+                                        <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
+                                    </div>
+                                    <p class="action">'.($massFeed[$i]['user']['user_wp']==$user_wp?'У меня новости':'Оставил сообщение').'</p>
+                                    <div class="content group">
+                                        '.$massFeed[$i]['status'].'
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="sub-action">
+                                '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
+                                <li>
+                                	<a href="#" class="opacity_link">
+                                        <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
+                                    </a>
+                                </li>').'
+                                <li>
+                                	<a href="#" class="opacity_link toggle-control">
+                                        <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
+                                    </a>
+                                </li>
+                                <!-- <li>
+                                    <a href="#" class="opacity_link toggle-control">
+                                        <strong>
+                                            <i class="small-icon active icon-comments"></i>
+                                            Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
+                                        </strong>
+                                    </a>
+                                </li> -->
+                            </ul>
+                        </div>
+                        <div class="wishlist-comments-container toggle-content no-margin-top">
+                            '.($_comCount>$maxCount?'
+                            <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
+                                <span class="c-control-text">
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
+                                    <br>
+                                    <i class="small-icon icon-green-arrow"></i>
+                                </span>
+                                <span class="c-control-text imp-hide">
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
+                                    <br>
+                                    <i class="small-icon icon-green-arrow-down"></i>
+                                </span>
+                            </span>':'').'
+                            <div id="comments-'.$massFeed[$i]['id'].'-full"></div>
+                            '.$_comments.'
+                            <div id="comments-'.$massFeed[$i]['id'].'"></div>
+                            <div class="feed-status-top group">
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
+                                    </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>';
                     break;
 				}
 			}
@@ -699,6 +681,6 @@
 	}
 
 	if(isset($_POST['list'])){
-		FeedList($_POST['items'],$_POST['list'],$_POST['circle'],'json');
+		FeedList($_POST['user_wp'],$_POST['items'],$_POST['list'],$_POST['online'],'json');
 	}
 ?>

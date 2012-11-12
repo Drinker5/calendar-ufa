@@ -1,22 +1,32 @@
 <?php
+//Вывод блока с фотоальбомом
 function ShowAlbumsBlock($user_wp,$album,$stamp,$cart){
 	$html='
-	<div class="album fl_l">
-		<a href="" class="stack rotated medium-avatar fl_l"><img src="'.$album['logo'].'" alt="" /></a>
-		<div class="content fl_l">
+	<div class="album fl_l" id="'.$cart['album-id'].'">
+		<a href="my-photoalbums?album_id='.$cart['album-id'].'" class="fl_l cover-photoalbum stack rotated"><img src="'.$album['logo'].'" alt="" /></a>
+		<div class="content fl_l album-descriptions">
 			<div class="text">
 				<div class="name">'.$album['header'].'</div>';
 	if($album['updated']=='')$html.='<div class="date">добавлен: <b>'.$album['data'].'</b></div>';
 	else                     $html.='<div class="date">обновлен: <b>'.$album['updated'].'</b></div>';
 	$html.='
-			</div>
-			<div>
-				<b><i class="small-icon icon-photo"></i>'.$album['count_photos'].'</b>';
+				<div class="photo-count">
+					<b><i class="small-icon icon-photo"></i>'.$album['count_photos'].'</b>
+				</div>
+			</div>';
 	if($user_wp==$_SESSION['WP_USER']['user_wp'])$html.='
-				<span class="popover-btn actions opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'">
-					<i class="small-icon icon-action"></i>
-					Действия
-					<i class="small-icon icon-grey-arrow"></i>
+			<div>
+				<a class="opacity_link" href="/my-photoalbums-edit?album_id='.$cart['album-id'].'">
+					<i original-title="Редактировать" class="tipN active small-icon icon-comments"></i>
+				</a>
+				<a class="opacity_link" href="#">
+					<i original-title="Комментарии" class="tipN active small-icon icon-review"></i>
+				</a>
+				<a id="delete" class="opacity_link" href="#">
+					<i original-title="Удалить альбом" class="tipN active small-icon icon-delete"></i>
+				</a>
+				<span class="popover-btn actions opacity_link" data-content="'.htmlspecialchars(json_encode($cart)).'">
+					<i class="small-icon icon-settings active"></i>
 				</span>
 			</div>
 		</div>
@@ -47,7 +57,6 @@ function PhotoAlbumsList($user_wp,$rows=20,$begin=0,$type_id=0,$par='',$what='')
 					}
 			}
 				else $krugi[$ki]['checked']=false;
-					
 			$cart=array(
 				"album-id" 		=> trim($value['album_id']),
 				"album-krugi"	=> $krugi,
@@ -88,6 +97,7 @@ $html='
 					<td>Альбом:</td>
 					<td>
 						<input id="title" class="bordered" type="text" placeholder="Название альбома..." name="header">
+						</select>
 					</td>
 				</tr>
 				<tr>
@@ -116,50 +126,55 @@ $html='
 
 }
 
+ //Получение имен альбомов и их id у пользователя.
+function Options($user_wp,$mode=0){ //По умолчанию возвращает HTML код
+	global $USER, $options;
+	$albums=$USER->ShowListPhotoAlbums($user_wp);
+	foreach($albums as $key => $value){
+		$name[$value['album_id']] = $value['header']; //Массив с именами альбомов и id
+	}
+	foreach($name as $key => $value){
+		$options.= '<option value="'.$key.'">'.$value.'</option>';
+	}
+	if($mode==0){return $options;}
+	if($mode==1){return $name;} //При mode=1 возвращает массив id => name
+}	
+
 function PhotoAlbumsEdit($user_wp,$what=''){
-	global $USER, $MYSQL;
+	global $USER, $MYSQL, $options;
 	$GLOBALS['PHP_FILE']=__FILE__;
 	$GLOBALS['FUNCTION']=__FUNCTION__;
 	//$albums=$USER->ShowListPhotoAlbums($user_wp);
 	if($_SESSION['WP_USER']['zvezda'] == 1) $where = " AND krug_id <> 9 "; else $where = " AND krug_id <> 10 ";
 	$krugi	= $MYSQL->query("SELECT `krug_id`, `name_".LANG_SITE."` `name` FROM `pfx_krugi` WHERE `show`=1 AND krug_id <> 1 $where ORDER BY sort");
-	
 	$html=''; $cart='';
+	/*foreach($albums as $key => $value){
+		$name[$value['album_id']] = $value['header']; //Массив с именами альбомов и id
+	}
 	
-	/*PreArray($albums);
-	if(is_array($albums)){
-		foreach($albums as $key=>$value){
-			if(is_array($value['prava'])){
-				//for($ki=0; $ki<count($krugi); $ki++){
-						if(in_array($krugi[$ki]['krug_id'], $value['prava'])) $krugi[$ki]['checked']=true;
-						else                                             	  $krugi[$ki]['checked']=false;
-					//}
-			}
-				//else $krugi[$ki]['checked']=false;
-					*/
-			$cart=array(
-			//	"album-id" 		=> trim($value['album_id']),
-				"album-krugi"	=> $krugi,
-			);
-			
-			$html=ShowAlbumClear($user_wp,$cart);
-		//}
+	
+	foreach($name as $key => $value){
+		$options.= '<option value="'.$key.'">'.$value.'</option>';
+	}*/
+
+	$cart=array(
+		"album-krugi"	=> $krugi,
+	//	"album-name"	=> $name,
+	);
+	$html=ShowAlbumClear($user_wp,$cart);
+
 
 		//if(is_array($krugi)){
 			//echo "<p><label><input type=\"checkbox\" name=\"circle1\" value=\"0\" id=\"chk_all\" class=\"frnchck\"". str_replace('0','checked',@$pravo[0]['krug_id']).">Все</label></p>";
 			//echo "<p><label><input type=\"checkbox\" name=\"circle1\" value=\"0\" id=\"chk_all\" class=\"frnchck\"". str_replace('1','checked',@$pravo[0]['krug_id']).">Только Я</label></p>";
-			
-		//}
 		
-		$resultArray=array(
-			"html"=>$html,
-			//"uid" =>$stamp
-		);
-			
+	$resultArray=array(
+		"html"=>$html,
+		//"uid" =>$stamp
+	);
 
-		if($what=='json')echo json_encode($resultArray);
-		else{             echo $html;}
-	//}
+	if($what=='json')echo json_encode($resultArray);
+	else{             echo $html;}
 }
 
 

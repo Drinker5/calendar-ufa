@@ -1,23 +1,18 @@
 <?php
-	//PreArray($AKCIA_INFO);
    require_once('jquery/jq_friends.php');
 
    //Друзья
    $online=0;
    $circle=isset($_REQUEST['c'])?$_REQUEST['c']:0;
    $user_wp=(int)$_SESSION['WP_USER']['user_wp'];
-   $subs_count=$USER->CountFriends(0,$user_wp,$online); //XXS?XS???!?!?!??!
+   $subs_count=$USER->CountFriends(0,$user_wp,$online);
    $rows=12;
 
-   $action_str = '';
-   $result = $USER->CheckHochu($akcia_id);
+   if($USER->CheckHochu($akcia_id))
+      $action_str = '<a class="wish_add add_me disabled" id="wish-add-'.$akcia_id.'" href="javascript:;" data-status="1"><span class="wa_icon"></span>Добавлено в желания</a>';
+   else
+      $action_str = '<a class="wish_add add_me" id="wish-add-'.$akcia_id.'" href="javascript:;" data-status="0" data-id="'.$akcia_id.'" data-shop="'.$AKCIA_INFO['shop_id'].'"><span class="wa_icon"></span>Добавить к себе в желания</a>';
 
-   //$akcia_id.', '.$AKCIA_INFO['shop_id']
-
-   if($result==0){
-        $action_str = '<a class="wish_add" href="javascript:;" data-id="'.$akcia_id.'" data-shop="'.$AKCIA_INFO['shop_id'].'"><span class="wa_icon"></span>Добавить к себе в желания</a>';
-   }
-   else $action_str = '<a class="disabled" href="javascript:;"><span class="wa_icon"></span>Добавлено в желания</a>';
 
 ?>
             <div id="content" class="fl_r">
@@ -25,7 +20,7 @@
                   <h2>Подарки</h2>
                </div>
                <div class="separator"></div>
-               <a href="/type-5" class="arrow-back">Вернуться к списку подарков</a>
+               <a href="/type-5" class="arrow-back" style="color:#fff;">Вернуться к списку подарков</a>
                <div id="gift_info">
                   <div class="gi_l">
                      <div class="gift_l">
@@ -43,6 +38,7 @@
                            <li class="active">RUB</li>
                            <li>USD</li>
                            <li>EUR</li>
+                           <i class="currency_info small-icon icon-info popover-btn"></i>
                         </ul>
                            <?=$action_str?>
                            <a class="wish_make" href="javascript:;" style="display: none;"><span class="gift_icon"></span>Сделать подарок</a>
@@ -57,10 +53,11 @@
                            <i class="map_close"></i>
                            <span class="map_wrapper"></span>
                         </div>
+                        <img src="http://a.tiles.mapbox.com/v3/jam-media.map-tckxnm3s/pin-m-star+48C(<?=$AKCIA_INFO['longitude']?>,<?=$AKCIA_INFO['latitude']?>)/<?=$AKCIA_INFO['longitude']?>,<?=$AKCIA_INFO['latitude']?>,15/550x345.png">
                      </div>
                      <div class="chosen_friend" style="display: none;">
                         <p class="c_title">Кому</p>
-                        <p class="c_name">Александер Мартиросянович</p>
+                        <p class="c_name"></p>
                         <div class="round_mask">
                         </div>
                      </div>
@@ -73,7 +70,7 @@
                         </div>
                         <div class="gb_content">
                            <p class="gift_title"><?=$AKCIA_INFO['shopname']?></p>
-                           <p>г. Москва, Тверская улица д.3 стр. 5</p>
+                           <p>г. <?=$AKCIA_INFO['address'][2]?>, <?=$AKCIA_INFO['address'][0]?> <?=$AKCIA_INFO['address'][1]?></p>
                            <p>Телефон: <?=$AKCIA_INFO['phone']?></p>
                            <p class="toggle_map"><i class="small-icon icon-check-in"></i><a class="px11" href="javascript:;">Посмотреть на карте</a><i class="icon-blue-arrow-right"></i></p>
                         </div>
@@ -84,7 +81,7 @@
                            Наличие:
                         </div>
                         <div class="gb_content">
-                           <div class="contentProgress"><div class="available tipN" id="bar1" title="<?=$AKCIA_INFO['kolvo']*10?>%"></div></div>
+                           <div class="contentProgress"><div class="available tipN" id="bar1" title="<?=$AKCIA_INFO['kolvo']>10?100:$AKCIA_INFO['kolvo']*10?>%"></div></div>
                         </div>
                      </div>
                      
@@ -100,7 +97,7 @@
                            <a href="javascript:;" class="gb_icon gb_maestro"></a>
                            <a href="javascript:;" class="gb_icon gb_webmoney"></a>
                            
-                           <div class="show_info popover-btn">
+                           <div class="show_info clear popover-btn">
                               <i class="small-icon icon-info"></i>
                               <a class="px11" href="javascript:;">Подробная информация</a>
                            </div>
@@ -122,14 +119,14 @@
                         <p class="g_desc">Срок действия подарка с момента получения <span class="green">30 дней</span>.</p>
                      </div>
                      
-                     <div class="gift_block">
+                     <!--div class="gift_block">
                         <span class="g_desc">Рассказать друзьям:</span>
                            <a href="javascript:;" class="gb_icon gb_fb"></a>
                            <a href="javascript:;" class="gb_icon gb_lj"></a>
                            <a href="javascript:;" class="gb_icon gb_vk"></a>
                            <a href="javascript:;" class="gb_icon gb_gp"></a>
                            <a href="javascript:;" class="gb_icon gb_tw"></a>
-                     </div>
+                     </div-->
                      
                   </div>
                </div>
@@ -189,7 +186,7 @@
             foreach ($result as $k=>$v){
                $stamp=time();
                $new_usr=$USER->Info_min($v['user_wp'],70,70);
-               echo ShowFriendBlock($user_wp, $new_usr['photo'], $new_usr, $stamp);
+               echo ShowFriendBlock($user_wp, $new_usr['photo'], $new_usr, $AKCIA_INFO['kolvo']);
             }
          }
       }
@@ -265,7 +262,7 @@
                   $.ajax({
                      url:'/jquery-listfriends',
                      type:'POST',
-                     data:{user_wp:<?=$user_wp?>, list:begin, items:rows, circle:circle, online:'<?=$online?>', fio:fio},
+                     data:{user_wp:<?=$user_wp?>, list:begin, items:rows, circle:circle, online:'<?=$online?>', fio:fio, kolvo:<?=$AKCIA_INFO['kolvo']?>},
                      cache:false,
                      success:function(data){
                         var html;
@@ -281,17 +278,19 @@
                   });
                }
 
-               function setFriends(fio,photo){
+               function setFriends(fio,photo,id){
+<?php if($AKCIA_INFO['kolvo']>0){ ?>
                   $('#selectFriend').hide();
                   $('.chosen_friend .c_name').html(fio);
                   $('.chosen_friend .round_mask').html('<span class="r_m"></span><img src="' + photo + '">');
-                  $('.wish_make').show();
+                  $('.wish_make').show().attr({'href':'/gift-<?=$akcia_id?>-'+id});
                   $('.chosen_friend').show();
                   $('.c_a').show();
+<?php } ?>
                }
 
                function setOtherFriends(){
-                  $('.wish_make').hide();
+                  $('.wish_make').hide().attr({'href':'javascript:;'});;
                   $('.chosen_friend').hide();
                   $('.c_a').hide();
                   $('#selectFriend').show();
@@ -308,6 +307,17 @@
                      searchFriends();
                   });
                });
+
+               $('.currency li').click(function(){
+                  $('.currency li').removeClass('active');
+                  $(this).addClass('active');
+               });
+
+               $(".toggle_map, .map_close").click(function(){
+	               setTimeout(function() {
+		               $(".map").stop().fadeToggle("fast");
+		           }, 100);
+		       });
             </script>
 
             </div>

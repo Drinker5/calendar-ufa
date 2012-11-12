@@ -22,9 +22,11 @@ class webimgUploadedFileXhr{
         
         switch($par['type']){
         	case 'avatar_orig':
-        		$par['w'] = 500;
-        		$par['h'] = 800;
-        	break;
+        		list($realwidth, $realheight) = getimagesize(path_tmp.$file);
+            $new_size = resizeAvatar(700,700,$realwidth,$realheight);
+            $par['w'] = $new_size['width'];
+            $par['h'] = $new_size['height'];
+        	 break;
         	
         	case 'photoalbum':
         		$par['w'] = 113;

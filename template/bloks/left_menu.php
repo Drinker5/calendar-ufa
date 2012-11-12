@@ -56,28 +56,28 @@ function showAvatarsSlider($user_id)
 		<?php if($USER_INFO['security']){
 						$count_hochu=$USER->CountIHochu($USER_INFO['user_wp']);
 		?>
-						<li><a href="/<?=$USER_INFO['user_wp']?>-wishes"><i class="small-icon icon-wish"></i> Желания</a> <span class="notice-wrap"><?=$count_hochu['all']?></span></li>
-						<li><a href="/<?=$USER_INFO['user_wp']?>-calendar"><i class="small-icon icon-calendar"></i> Календарь</a></li>
-						<li><a href="/<?=$USER_INFO['user_wp']?>-friends"><i class="small-icon icon-whos-near"></i> Друзья</a> <span class="notice-wrap"><?=$USER->CountFriends(0,$USER_INFO['user_wp'])?></span></li>
-						<li><a href="/<?=$USER_INFO['user_wp']?>-photoalbums"><i class="small-icon icon-photoalbum"></i> Фотоальбомы</a> <span class="notice-wrap"><?=$USER->CountPhotoAlbums($USER_INFO['user_wp'])?></span></li>
+						<li><a href="/<?=$USER_INFO['user_wp']?>-wishes"><i class="menu-icon icon-wish"></i> Желания</a> <span class="notice-wrap"><?=$count_hochu['all']?></span></li>
+						<!-- <li><a href="/<?=$USER_INFO['user_wp']?>-calendar"><i class="menu-icon icon-calendar"></i> Календарь</a></li> -->
+						<li><a href="/<?=$USER_INFO['user_wp']?>-friends"><i class="menu-icon icon-whos-near"></i> Друзья</a> <span class="notice-wrap"><?=$USER->CountFriends(0,$USER_INFO['user_wp'])?></span></li>
+						<li><a href="/<?=$USER_INFO['user_wp']?>-photoalbums"><i class="menu-icon icon-photoalbum"></i> Фотоальбомы</a> <span class="notice-wrap"><?=$USER->CountPhotoAlbums($USER_INFO['user_wp'])?></span></li>
 						<div class="separator"></div>
 		<?php } ?>
 		<?php
 			switch($USER->IsFriendAction($USER_INFO['user_wp'])){
 				case 1://Могу пригласить
-					echo '<li><a href="#" class="add_new_friend" data-user="'.$USER_INFO['user_wp'].'" data-name="'.trim($USER_INFO['firstname'].' '.$USER_INFO['lastname']).'"><i class="small-icon icon-add-friend"></i> Добавить в друзья</a></li>';
+					echo '<li><a href="#" class="add_new_friend" data-user="'.$USER_INFO['user_wp'].'" data-name="'.trim($USER_INFO['firstname'].' '.$USER_INFO['lastname']).'"><i class="menu-icon icon-add-friend"></i> Добавить в друзья</a></li>';
 				break;
 
 				case 2://Приглашение отправленно
-					echo '<li><a href="#"><i class="small-icon icon-man-near"></i> Уже приглашён</a></li>';
+					echo '<li><a href="#"><i class="menu-icon icon-man-near"></i> Уже приглашён</a></li>';
 				break;
 
 				case 3://Подтвердить приглашение
-					echo '<li><a href="#" class="save_new_friend" data-user="'.$USER_INFO['user_wp'].'" data-name="'.trim($USER_INFO['firstname'].' '.$USER_INFO['lastname']).'"><i class="small-icon icon-add-friend"></i> Принять приглашение</a></li>';
+					echo '<li><a href="#" class="save_new_friend" data-user="'.$USER_INFO['user_wp'].'" data-name="'.trim($USER_INFO['firstname'].' '.$USER_INFO['lastname']).'"><i class="menu-icon icon-add-friend"></i> Принять приглашение</a></li>';
 				break;
 
 				case 4://Удалить пользователя
-					echo '<li><a href="#" class="id_friend_del" data-user="'.$USER_INFO['user_wp'].'" data-name="'.trim($USER_INFO['firstname'].' '.$USER_INFO['lastname']).'"><i class="small-icon icon-delete-friend"></i> Удалить из друзей</a></li>';
+					echo '<li><a href="#" class="id_friend_del" data-user="'.$USER_INFO['user_wp'].'" data-name="'.trim($USER_INFO['firstname'].' '.$USER_INFO['lastname']).'"><i class="menu-icon icon-delete-friend"></i> Удалить из друзей</a></li>';
 				break;
 			}
 		?>
@@ -137,43 +137,50 @@ function showAvatarsSlider($user_id)
 								<a href="#" class="big-circle-icon circle-icon-whos-near"></a><br>Кто рядом
 							</li>
 							<li>
-								<a href="#" class="big-circle-icon circle-icon-where-to-go"></a><br>Куда пойти
+								<a href="/my-findplaces" class="big-circle-icon circle-icon-where-to-go"></a><br>Куда пойти
 							</li>
 						</ul>
 					</div><!--end of .profile-bottom-->
 
 					<ul class="sidebar-menu">
-						<li<?php if(@$_URLP[1]=='gifts')echo ' class="active"'; ?>>
-							<a href="/my-gifts"><i class="small-icon icon-gift"></i> Мои подарки</a>
-							<span class="notice-wrap"><?=$USER->CountPodarki(0,0,'new')?></span>
+						<li<?php
+							if(@$_URLP[1]=='gifts')echo ' class="active"';
+							$count_gifts=$USER->CountPodarki(0,0,'new');
+							if($count_gifts==0)$count_gifts='';
+						?>>
+							<a href="/my-gifts"><i class="menu-icon icon-gift"></i> Мои подарки</a>
+							<span class="notice-wrap"><?=$count_gifts?></span>
 						</li>
 						<li<?php if(@$_URLP[1]=='friends')echo ' class="active"'; ?>>
-							<a href="/my-friends"><i class="small-icon icon-whos-near"></i> Мои друзья</a>
-							<span class="notice-wrap popover-btn" id="add-friend"><i class="small-icon icon-green-plus"></i></span>
+							<a href="/my-friends"><i class="menu-icon icon-whos-near"></i> Мои друзья</a>
+							<span class="notice-wrap popover-btn" id="add-friend"><i class="menu-icon icon-green-plus"></i></span>
 						</li>
 						<li<?php if(@$_URLP[1]=='wishes')echo ' class="active"'; ?>>
-							<a href="/my-wishes"><i class="small-icon icon-wish"></i> Мои желания</a>
+							<a href="/my-wishes"><i class="menu-icon icon-wish"></i> Мои желания</a>
 						</li>
 						<!--li<?php if(@$_URLP[1]=='calendar')echo ' class="active"'; ?>>
-							<a href="/my-calendar"><i class="small-icon icon-calendar"></i> Мой календарь</a>
+							<a href="/my-calendar"><i class="menu-icon icon-calendar"></i> Мой календарь</a>
 						</li-->
 						<li<?php if(@$_URLP[1]=='subscribes')echo ' class="active"'; ?>>
-							<a href="/my-subscribes"><i class="small-icon icon-subscription"></i> Мои подписки</a>
+							<a href="/my-subscribes"><i class="menu-icon icon-subscription"></i> Мои подписки</a>
 						</li>
 						<li<?php if(@$_URLP[1]=='photoalbums')echo ' class="active"'; ?>>
-							<a href="/my-photoalbums"><i class="small-icon icon-photoalbum"></i> Мои фотоальбомы</a>
+							<a href="/my-photoalbums"><i class="menu-icon icon-photoalbum"></i> Мои фотоальбомы</a>
 						</li>
 						<div class="separator"></div>
 						<li<?php if(@$_URLP[1]=='feed')echo ' class="active"'; ?>>
-							<a href="/my-feed"><i class="small-icon icon-address"></i> Лента новостей</a>
+							<a href="/my-feed"><i class="menu-icon icon-address"></i> Лента новостей</a>
 						</li>
 						<li<?php if(@$_URLP[1]=='announcements')echo ' class="active"'; ?>>
-							<a href="/my-announcements"><i class="small-icon icon-notice"></i> Мои уведомления</a>
-							<span class="notice-wrap"><?=$USER->CountUvedom()?></span>
+							<a href="/my-announcements"><i class="menu-icon icon-notice"></i> Мои уведомления</a>
+					<?php
+						$count_uved=$USER->CountUvedom();
+						if($count_uved>0)echo '<span class="notice-wrap count">+'.$count_uved.'</span>';
+					?>
 						</li>
 						<div class="separator"></div>
 						<li<?php if(@$_URLP[1]=='profile' or @$_URLP[1]=='phones' or @$_URLP[1]=='alerts' or @$_URLP[1]=='avatar' or @$_URLP[1]=='password')echo ' class="active"'; ?>>
-							<a href="/my-profile"><i class="small-icon icon-settings"></i> Мои настройки</a>
+							<a href="/my-profile"><i class="menu-icon icon-settings"></i> Мои настройки</a>
 						</li>
 					</ul>
 				</div><!--end of .sidebar-inner-->
@@ -290,16 +297,16 @@ function showAvatarsSlider($user_id)
 
 					if(is_array($type)){
 						foreach($type as $key=>$value){
-							echo '<li><a href="/type-'.$value['id'].'"><i class="small-icon icon-'.$value['id'].'"></i> '.$value['name'].'</a> <span class="notice-wrap">'.$value['rows'].'</span></li>';
+							echo '<li><a href="/type-'.$value['id'].'"><i class="menu-icon icon-'.$value['id'].'"></i> '.$value['name'].'</a> <span class="notice-wrap">'.$value['rows'].'</span></li>';
 						}
 					}
 ?>
 						<div class="separator"></div>
-						<li><a href="/shop-<?=$SHOP_INFO['id']?>-calendar"><i class="small-icon icon-calendar"></i> Календарь</a> <span class="notice-wrap"><?=$SHOP_INFO['count_podpisok']?></span></li>
-						<li><a href="/shop-<?=$SHOP_INFO['id']?>-photoalbums"><i class="small-icon icon-photoalbum"></i> Фотоальбомы</a></li>
+						<!-- <li><a href="/shop-<?=$SHOP_INFO['id']?>-calendar"><i class="menu-icon icon-calendar"></i> Календарь</a> <span class="notice-wrap"><?=$SHOP_INFO['count_podpisok']?></span></li> -->
+						<li><a href="/shop-<?=$SHOP_INFO['id']?>-photoalbums"><i class="menu-icon icon-photoalbum"></i> Фотоальбомы</a></li>
 						<div class="separator"></div>
-						<li id="count_subscribers"><a href="/shop-<?=$SHOP_INFO['id']?>-subscribers"><i class="small-icon icon-subscription"></i> Подписчики</a> <span class="notice-wrap"><?=$SHOP->CountSubscribers($SHOP_INFO['id'])?></span></li>
-						<li><a href="/shop-<?=$SHOP_INFO['id']?>-reviews"><i class="small-icon icon-review"></i> Отзывы</a></li>
+						<li id="count_subscribers"><a href="/shop-<?=$SHOP_INFO['id']?>-subscribers"><i class="menu-icon icon-subscription"></i> Подписчики</a> <span class="notice-wrap"><?=$SHOP->CountSubscribers($SHOP_INFO['id'])?></span></li>
+						<li><a href="/shop-<?=$SHOP_INFO['id']?>-reviews"><i class="menu-icon icon-review"></i> Отзывы</a></li>
 					</ul>
 				</div>
 <?php
@@ -470,6 +477,64 @@ function showAvatarsSlider($user_id)
 				</div>
 			</div>
 		";
+	break;
+
+	case 11: // Кумир
+		$mV=array('10051'=>'brejneva','10019'=>'harlamov','10132'=>'sting');
+		//$mI=array('10051'=>'Вера Брежнева','10019'=>'Гарик Харламов','10132'=>'STING');
+?>
+				<div class="sidebar-inner">
+                    <div class="profile-avatar">
+                        <video id="my_video" class="video-js vjs-default-skin" autoplay="" loop="" preload="auto">
+                            <source src="stars/video/<?=$mV[$USER_INFO['user_wp']]?>.mp4" type="video/mp4">
+                            <source src="stars/video/<?=$mV[$USER_INFO['user_wp']]?>" type="video/ogg">
+                         </video>
+                        <!-- <i class="info-icon popover-btn"></i> -->
+                    </div>
+					<div class="profile-bottom">
+						<div class="status-wrap">
+							<?=OnlineStatus($USER_INFO['status_chat'],'')?>
+							<?=trim($USER_INFO['firstname'].' '.$USER_INFO['lastname'])?>
+						</div><!--end of .status-wrap-->
+						<div class="separator"></div>
+						<ul class="profile-actions group">
+                            <li>
+                                <a href="#" class="big-circle-icon circle-icon-make-gift"></a><br>Сделать подарок
+                            </li>
+                            <li>
+                                <a href="#" class="big-circle-icon circle-icon-invite"></a><br>Магазин
+                            </li>
+                            <li>
+                                <a href="#" class="big-circle-icon circle-icon-subscribe"></a><br>Подписаться 
+                            </li>
+						</ul>
+					</div><!--end of .profile-bottom-->
+
+					<ul class="sidebar-menu">
+                        <li><a href="javascript:;"><i class="menu-icon icon-review"></i> Журнал</a></li>
+<?php $count_hochu=$USER->CountIHochu($USER_INFO['user_wp']); ?>
+						<li><a href="/<?=$USER_INFO['user_wp']?>-wishes"><i class="menu-icon icon-add"></i> Желания</a> <span class="notice-wrap"><?=$count_hochu['all']?></span></li>
+						<!-- <li><a href="/<?=$USER_INFO['user_wp']?>-calendar"><i class="menu-icon icon-calendar"></i> Календарь</a></li> -->
+						<li><a href="/<?=$USER_INFO['user_wp']?>-photoalbums"><i class="menu-icon icon-photoalbum"></i> Фотоальбомы</a> <span class="notice-wrap"><?=$USER->CountPhotoAlbums($USER_INFO['user_wp'])?></span></li>
+                        <li><a href="javascript:;"><i class="menu-icon icon-photoalbum"></i> Видеоархив</a><span class="notice-wrap">0</span></li>
+						<div class="separator"></div>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="menu-icon icon-subscriber"></i>
+                                Подписчики
+                            </a>
+                            <span class="notice-wrap">3.000.093</span>
+                        </li>  
+					</ul>
+				</div><!--end of .sidebar-inner-->
+
+				<!--table class="online-count">
+					<tr>
+						<td><div class="bubble bordered">сейчас on-line <?=lang_friends_online($USER->CountFriends(0,$_SESSION['WP_USER']['user_wp'],1),$_SESSION['lang'])?></div></td>
+						<td><a href="#" class="btn btn-green">Чат</a></td>
+					</tr>
+				</table><!--end of .online-count-->
+<?php
 	break;
 
 }

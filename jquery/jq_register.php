@@ -41,6 +41,11 @@ function phone_check($phone)
     global $errors;
     if (strlen($phone)<11 || ! is_numeric($phone))
         $errors[] = "Ошибка при вводе номера телефона";
+    global $MYSQL;
+    $tbusers  = "pfx_users";
+    $result = $MYSQL->query("SELECT Count(*) FROM $tbusers WHERE mobile='$phone'");
+    if($result[0]['count'] > 0)
+        $errors[] = "Пользователь с этим номером телефона уже существует";
 }
 
 

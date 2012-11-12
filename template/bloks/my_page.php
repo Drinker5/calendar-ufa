@@ -41,15 +41,45 @@
 	//Лента новостей
 	$subs_count=$USER->CountHistoryLenta(varr_int($USER_INFO['user_wp']),$circle);
 	$rows=5;
+
+	//Кумиры
+	$mT=array('10051'=>'ТУР 19 ноября по Росии','10019'=>'Comedy Club Best 2011','10132'=>'Back To Bass Fall Tour 2012');
+	$mA=array('10051'=>'«Любовь спасёт мир» (2010)','10019'=>'Cамый лучший Фильм. 2011','10132'=>'Sting: The Best of 25 Years (2CD Version)');;
 ?>
-            <div id="content" class="fl_r">
+
+            <!-- <div id="content" class="fl_r<?=$USER_INFO['zvezda']==1?' cumir':''?>"> -->
+<?php if($USER_INFO['zvezda']==1){ ?>
+                <div class="banner-cumir">
+                    <img src="stars/photo/<?=$USER_INFO['user_wp']?>/banner.jpg" />
+                </div>
+
+                <div class="group">
+                    <div class="fl_l text-cumir">
+                        <h2 class="name blue px12 clear"><?php echo trim($USER_INFO['firstname']." ".$USER_INFO['lastname']); ?></h2>
+                        <ul class="text-l">
+                        	<?php echo ($USER_INFO['town_id'] > 0)?"<li><i class=\"small-icon icon-address\"></i>г. ".$USER_INFO['town_name'].", ".$USER_INFO['country_name']."</li>":"";?>
+                            <li><strong>День рождение: <?=$USER_INFO['birthday']?></strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="wrapped tx_r">
+                        <div class="photos_mini">
+                            <a rel="lastPhoto" href="stars/photo/<?=$USER_INFO['user_wp']?>/photo1_large.jpg"><img src="stars/photo/<?=$USER_INFO['user_wp']?>/photo1.jpg" alt="photo"></a>
+                            <a rel="lastPhoto" href="stars/photo/<?=$USER_INFO['user_wp']?>/photo2_large.jpg"><img src="stars/photo/<?=$USER_INFO['user_wp']?>/photo2.jpg" alt="photo"></a>
+                            <a rel="lastPhoto" href="stars/photo/<?=$USER_INFO['user_wp']?>/photo3_large.jpg"><img src="stars/photo/<?=$USER_INFO['user_wp']?>/photo3.jpg" alt="photo"></a>
+                            <a rel="lastPhoto" href="stars/photo/<?=$USER_INFO['user_wp']?>/photo4_large.jpg"><img src="stars/photo/<?=$USER_INFO['user_wp']?>/photo4.jpg" alt="photo"></a><br>
+                            <a class="no c-db" href="javascript:;">показать все</a>
+                        </div>
+                    </div>
+                </div>  
+<?php }else{ ?>
                 <div class="group">
                     <div class="fl_l" style="width: 520px;">
                         <h2 class="name blue px12 clear"><?php echo trim($USER_INFO['firstname']." ".$USER_INFO['lastname']); ?></h2>
                         <ul class="text-l">
                         	<?php echo ($USER_INFO['town_id'] > 0)?"<li><i class=\"small-icon icon-address\"></i>г. ".$USER_INFO['town_name'].", ".$USER_INFO['country_name']."</li>":"";?>
 	                        <li>День рождение: <b><?=$USER_INFO['birthday']?></b></li>
-                            <li class="p_r">
+                            <!-- <li class="p_r">
                                 <div class="feed-status2 text-status-wrap wrapped">
                                     <div class="group">
                                         <span class="arrow_box2 fl_l">Статус</span>
@@ -58,6 +88,7 @@
                                         </div>
                                     </div>
                                 </div>
+<?php if($_SESSION['WP_USER']['user_wp']==$USER_INFO['user_wp']){ ?>
 
                                 <div id="status-change-window">
                                     <h3 style="margin-bottom: 3px;">Изменение статуса</h3>
@@ -74,7 +105,8 @@
                                         <button class="btn btn-grey fl_r no-margin btn-small-padding" onclick="myStatus()">Сохранить</button>
                                     </div>
                                 </div>
-                            </li>
+<?php } ?>
+                            </li> -->
                         </ul>
                         <div class="photos_mini">
                             <?=$photos?><br>
@@ -110,44 +142,44 @@
 	}
 ?>
                 </div>
-
+<?php } ?>
 				<script type="text/javascript">
 					$("a[rel=lastPhoto]").fancybox({
 						'transitionIn'		: 'none',
 						'transitionOut'		: 'none',
 					});
 
-					function myStatus()
-					{
-						var status = $("#status-input").val(),
-							count  = $("#status-input").val().length;
+					// function myStatus()
+					// {
+					// 	var status = $("#status-input").val(),
+					// 		count  = $("#status-input").val().length;
 
-						if(count<=70)
-						{
-							$.ajax({
-								type: "POST",
-								url: "/jquery-status",
-								data: {status:status},
-								async: false,
-								success: function(data)
-								{
-									$("#status-input-text").html(status?status:'Введите текст');
-									$('#status-change-window').hide();
-								}
-							});
-						}
-						else
-							alert("STATUS: НЕ БОЛЕЕ 70 СИМВОЛОВ");
-					}
+					// 	if(count<=70)
+					// 	{
+					// 		$.ajax({
+					// 			type: "POST",
+					// 			url: "/jquery-status",
+					// 			data: {status:status},
+					// 			async: false,
+					// 			success: function(data)
+					// 			{
+					// 				$("#status-input-text").html(status?status:'Введите текст');
+					// 				$('#status-change-window').hide();
+					// 			}
+					// 		});
+					// 	}
+					// 	else
+					// 		alert("STATUS: НЕ БОЛЕЕ 70 СИМВОЛОВ");
+					// }
 
-					jQuery(function($){
-						$("#status-input").keypress(function(event){
-							if(event.which == '13'){
-								myStatus();
-								return false;
-							}
-						});
-					});
+					// jQuery(function($){
+					// 	$("#status-input").keypress(function(event){
+					// 		if(event.which == '13'){
+					// 			myStatus();
+					// 			return false;
+					// 		}
+					// 	});
+					// });
 				</script>
 
                 <div class="profile-info toggle-stop">
@@ -199,7 +231,41 @@
                         </div>
                     </div>
                 </div>
+<?php if($USER_INFO['zvezda']==1){ ?>
+
+                <div class="music-disc">
+                    <div class="block fl_l">
+                        <img class="fl_l" src="stars/photo/<?=$USER_INFO['user_wp']?>/tour.jpg"/>
+                        <strong><?=$mT[$USER_INFO['user_wp']]?></strong>
+                        <!-- <p>On November 21, Sting will perform at the Lodz Arena in Lodz, Poland as part of his critically-acclaimed Back to Bass tour! </p> -->
+                        <div class="tx-r fl_l button">
+                                <a href="#" class="make-gift show opacity_link group">
+                                    <span class="big-circle-icon circle-icon-make-favorite fl_r tx_c"></span>
+                                    <div class="wrapped tx_r">
+                                        Подарить билет
+                                    </div>
+                                </a>
+                            </div>
+                    </div>
+                    <div class="block fl_r">
+                        <img class="fl_r" src="stars/photo/<?=$USER_INFO['user_wp']?>/disc.jpg"/>
+                        <strong><?=$mA[$USER_INFO['user_wp']]?></strong>
+
+                        <div class="tx-r fl_r right_blok" style="margin-top: 30px;">
+                                <a href="#" class="make-gift show opacity_link group">
+                                    <span class="big-circle-icon circle-icon-make-favorite fl_r tx_c"></span>
+                                    <div class="wrapped">
+                                        Подарить альбом
+                                    </div>
+                                </a>
+                            </div>
+                    </div>
+                    <div class="cleared"></div>
+                </div>
+
 <?php
+	}
+
 	$zoom=12; //Масштаб карты
 	$myPos=false; //Мое местоположение
 
@@ -408,11 +474,11 @@
                             <button class="btn btn-green fl_r no-margin" type="submit" onclick="NewEvent()">Отправить</button>
                             <div class="feed-status2 wrapped">
                                 <div class="group">
-                                    <i id="photo" class="small-icon icon-photo active fl_r pointer"></i>
-                                    <input type="file" multiple="true" accept="image/jpeg,image/png,image/gif">
+                                    <!-- <i id="photo" class="small-icon icon-photo active fl_r pointer"></i> -->
+                                    <!-- <input type="file" multiple="true" accept="image/jpeg,image/png,image/gif"> -->
                                     <span class="arrow_box2 fl_l">Что нового?</span>
                                     <div class="wrapped">
-                                        <input type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
+                                        <input type="text" id="status-input" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
                                     </div>
                                 </div>
                             </div>
@@ -497,45 +563,83 @@
 					function LentaSearch(){
 					}
 
-					function NewEvent(){
+					function NewEvent()
+					{
+						var status = $("#status-input").val(),
+							count  = $("#status-input").val().length;
+
+						if(count<3)
+							alert("NewEvent: НЕ МЕНЕЕ 3 СИМВОЛОВ");
+						else if(count>70)
+							alert("NewEvent: НЕ БОЛЕЕ 70 СИМВОЛОВ");
+						else
+						{
+							$.ajax({
+								type: "POST",
+								url: "/jquery-event",
+								data: {status:status,user_wp:<?=$_SESSION['WP_USER']['user_wp']?>,whom:<?=$USER_INFO['user_wp']?>},
+								async: false,
+								success: function(data)
+								{
+									var html,
+									idLenta=$('#idLenta');
+
+									if(data){
+										html = jQuery.parseJSON(data);
+										idLenta.prepend(html.html);
+										$("#status-input").val("");
+									}
+								}
+							});
+						}
 					}
 
 					function CommentsAction(id,type,n,t){
-						var msg    = $("#comments-" + id + "-add").val(),
-							count  = $("#comments-" + id + "-count").get(0),
-							count0 = $("#comments-" + id + "-count-other").get(0);
+						var msg     = $("#comments-" + id + "-add").val(),
+							msgCount= $("#comments-" + id + "-add").val().length,
+							//count   = $("#comments-" + id + "-count").get(0),
+							count0  = $("#comments-" + id + "-count-other").get(0)||-1;
 
-						$.ajax({
-							url:'/jquery-comments',
-							type:'POST',
-							data:{type:type,id:id,msg:msg,n:n},
-							cache:false,
-							success: function(data){
-								var html,
-									nCount         = count.innerHTML,
-									nCountOther    = count0.innerHTML,
-									idComments     = $('#comments-' + id);
+						if(type=='add' && msgCount<3)
+							alert("CommentsAction: НЕ МЕНЕЕ 3 СИМВОЛОВ");
+						else if(type=='add' && msgCount>70)
+							alert("CommentsAction: НЕ БОЛЕЕ 70 СИМВОЛОВ");
+						else
+						{
+							$.ajax({
+								url:'/jquery-comments',
+								type:'POST',
+								data:{type:type,id:id,msg:msg,n:n},
+								cache:false,
+								success: function(data){
+									var html,
+										//nCount         = count.innerHTML,
+										nCountOther    = count0.innerHTML,
+										idComments     = $('#comments-' + id);
 
-								if(data){
-									if(type=='add'){
-										nCount++;
-										nCountOther++;
-										html = jQuery.parseJSON(data);
-										idComments.append(html.html);
-										$("#comments-" + id + "-add").val('');
-									} else if(type=='delete'){
-										nCount--;
-										nCountOther--;
-										$('#comments-' + n + '-id').slideUp('slow',function(){
-											$(this).remove();
-										});
-										if(t==1)
-											$('<span id="comments-' + id + '-count-other">' + nCountOther +'</span>').replaceAll('span#comments-' + id + '-count-other');
+									if(data){
+										if(type=='add'){
+											//nCount++;
+											nCountOther++;
+											html = jQuery.parseJSON(data);
+											idComments.append(html.html);
+											$("#comments-" + id + "-add").val('');
+										} else if(type=='delete'){
+											//nCount--;
+											nCountOther--;
+											$('#comments-' + n + '-id').slideUp('slow',function(){
+												$(this).remove();
+											});
+											if(t==1)
+												$('<span id="comments-' + id + '-count-other">' + nCountOther +'</span>').replaceAll('span#comments-' + id + '-count-other');
+											if(nCountOther==0)
+												$('.toggle-change').remove();
+										}
+										//$('#comments-' + id + '-count').html(nCount);
 									}
-									$('#comments-' + id + '-count').html(nCount);
 								}
-							}
-						});
+							});
+						}
 					}
 
 					function CommentsShow(id,num){
@@ -574,4 +678,15 @@
 							myLenta();
 						}
 					});
+
+/*
+					jQuery(function($){
+						$("#status-input").keypress(function(event){
+							if(event.which == '13'){
+								myStatus();
+								return false;
+							}
+						});
+					});
+*/
                 </script>

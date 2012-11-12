@@ -32,7 +32,6 @@
     width: 100%;
     border-bottom: 1px solid #edeff3;
     /*padding-bottom: 3px;*/
-    margin-bottom: 20px;
     vertical-align: middle;
 }
 .nav-panel.top-border {
@@ -141,27 +140,27 @@
 }*/
 
 /* Правая часть */
+
 .nav-panel .right li:hover {
     background-color: #f3f9fd;
 }
 
 .nav-panel .right li.active {
-    background-color: #75849c;
-    background-color: rgba(117, 132, 156, 0.15);
+    background: #eaedf0;
 }
 
 .nav-panel .right a, .nav-panel .right a:visited {
     display: block;
     padding: 6px 9px 3px 9px;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 15px;
     font-weight: bold;
     text-decoration: none;
-    color: #4f72ab;
+    color: #8bb8ea;
 }
 
 .nav-panel .right li.active a {
-    color: #75849c;
+    color: #4f72ab;
 }
 
 /* Подарок */
@@ -210,17 +209,17 @@
     margin-right: 28px;
 }
 .gift .info .date-label {
-    width: 77px;
     display: block;
-    font-size: 10px;
     line-height: 15px;
-    color: #5b6880;
+    font-size: 12px;
+    color: #75849c;
+    margin-right: 5px;
 }
 .gift .info .date {
-    font-size: 10px;
+    font-size: 12px;
     line-height: 15px;
     font-weight: bold;
-    color: #358dc6;
+    color: #0d86d5;
 }
 .gift .info .counter {
     margin: 7px 0 25px 0;
@@ -422,7 +421,7 @@
     width: 402px;
 }
 .edit-places-container .places-list {
-    width: 378px;
+    width: 342px;
 }
 .edit-places-container .places-list .places-wrapper {
     position: relative;
@@ -511,7 +510,7 @@
     text-decoration: underline;
 }
 .edit-places-container .places-list .place .info {
-    max-width: 230px;
+    max-width: 182px;
     overflow-x: hidden;
     color: #716e6b;
     font-size: 11px;
@@ -622,4 +621,299 @@
  position: relative;
  top: 7px;
  cursor: pointer;
+}
+
+/**
+ * Map Pin
+ */
+
+.white-pin {
+    position: relative;
+    width: 169px;
+    height: 128px;
+    
+    border: 1px solid #f2f7e3;
+    border-radius: 3px;
+
+    -webkit-box-shadow: 0 0 0 1px #94c11e,
+                        2px 3px 2px #b3b8a3;
+
+    -moz-box-shadow: 0 0 0 1px #94c11e,
+                     2px 3px 2px #b3b8a3;
+    
+    box-shadow: 0 0 0 1px #94c11e,
+                2px 3px 2px #b3b8a3;
+
+    padding: 5px 9px 0 9px;
+}
+.white-pin .down-arrow {
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    margin-left: -10px;
+    width: 19px;
+    height: 13px;
+    background: url('../pic/pin_down_arrow.png') no-repeat;
+    border-top: 1px solid #fff;
+}
+.white-pin .title {
+    color: #0d86d5;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 15px;
+}
+.white-pin .rating {
+    margin-top: 3px;
+}
+.white-pin .adress {
+    margin-bottom: 15px;
+}
+.white-pin .info {
+    width: 67px;
+    display: inline-block;
+    text-align: center;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: bold;
+    color: #95c11f;
+}
+.white-pin .info.right {
+    margin-left: 31px;
+}
+.white-pin .info span {
+    font-size: 11px;
+    font-weight: normal;
+}
+
+/**
+ * Comments
+ */
+
+.toggle-comments .c-control-text {
+    display: block;
+    padding: 12px 0 12px 0;
+    border-bottom: 1px solid #dee7f0;
+    color: #97B425;
+    font-weight: bold;
+    font-size: 11px;
+}
+.toggle-comments .c-control-text-2 {
+    color: #97B425;
+    font-weight: bold;
+}
+
+.comment-content .comment-author {
+    margin: 0 16px 0 0;
+    color: #358DC5;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.wishlist-comments-container .wishlist-comment, .album-comment {
+    padding: 8px 14px 11px 14px;
+    border-bottom: 1px solid #e5ebf1;
+}
+
+.wishlist-comments-container .leave-comment {
+    position: relative;
+    padding: 15px 14px;
+    display: inline-block;
+}
+.wishlist-comments-container .leave-comment .commenter-avatar {
+    margin-right: 11px;
+}
+.wishlist-comments-container .leave-comment textarea {
+    position: relative;
+    top: 12px;
+    padding: 5px 12px;
+    width: 538px;
+    height: 52px;
+    border: 1px solid #d9dce4;
+    border-radius: 1px;
+    color: #9A9A9A;
+    font-size: 11px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.wishlist-comments-container .submit-and-info {
+    width: 88px;
+    height: 50px;
+    display: inline-block;
+    text-align: center;
+}
+.wishlist-comments-container .submit-and-info .btn-green  {
+    margin: 0 0 9px 0 !important;
+}
+.wishlist-comments-container .submit-and-info span {
+    /*line-height: 12px;*/
+    color: #b4becc;
+}
+
+/**
+ * Payment
+ */
+.payment-whon-where-what {
+    margin-top: 28px;
+    padding: 0 44px 12px 44px;
+    border-bottom: 1px solid #EDEFF3;
+    position: relative;
+}
+
+.payment-whon-where-what .chosen_friend {
+    position: static;
+    /*right: 10px;*/
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+}
+.payment-whon-where-what .round_mask {
+    margin: 5px 13px 0 13px;
+    width: 94px;
+    height: 106px;
+    text-align: left;
+}
+.payment-whon-where-what .arrow {
+    display: inline-block;
+    margin: 0 3px;
+    height: 75px;
+    vertical-align: middle;
+}
+
+.payment-whon-where-what .summ-block {
+    display: inline-block;
+    margin-left: 5px;
+    width: 173px;
+    height: 145px;
+    background: url('../pic/summ-bg.png') top no-repeat;
+    color: #95c11f;
+    vertical-align: top;
+    text-align: center;
+}
+.payment-whon-where-what .summ-block .title {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 11px;
+}
+.payment-whon-where-what .summ-block .summ {    
+    display: block;
+    margin-top: 38px;
+    color: #009ad7;
+    font-size: 22px;
+    font-family: 'Festus';
+    -webkit-font-smoothing: antialiased;
+}
+
+.payment-whon-where-what .payed-30-days {
+    position: absolute;
+    display: none;
+    height: 19px;
+    background: url('../pic/payed-30-days.png') repeat-x;
+    color: #fff;
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #8fc2e4;
+    border-radius: 2px;
+    padding: 3px 7px 0 7px;
+    left: 50%;
+    margin-left: -193px;
+    bottom: -5px;
+}
+.payment-whon-where-what .payed-30-days .arrow {
+    position: absolute;
+    background: url('../pic/payed-30-days-arrow.png') no-repeat;
+    width: 5px;
+    height: 9px;
+    left: -8px;
+    top: 7px;
+}
+
+
+.payment-write-message {
+    text-align: center;
+    padding: 11px 0 16px 0;
+    border-bottom: 1px solid #EDEFF3;
+}
+.payment-write-message .green-button {
+    margin: 0 auto;
+    width: 189px;
+    height: 21px;
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+    background: #98c21d;
+    color: white;
+    text-shadow: 1px 1px 1px #80a418;
+    font-size: 10px;
+    line-height: 18px;
+}
+.payment-write-message .green-button i {
+    margin-right: 9px;
+    top: 3px;
+}
+.payment-write-message .show {
+    display: none;
+}
+
+
+.message-popup {
+    padding: 8px;
+    width: 358px;
+}
+.message-popup textarea.bordered {
+    margin: 3px 0 0 4px;
+    padding: 6px 14px;
+    width: 320px;
+    height: 56px;
+    border: 1px solid #d9dce4;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.message-popup label {
+    padding: 8px 0px 8px 4px;
+    font-size: 11px;
+}
+.popover.payment-message {
+
+}
+.popover.payment-message .left-arrow {
+    top: 6%;
+}
+.popover.payment-message .big-left-arrow {
+    top: 6%;
+}
+
+
+.nav-panel.payment {
+    padding: 0 44px;
+}
+.nav-panel .hint.payment {
+    font-size: 28px;
+}
+.nav-panel .geo-arrow-down {
+     position: relative;
+     bottom: -18px;
+     display: inline-block;
+     margin-right: 10px;
+     width: 27px;
+     height: 25px;
+     background: url("../pic/icons/geo_arrow-down.png") no-repeat;
+}
+
+
+.payment-methods {
+
+}
+
+.payment-methods .line {
+    border-bottom: 1px solid #EDEFF3;
+    height: 44px;
+}
+.payment-methods .line .title {
+    font-size: 12px;
+    padding: 9px 0 0 0;
+    color: #95c11f;
+    width: 160px;
+    font-weight: bold;
+}
+.payment-methods .line .systems-icons a {
+    margin-right: 25px;
 }

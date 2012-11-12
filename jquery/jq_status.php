@@ -1,4 +1,4 @@
 <?php
-	$result = $USER->UpdateUserStatus(@$_POST['status']);
-	//true?false
+	$id=$USER->UpdateUserStatus(@$_POST['status']);
+	return $id>0?true:false;
 ?>
