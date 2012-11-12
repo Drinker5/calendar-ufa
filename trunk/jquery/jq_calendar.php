@@ -392,7 +392,8 @@ if(isset($_GET["friendlist"])){
 		$json[] = array( 
 			"friend_wp" => $row["user_wp"],
 			"name" => $row["firstname"].' '.$row['lastname'],
-			"userpic" => $row['photo']
+			"userpic" => $row['photo'],
+			"added" => false
 		);		
 	}
 

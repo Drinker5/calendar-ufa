@@ -73,8 +73,10 @@
 		event_title.val("");
 		event_id.val("");
 		event_notes.val("");
-		privacy_friends.children('span').remove()
-
+		
+		for(var p in suggestions){	suggestions[p].added = false; }
+		privacy_friends.children('span').remove();
+		
 		event_repeat.selectBox("value", 0);
 		event_finish.selectBox("value", 0);
 		event_remind.selectBox("value", 0);
@@ -479,10 +481,8 @@
 		}]
 	});
 	
-	var priv_friends;
-
+	var suggestions = [];
 	$(function(){
-		var suggestions = [];
 		$.getJSON("/jquery-calendar?friendlist", function(data) { suggestions = data; });
 		//Присоединяем автозаполнение
 		$("#to").autocomplete({
@@ -496,11 +496,18 @@
 					span = $("<span>").text(friend),
 					a = $("<a>").addClass("remove").attr({
 						href: "javascript:",
-						title: "Remove " + friend
+						title: "Убрать " + friend
 					}).text("x").appendTo(span);
 				
+				span.attr("wp",ui.item.friend_wp);
 				//Добавляем friend к div friend 
 				span.insertBefore("#to");
+				
+				//Удаление из списка добавленного друга
+				for(var p in suggestions){
+					if(suggestions[p].friend_wp == ui.item.friend_wp){ suggestions[p].added = true; break; }
+				}
+				
 				return false;
 			},
 			//Определяем обработчик выбора
@@ -509,9 +516,11 @@
 				$("#to").val("").css("top", 2);
 			}
 		}).data( "autocomplete" )._renderItem = function( ul, item ) {
-            return $( "<li>" ).data( "item.autocomplete", item )
-                .append( "<a>" + item.name + "<br>" + item.friend_wp + "</a>" )
-                .appendTo( ul );
+			if(item.added == false){
+				return $( "<li>" ).data( "item.autocomplete", item )
+					.append( "<a>" + item.name + "<br>" + item.friend_wp + "</a>" )
+					.appendTo( ul );
+			}
         };
 		
 		//Добавляем обработчки события click для div privacy_friends
@@ -522,6 +531,13 @@
 		
 		//Добавляем обработчик для события click удаленным ссылкам
 		$(".remove", document.getElementById("privacy_friends")).live("click", function(){
+			
+			//Восстанавливаем в списке друзей для выбора
+			var wp = $(this).parent().attr("wp");
+			for(var p in suggestions){
+				if(suggestions[p].friend_wp == wp){ suggestions[p].added = false; break; }
+			}
+			
 			//Удаляем текущее поле
 			$(this).parent().remove();
 			//Корректируем положение поля 'Кому'
