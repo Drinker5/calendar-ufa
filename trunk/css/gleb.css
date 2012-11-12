@@ -72,7 +72,7 @@ margin-left:93.5px;
 margin-right:85.5px;
 }
 #event_repeat {
-padding-left:10px;
+	padding-left:10px;
 	color:grey;
 	margin-right:15px;
 	width: 190px;
@@ -142,3 +142,20 @@ padding-left:10px;
 	height:60px;
 }
 
+.whead h5{
+background-image: url("../pic/panel2.png");
+background-size:cover;
+font-size:18px;
+height:60px;
+padding-left:20px;
+padding-top:15px;
+}
+.whead {  color: #fff; /*a#636363;*/
+}
+#event_start, #event_end  {
+	width:100px;
+	float: left;
+}
+#lbl{
+	padding-top:20px;
+}
