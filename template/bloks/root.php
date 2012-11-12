@@ -30,7 +30,6 @@
 						$file='bloks/my_calendar.php';
 						$TITLE='Мой календарь';
 						$scripts.="	<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/gleb.css\" />
-									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/aigul.css\" />
 									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/jquery-ui-timepicker-addon.css\" />
 									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/fullcalendar.css\" />
 									<script type=\"text/javascript\" src=\"js/common.calendar.js\"></script>
