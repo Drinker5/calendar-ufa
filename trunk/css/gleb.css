@@ -20,7 +20,7 @@
 }
 
 form{
-	color:grey;
+	color:grey !important;
 }
 #dialog-form {
 	padding: 10px; 
@@ -71,6 +71,7 @@ hr{ /* Горизонтальная линия */
 margin-left:93.5px;
 margin-right:85.5px;
 }
+
 #event_repeat {
 	padding-left:10px;
 	color:grey;
@@ -78,6 +79,7 @@ margin-right:85.5px;
 	width: 190px;
 	height:30px;
 }
+
 #event_finish{
 padding-left:10px;
 	color:grey;
@@ -121,6 +123,7 @@ padding-left:10px;
 	border:1px solid #DDD; 
 	background-color:#fff;
 }
+
 #privacy_friends #to { width:80px; margin:0 0 2px 0; padding:0 0 3px; position:relative; top:0; float:left; border:none; z-index:0;}
 #privacy_friends input { display:block; }
 #privacy_friends span { display:block; width:auto; margin:0 3px 3px 0; padding:3px 20px 4px 8px; position:relative; float:left; text-indent:0; background-color:#eee; border:1px solid #333; -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px; color:#333; font:normal 11px Verdana, Sans-serif; }
@@ -158,4 +161,8 @@ padding-top:15px;
 }
 #lbl{
 	padding-top:20px;
+}
+
+.ui-button-text{
+	
 }
