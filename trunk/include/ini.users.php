@@ -27,13 +27,16 @@ class T_USERS {
 	     $Msg .= "    <a href=\"".sys_url."active-$session\">".sys_url."active-$session</a><br /><br />";
 	     $Msg .= "С Уважением, ".sys_copy." ".sys_url."<br /><br />";
 
-	     if(send_mail($email, $Msg, LANG_BTN_REGISTER.' '.sys_copy))
+	     if(send_mail($userinfo['email'], $Msg, LANG_BTN_REGISTER.' '.sys_copy))
+	    {
+	    	@setcookie('reg_mail',$userinfo['email'],time()+600,'/');
 		  return 0; // Регистрация успешна
+		}
 	     else
 	      return -3; // Регистрация успешна но письмо не отправилось \\ Херово :)
 		}
 		return -2; // Не удалось вставить строку в БД
-		
+
 	}
 
 
@@ -105,7 +108,7 @@ class T_USERS {
 	    	$result = $MYSQL->query("SELECT `user_wp` FROM $tbusers WHERE session='".mysql_real_escape_string($session)."'");
 	    	if(is_array($result) && count($result) == 1){
 	    		$MYSQL->query("UPDATE $tbusers SET everif=1 WHERE session='".mysql_real_escape_string($session)."'");
-	    		$this->CreateAvatarsAlbum($result['user_wp']);
+	    		$this->CreateAvatarsAlbum($result[0]['user_wp']);
 	    		return $this->WPin($session);
 	    	}
 	    	return -2; // Нет пользователя с такой сессией
@@ -623,7 +626,7 @@ class T_USERS {
 
 	    $MYSQL->query("UPDATE $tbusers SET status='".mysql_real_escape_string($status)."' WHERE user_wp=".(int)$_SESSION['WP_USER']['user_wp']."");
 	    $stID=$MYSQL->query("INSERT INTO $tbstatus (`status`,`date`) VALUES ('".mysql_real_escape_string($status)."', NOW())");
-	    $MYSQL->query("INSERT INTO $tbuserdeystvie (`data_add`,`user_wp`,`deystvie`,`id_deystvie`) VALUES (NOW(), ".varr_int($_SESSION['WP_USER']['user_wp']).", 10, ".$stID.")");
+	    return $MYSQL->query("INSERT INTO $tbuserdeystvie (`data_add`,`user_wp`,`deystvie`,`id_deystvie`) VALUES (NOW(), ".varr_int($_SESSION['WP_USER']['user_wp']).", 10, ".$stID.")");
 	}
 
 /****************************************************************************************************************************************************/
@@ -1466,6 +1469,41 @@ class T_USERS {
 		return $result[0]['count'];
 	}
 
+	function CountFriendsInCircle($new=0,$user_wp=0,$online=0,$circle=0){
+		global $MYSQL;
+
+		$GLOBALS['PHP_FILE']=__FILE__;
+		$GLOBALS['FUNCTION']=__FUNCTION__;
+		$tbfriends          ="pfx_users_friends";
+		$tbkrugi            ="pfx_users_krugi";
+		$tbusers            ="pfx_users";
+		$user_wp            =(int)$user_wp;
+
+		if($user_wp==0)$user_wp=(int)$_SESSION['WP_USER']['user_wp'];
+
+		if  ($online==1)$where=" AND (`".$tbusers."`.`online` + INTERVAL 10 MINUTE > now()) AND `".$tbusers."`.`status_chat`!=0";
+		else            $where="";
+
+		if($circle>0)
+			$inner='INNER JOIN `'.$tbkrugi.'` ON `'.$tbkrugi.'`.`friends_id`=`'.$tbfriends.'`.`id` WHERE `'.$tbkrugi.'`.`krug_id`=\''.$circle.'\' AND';
+		else
+			$inner='WHERE';
+
+		switch($new){
+			case 1:
+				$result=$MYSQL->query("SELECT Count(*) FROM `".$tbfriends."` ".$inner." `friend_wp`=".$user_wp." AND IFNULL(`good`,0)=0");
+			break;
+
+			default:
+				$result=$MYSQL->query("SELECT Count(*) FROM `".$tbfriends."` INNER JOIN `".$tbusers."` ON `".$tbusers."`.`user_wp`=`".$tbfriends."`.`friend_wp` ".$inner." `".$tbfriends."`.`user_wp`=".$user_wp." AND `good`=1 ".$where);
+			break;
+		}
+
+		//if($new==1 && $result[0]['count']>0)return '<b style="color:red">'.$result[0]['count'].'</b>';
+		//else                                return $result[0]['count'];
+		return $result[0]['count'];
+	}
+
 //!Друзья — друг или нет?
 	function IsFriend($friend_wp){
 		global $MYSQL;
@@ -2005,7 +2043,7 @@ class T_USERS {
 		$tbphotoalbum     = "pfx_users_photos_album";
 		$tbuserphotos     = "pfx_users_photos";
 		$tbfriends        = "pfx_users_friends";
-		$tbstatus         = "pfx_users_status";
+		$tbevent          = "pfx_users_event";
 		$tbpodpiska       = "pfx_podpiska";
 		$tbcountry        = "pfx_country";
 		$tbshops          = "pfx_shops";
@@ -2313,8 +2351,8 @@ class T_USERS {
 	    				}
 	    		    break;*/
 
-	    			case 10: // Обновлен статус
-	    				$result = $MYSQL->query("SELECT status FROM $tbstatus WHERE id = ".varr_int($value['id_deystvie']));
+	    			case 10: // Обновлен статус/Что нового?
+	    				$result = $MYSQL->query("SELECT user_wp, event FROM $tbevent WHERE id = ".varr_int($value['id_deystvie']));
 
 	    				if(is_array($result)){
 	    			 		$result = $result[0];
@@ -2322,8 +2360,8 @@ class T_USERS {
 	    			       'id'         => $value['id'],
  	    			       'deystvie'   => 10,
 	    			       'data'       => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			       'user'       => $this->Info_min($value['user_wp'],40,40),
-	    			       'status'     => ToText($result['status']),
+	    			       'user'       => $this->Info_min($result['user_wp'],40,40),
+	    			       'status'     => ToText($result['event']),
 	    			    );
 
 	    				} else {
@@ -2338,20 +2376,22 @@ class T_USERS {
 	}
 
 
-	function CountMassHistoryLenta($circle=1){
+	function CountMassHistoryLenta($user_wp,$online=0){
 		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
 	    $GLOBALS['FUNCTION'] = __FUNCTION__;
 
 	    $tbdeystvie       = "pfx_deystvie";
+	    $tbusers          = "pfx_users";
 	    $tbuserskrugi     = "pfx_users_krugi";
 	    $tbfriends        = "pfx_users_friends";
 	    $tbusers_deystvie = "pfx_users_deystvie";
 	    $tbsettings_deystvie = "pfx_users_settings_lenta";
 
 	    $user_wp = varr_int($_SESSION['WP_USER']['user_wp']);
-	    $circle  = varr_int($circle);
+	    $online  = varr_int($online);
+	    $nInner  = '';
 
 	    // Заполняем таблицу настроек ленты событий пользователя (например: показывать только подарки, дружбу, фотоальбомы и т.п.)
 	    /*$deystvie = $MYSQL->query("SELECT Count(*) FROM $tbsettings_deystvie WHERE user_wp = ".varr_int($_SESSION['WP_USER']['user_wp']));
@@ -2361,21 +2401,19 @@ class T_USERS {
 	       	 $MYSQL->query("INSERT INTO $tbsettings_deystvie (deystvie_id,user_wp) VALUES (".$value['deystvie_id'].",".varr_int($_SESSION['WP_USER']['user_wp']).")");
 	    }*/
 
-	    // Круги
-	    switch($circle){
-	    	case 1: // Все
-	    		$where = "$tbusers_deystvie.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends WHERE $tbfriends.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends WHERE $tbfriends.user_wp=$user_wp AND $tbfriends.good=1) AND $tbfriends.good=1) AND";
-	    	   //OR ($tbusers_deystvie.deystvie = 1 AND $tbusers_deystvie.id_deystvie = $user_wp)
-	    	break;
+		if($online==1){
+			$inner=" INNER JOIN $tbusers ON $tbusers.user_wp = $tbfriends.friend_wp";
+			$w="AND ($tbusers.online + INTERVAL 10 MINUTE > now())";
+		}else{
+			$inner="";
+			$w="";
+		}
 
-	    	default:
-	    		$inner = "INNER JOIN $tbuserskrugi ON $tbuserskrugi.krug_id = $circle";
-	    		$where = "$tbusers_deystvie.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends WHERE $tbfriends.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends $inner WHERE $tbfriends.user_wp=$user_wp AND $tbfriends.good=1 AND $tbfriends.id = $tbuserskrugi.friends_id) AND $tbfriends.good=1) AND";
-	    	break;
-	    }
+	    $where = "$tbusers_deystvie.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends $inner WHERE $tbfriends.user_wp=$user_wp AND $tbfriends.good=1 $w) AND";
 
 	    $sql = "SELECT Count(*) FROM $tbusers_deystvie
 	             /* INNER JOIN $tbsettings_deystvie ON $tbsettings_deystvie.user_wp = ".varr_int($_SESSION['WP_USER']['user_wp'])." */
+	             $nInner
 	            WHERE $where /* $tbsettings_deystvie.deystvie_id = $tbusers_deystvie.deystvie AND */ $tbusers_deystvie.privat = 0";
 
 	    $count = $MYSQL->query($sql);
@@ -2383,7 +2421,7 @@ class T_USERS {
 	}
 
 
-	function ShowMassHistoryLenta($circle=1,$rows=15,$begin=0){
+	function ShowMassHistoryLenta($user_wp,$online=0,$rows=15,$begin=0){
 		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
@@ -2393,6 +2431,7 @@ class T_USERS {
 		$tbphotoalbum     = "pfx_users_photos_album";
 		$tbuserphotos     = "pfx_users_photos";
 		$tbfriends        = "pfx_users_friends";
+		$tbevent          = "pfx_users_event";
 		$tbpodpiska       = "pfx_podpiska";
 		$tbcountry        = "pfx_country";
 		$tbshops          = "pfx_shops";
@@ -2404,27 +2443,20 @@ class T_USERS {
 		$tbsettings_deystvie = "pfx_users_settings_lenta";
 		$tbuserskrugi     = "pfx_users_krugi";
 
-	    $user_wp = varr_int($_SESSION['WP_USER']['user_wp']);
-	    $circle  = varr_int($circle);
+	    $user_wp = varr_int($user_wp);
+	    $online  = varr_int($online);
 	    $rows    = varr_int($rows);
-		//$page    = varr_int($page-1);
-		//$begin   = varr_int($page*$rows);
 		$begin   = varr_int($begin);
-	    $inner   = "";
-	    $where   = "";
 
-	    // Круги
-	    switch($circle){
-	    	case 1: // Все
-	    		$where = "$tbusers_deystvie.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends WHERE $tbfriends.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends WHERE $tbfriends.user_wp=$user_wp AND $tbfriends.good=1) AND $tbfriends.good=1) AND";
-	    	   //OR ($tbusers_deystvie.deystvie = 1 AND $tbusers_deystvie.id_deystvie = $user_wp)
-	    	break;
+		if($online==1){
+			$inner=" INNER JOIN $tbusers ON $tbusers.user_wp = $tbfriends.friend_wp";
+			$w="AND ($tbusers.online + INTERVAL 10 MINUTE > now())";
+		}else{
+			$inner="";
+			$w="";
+		}
 
-	    	default:
-	    		$inner = "INNER JOIN $tbuserskrugi ON $tbuserskrugi.krug_id = $circle";
-	    		$where = "$tbusers_deystvie.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends WHERE $tbfriends.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends $inner WHERE $tbfriends.user_wp=$user_wp AND $tbfriends.good=1 AND $tbfriends.id = $tbuserskrugi.friends_id) AND $tbfriends.good=1) AND";
-	    	break;
-	    }
+	    $where = "$tbusers_deystvie.user_wp IN (SELECT $tbfriends.friend_wp FROM $tbfriends $inner WHERE $tbfriends.user_wp=$user_wp AND $tbfriends.good=1 $w) AND";
 
 	    $sql = "SELECT $tbusers_deystvie.id, $tbusers_deystvie.data_add, $tbusers_deystvie.deystvie, $tbusers_deystvie.id_deystvie, $tbusers_deystvie.user_wp
 	               FROM $tbusers_deystvie
@@ -2451,11 +2483,18 @@ class T_USERS {
 	    		switch($value['deystvie']){
 	    			case 1: // Друзья
 
-	    			  $user_first  = $value['id_deystvie'];
-	    			  $user_second = $value['user_wp'];
+	    			   	  if($user_wp == $value['user_wp']){ $user_first = $user_wp; $user_second = $value['id_deystvie'];}
+	    			  elseif($user_wp == $value['id_deystvie']){ $user_first = $user_wp; $user_second = $value['user_wp'];}
+	    			  else {
+	    			  	if($this->IsFriend($value['user_wp'])){
+	    			  		$user_first = $value['user_wp']; $user_second = $value['id_deystvie'];
+	    			  	} else {
+	    			  		$user_first = $value['id_deystvie']; $user_second = $value['user_wp'];
+	    			  	}
+	    			  }
 
-	    			  $user1 = $this->Info_min($user_first,40,40);
-	    			  $user2 = $this->Info_min($user_second,78,101,true);
+	    			  $user1 = $this->Info_min($user_second,78,101,true);
+	    			  $user2 = $this->Info_min($user_first,40,40);
 
 	    			  if(isset($user1) && is_array($user1))
 	    			  $array[] = array(
@@ -2473,6 +2512,7 @@ class T_USERS {
 	    			                      FROM $tbhistorypay
 	    			                     INNER JOIN $tbcountry ON $tbcountry.id = $tbhistorypay.town_id
 	    			                    WHERE $tbhistorypay.id = ".varr_int($value['id_deystvie'])." AND $tbhistorypay.privat = 0");
+
 
 	    			 if(is_array($result) && count($result) == 1){
 	    			 	$podarok = unserialize($result[0]['podarok']);
@@ -2522,7 +2562,7 @@ class T_USERS {
 
 	    			 } else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	    return $this->ShowMassHistoryLenta($circle,$rows,$begin+$rows);
+	    			  	    return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    				}
 	    			break;
 
@@ -2544,7 +2584,7 @@ class T_USERS {
 	    			  );
 	    			  } else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	    return $this->ShowMassHistoryLenta($circle,$rows,$begin+$rows);
+	    			  	    return $this->ShowHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    				}
 	    			break;*/
 
@@ -2568,7 +2608,7 @@ class T_USERS {
 
 	    			  } else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	    return $this->ShowMassHistoryLenta($circle,$rows,$begin+$rows);
+	    			  	    return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    			  }
 	    			break;
 
@@ -2591,20 +2631,24 @@ class T_USERS {
 	    			  	$logo = ShowLogo(array(@$result[0]['shop_id']),188,101);
 	    			  	if(is_array($logo)) $logo = $logo[0]['logo'];
 
+	    			  	$photo = ShowFotoAkcia(array(@$result[0]['id']),130,91);
+	    			  	if(is_array($photo)) $photo = $photo[0]['foto'];
+
 	    			  $array[] = array(
-	    			    'id'        => $value['id'],
-	    			    'deystvie'  => $value['deystvie'],
-	    			    'data'      => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			    'akcia_id'  => $result[0]['id'],
-	    			    'user'      => $this->Info_min($value['user_wp'],40,40),
-	    			    'header'    => htmlspecialchars(stripslashes(trim($result[0]['header']))),
-	    			    'shop_name' => htmlspecialchars(stripslashes(trim(@$result[0]['name']))),
-	    			    'shop_id'   => @$result[0]['shop_id'],
-	    			    'shop_logo' => $logo,
+	    			    'id'         => $value['id'],
+	    			    'deystvie'   => $value['deystvie'],
+	    			    'data'       => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+	    			    'akcia_id'   => $result[0]['id'],
+	    			    'akcia_photo'=> $photo,
+	    			    'user'       => $this->Info_min($value['user_wp'],40,40),
+	    			    'header'     => htmlspecialchars(stripslashes(trim($result[0]['header']))),
+	    			    'shop_name'  => htmlspecialchars(stripslashes(trim(@$result[0]['name']))),
+	    			    'shop_id'    => @$result[0]['shop_id'],
+	    			    'shop_logo'  => $logo,
 	    			  );
 	    			  } else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	    return $this->ShowMassHistoryLenta($circle,$rows,$begin+$rows);
+	    			  	    return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    				}
 	    			break;
 
@@ -2620,36 +2664,42 @@ class T_USERS {
 
 	    			  } else { // Комментарий по действию не найден
 	    			  	$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	return $this->ShowMassHistoryLenta($circle,$rows,$begin+$rows);
+	    			  	return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    			  }
 	    			break;*/
 
 	    			case 8: // Я здесь
-	    				$shop = $this->IHere($value['user_wp']);
-	    				if(is_array($shop)){
-	    				 $shop['adress'] = explode("::",$shop['adress']);
-	                       $adressa = array(
-		                     'street' => @$shop['adress'][0],
-		                     'house'  => @$shop['adress'][1],
-		                     'town'   => @$shop['adress'][2],
-		                   );
+	    				$shop=$MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbshopadres.adress, $tbshopadres.id adress_id
+		                              FROM $tbshopadres
+		                             INNER JOIN $tbshops ON $tbshops.id = $tbshopadres.shop_id
+		                            WHERE $tbshopadres.id = ".varr_int($value['id_deystvie']));
 
-	    			 	$photo = ShowFotoAkcia(array($podarok['id']),146,101);
-	    			 	if(is_array($photo)) $photo = $photo[0]['foto'];
+						if(is_array($shop)){
+							$shop[0]['adress'] = explode("::",$shop[0]['adress']);
+							$adressa = array(
+								'street' => @$shop[0]['adress'][0],
+								'house'  => @$shop[0]['adress'][1],
+								'town'   => @$shop[0]['adress'][2],
+							);
 
-	    				$array[] = array(
-	    				'id'           => $value['id'],
-	    			    'deystvie'     => 8,
-	    			    'data'         => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			    'user'         => $this->Info_min($value['user_wp'],40,40),
-	    			    'shop_id'      => $shop['shop_id'],
-	    			    'shop_name'    => htmlspecialchars(stripslashes(trim($shop['shop_name']))),
-	    			    'shop_adress'  => $adressa,
-	    			    'shop_photo'   => $photo,
-	    			    );
+							$photo = ShowLogo(array($shop[0]['shop_id']),146,101,true);
+							if(is_array($photo)) $photo = $photo[0]['logo'];
+
+							$array[] = array(
+								'id'           => $value['id'],
+								'deystvie'     => 8,
+								'data'         => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+								'user'         => $this->Info_min($value['user_wp'],40,40),
+								'shop_id'      => $shop[0]['shop_id'],
+								'shop_name'    => htmlspecialchars(stripslashes(trim($shop[0]['shop_name']))),
+								'shop_adress'  => $adressa,
+								'shop_photo'   => $photo,
+								'shop_url'     => @$shop[0]['URL'],
+								'shop_phone'   => @$shop[0]['phones'],
+							);
 	    				} else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	    return $this->ShowMassHistoryLenta($circle,$rows,$begin+$rows);
+	    			  	    return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    				}
 	    			break;
 
@@ -2676,12 +2726,28 @@ class T_USERS {
 	    			  );
 	    			  } else {
 	    				  $MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	  return $this->ShowMassHistoryLenta($circle,$rows,$begin+$rows);
+	    			  	  return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    				}
 	    		    break;*/
 
-	    			/*case 10: // Обновлен статус
-	    		    break;*/
+	    			case 10: // Обновлен статус/Что нового?
+	    				$result = $MYSQL->query("SELECT user_wp, event FROM $tbevent WHERE id = ".varr_int($value['id_deystvie']));
+
+	    				if(is_array($result)){
+	    			 		$result = $result[0];
+	    			    	$array[] = array(
+	    			       'id'         => $value['id'],
+ 	    			       'deystvie'   => 10,
+	    			       'data'       => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+	    			       'user'       => $this->Info_min($result['user_wp'],40,40),
+	    			       'status'     => ToText($result['event']),
+	    			    );
+
+	    				} else {
+	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
+	    			  		return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
+	    				}
+	    		    break;
 	    		}
 	    	}
 	    }
@@ -2698,7 +2764,7 @@ class T_USERS {
 
 		$tbphotoalbum = "pfx_users_photos_album";
 
-		$count = $MYSQL->query("SELECT Count(*) FROM $tbphotoalbum WHERE user_wp=".(int)$user_wp);
+		$count = $MYSQL->query("SELECT Count(*) FROM $tbphotoalbum WHERE type=0 AND user_wp=".(int)$user_wp);
 		return $count[0]['count'];
 	}
 
@@ -2726,7 +2792,7 @@ class T_USERS {
 
 		$tbphotoalbum = "pfx_users_photos_album";
 
-		$result = $MYSQL->query("SELECT id, user_wp, data_add, header, IFNULL(pravo,'') pravo, IFNULL(`updated`,'') `updated` FROM $tbphotoalbum WHERE user_wp = $user_wp ORDER BY data_add DESC LIMIT $begin,$rows");
+		$result = $MYSQL->query("SELECT id, user_wp, data_add, header, IFNULL(pravo,'') pravo, IFNULL(`updated`,'') `updated`, type FROM $tbphotoalbum WHERE user_wp = $user_wp AND type = '0' ORDER BY data_add DESC LIMIT $begin,$rows");
 		if(is_array($result)){
 			foreach($result as $key=>$value){
 				$albums[] = array(
@@ -3055,7 +3121,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
 
     if ($type == 'wishes'){
         if ($par == 'performed'){
-            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header, $tbakcia.shop_id,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                FROM $tbhochu
         		                INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
@@ -3064,7 +3130,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         		                LIMIT $begin,$rows";
         }
         else{
-            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header, $tbakcia.shop_id,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         		                FROM $tbhochu
         		                INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         		                INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
@@ -3081,7 +3147,6 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
             $sql = "SELECT * FROM $tbhochu WHERE id=$id AND user_wp=$user_wp";
         }
     }
-    //echo $sql."<br />";
     $result = $MYSQL->query($sql);
     return $result;
 
@@ -3109,7 +3174,6 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         $where      = '';
         $pre_pos    = -1;
         $sql        = '';
-        $user_wp    = (int)@$_SESSION['WP_USER']['user_wp'];
         $count      = 0;
 
         $wl_array = $USER->FindWLPosition($user_wp, $rows, $begin, $par);
@@ -3238,7 +3302,7 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
             if ($par == 'performed')
                 $where = "AND $tbhochu.status = 1";
 
-            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
+            $sql = "SELECT $tbhochu.id, $tbhochu.akcia_id, $tbhochu.status, $tbhochu.reason, $tbhochu.adddata, $tbhochu.adress_id, $tbakcia.header, $tbakcia.shop_id,  $tbakcia.mtext, $tbakcia.amount, $tbcurrency.mask
         	        FROM $tbhochu
         	        INNER JOIN $tbakcia ON $tbakcia.id = $tbhochu.akcia_id
         	        INNER JOIN $tbcurrency ON $tbcurrency.id = $tbakcia.currency_id
@@ -3246,8 +3310,6 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
         	        ORDER BY $tbhochu.adddata DESC
         	        LIMIT $wish_cnt,$rows";
 
-            //echo $wish_cnt."/n/r";
-            //echo $sql;
             $result = $MYSQL->query($sql);
 
     		if(is_array($result) && count($result)){
@@ -3255,8 +3317,9 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
             	$total_array[] = array(
             	   'akcia_id'    => $value['akcia_id'],
             	   'id'          => $value['id'],
+                   'shop_id'     => $value['shop_id'],
                    'status'      => $value['status'],
-                   'reason'      => $value['reason'],
+                   'reason'      => htmlspecialchars(stripslashes(trim($value['reason']))),
                    'adddata'     => $value['adddata'],
             	   'header'      => htmlspecialchars(stripslashes(trim($value['header']))),
             	   'amount'      => $value['amount'],
@@ -3266,7 +3329,6 @@ function LoadWishes($user_wp, $id, $begin=0, $rows=0, $type='', $par='', $wish_c
             	);
             }
     		}
-
         }
 
         return @$total_array;

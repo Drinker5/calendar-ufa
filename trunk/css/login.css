@@ -1,7 +1,9 @@
 @import "reset2.css";
-html { height: 100%; }
 
-.loginWrapper { line-height: 22px; width: 240px; position: absolute; left: 50%; top: 50%; margin: -84px 0 0 -120px; text-align: center; -moz-perspective: 800px; -webkit-perspective: 800px; perspective: 800px; font-family: Arial, Helvetica, sans-serif; background: #ededed; font-size: 12px;  color: #5f5f5f; min-height: 100%; position: relative;  }
+html { height: 100%; }
+body { font-family: Arial, Helvetica, sans-serif; background: #ededed; font-size: 12px; line-height: 22px; color: #5f5f5f; min-height: 100%; position: relative; }
+
+.loginWrapper { width: 240px; position: absolute; left: 50%; top: 50%; margin: -124px 0 0 -120px; text-align: center; -moz-perspective: 800px; -webkit-perspective: 800px; perspective: 800px; }
 
 .clear { clear: both; display: block; }
 
@@ -50,8 +52,8 @@ transition:0.8s;
 .loginPic { text-align: center; display: block; position: relative; overflow: hidden;}
 .loginPic span { display: block; color: #5f5f5f; font-size: 14px; margin-top: 10px; font-weight: bold; text-shadow: 0 1px 1px #ffffff; }
 .loginPic img {width: 104px; height: 104px; border-radius: 3px;}
-.loginPic:before {position: absolute; content: ""; width: 104px; height: 104px; border-radius: 3px; box-shadow: inset 0px 0px 0px 3px rgba(255,255,255,.12);; top: 0px; left: 50%; margin-left: -52px;}
-.loginPic:after {position: absolute; content: ""; width: 104px; height: 96px;  top: 0px; left: 50%; margin-left: -52px;}
+.loginPic:before {position: absolute; content: ""; width: 104px; height: 104px; border-radius: 3px; /* box-shadow: inset 0px 0px 0px 3px rgba(255,255,255,.12); */ top: 0px; left: 50%; margin-left: -52px;}
+.loginPic:after {position: absolute; content: ""; width: 104px; height: 96px; background: url(../pic/mask.png) no-repeat; top: 0px; left: 50%; margin-left: -52px;}
 .loginWrapper form { display: block; margin: 0 auto; width: 236px; }
 .loginWrapper a { display: inline-block; }
 .loginWrapper input[type=text], .loginWrapper input[type=password] {background: #fbfbfb; font-size: 11px; color: #858585; box-shadow: 0 0 0px 2px #ebebeb; -webkit-box-shadow: 0 0 0px 2px #ebebeb; -moz-box-shadow: 0 0 0px 2px #ebebeb; padding: 7px 27px 7px 9px; border: 1px solid #d7d7d7; width: 198px; display: inline-block; margin-top: 15px; }
@@ -85,5 +87,3 @@ cursor: pointer;
 .bBlue:active { box-shadow: inset 0 0px 5px rgba(0,0,0,.4);}
 
 .center {display: inline-block; text-align: center;}
-.loginActions{width: 50px; height: 50px; margin-left: 90px;}
-div.login_error,div.forget_error{color:red;}

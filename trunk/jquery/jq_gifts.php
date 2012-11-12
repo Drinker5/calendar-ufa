@@ -15,6 +15,7 @@
 
 		$tbakcia       = "pfx_akcia";
 		$tbtype        = "pfx_type";
+		$tbcategory    = "pfx_cat_to_shop";
 		$tbcurrency    = "pfx_currency";
 		$tbshops       = "pfx_shops";
 		$tbshopsadr    = "pfx_shops_adress";
@@ -29,8 +30,12 @@
 		//else
 		//	$w[]=$tbakcia.'.`moderator`=1';
 
-		//if($category>0)
-		//	$w[]='';
+		if($category>0)
+		{
+			$inner.="
+				                 INNER JOIN $tbcategory ON $tbcategory.shop_id = $tbakcia.shop_id";
+			$w[]=$tbcategory.'.`cat_id`='.$category;
+		}
 
 		if($currency>0)
 			$w[]=$tbakcia.'.`currency_id`='.$currency;
@@ -39,14 +44,18 @@
 			$w[]=$tbakcia.'.`header` LIKE \'%'.mysql_real_escape_string($name).'%\'';
 
 		if($mR)
-			$w[]=$tbcountryshop.'.`country_id`='.(int)$_SESSION['TOWN_ID'];
-		//elseif(!empty($region))
-		//	$w[]=$tbakcia.'.`country_id`='.(int)$region;
+			$w[]=$tbshopsadr.'.`adress` LIKE \'%'.mysql_real_escape_string($_SESSION['WP_USER']['town_name']).'%\'';
+		elseif(!empty($region) and strlen(trim($region))>0)
+			$w[]=$tbshopsadr.'.`adress` LIKE \'%'.mysql_real_escape_string($region).'%\'';
+
+		if($mR or $mP or (!empty($region) and strlen(trim($region))>0))
+			$inner.="
+				                 INNER JOIN $tbshopsadr ON $tbshopsadr.shop_id = $tbshops.id";
 
 		if($mP)
 		{
-			$inner.="INNER JOIN $tbshopsadr ON $tbshopsadr.shop_id = $tbshops.id
-					 INNER JOIN $tbplaces ON $tbplaces.address = $tbshopsadr.id\r\n";
+			$inner.="
+				                 INNER JOIN $tbplaces ON $tbplaces.address = $tbshopsadr.id";
 			$w[]=$tbplaces.'.`user_wp`='.(int)$_SESSION['WP_USER']['user_wp'];
 		}
 
@@ -56,15 +65,97 @@
 		if($w)
 			$f='WHERE '.implode(' AND ',$w);
 
+		if($w)
+			$f='WHERE '.implode(' AND ',$w);
+
 		$result = $MYSQL->query("SELECT Count(*)
 			                 	 FROM $tbakcia
 			                 	 INNER JOIN $tbtype  ON $tbtype.id  = $tbakcia.idtype
 			                 	 INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
-			                 	 INNER JOIN $tbcountryshop ON $tbcountryshop.shop_id = $tbshops.id
+			                 	 /* INNER JOIN $tbcountryshop ON $tbcountryshop.shop_id = $tbshops.id */
 			                 	 $inner
 			                 	 $f");
 
 		return $result[0]['count'];
+	}
+
+	function getMaxCost($type_id,$gr_id,$category=0,$currency=2,$name='',$region='',$mR=false,$mP=false,$oA=false){
+		global $MYSQL, $AKCIANAME, $SHOPNAME;
+
+		$GLOBALS['PHP_FILE'] = __FILE__;
+		$GLOBALS['FUNCTION'] = __FUNCTION__;
+
+		$type_id = varr_int($type_id);
+		$gr_id   = varr_int($gr_id);
+		$category= varr_int($category);
+		$currency= varr_int($currency);
+		$inner   = '';
+		$f       = '';
+		$w       = array();
+
+		$tbakcia       = "pfx_akcia";
+		$tbtype        = "pfx_type";
+		$tbcategory    = "pfx_cat_to_shop";
+		$tbcurrency    = "pfx_currency";
+		$tbshops       = "pfx_shops";
+		$tbshopsadr    = "pfx_shops_adress";
+		$tbcountryshop = "pfx_country_shops";
+		$tbplaces      = "pfx_users_places";
+
+		$w[]=$tbakcia.'.`idtype`='.$type_id;
+
+		//if(isset($_SESSION['KLIENT']))
+		//	$w[]=$tbakcia.'.`klient_id`='.$_SESSION['KLIENT']['id'];
+		//else
+		//	$w[]=$tbakcia.'.`moderator`=1';
+
+		if($category>0)
+		{
+			$inner.="
+				                 INNER JOIN $tbcategory ON $tbcategory.shop_id = $tbakcia.shop_id";
+			$w[]=$tbcategory.'.`cat_id`='.$category;
+		}
+
+		if($currency>0)
+			$w[]=$tbakcia.'.`currency_id`='.$currency;
+
+		if(!empty($name) and strlen(trim($name))>0)
+			$w[]=$tbakcia.'.`header` LIKE \'%'.mysql_real_escape_string($name).'%\'';
+
+		if($mR)
+			$w[]=$tbshopsadr.'.`adress` LIKE \'%'.mysql_real_escape_string($_SESSION['WP_USER']['town_name']).'%\'';
+		elseif(!empty($region) and strlen(trim($region))>0)
+			$w[]=$tbshopsadr.'.`adress` LIKE \'%'.mysql_real_escape_string($region).'%\'';
+
+		if($mR or $mP or (!empty($region) and strlen(trim($region))>0))
+			$inner.="
+				                 INNER JOIN $tbshopsadr ON $tbshopsadr.shop_id = $tbshops.id";
+
+		if($mP)
+		{
+			$inner.="
+				                 INNER JOIN $tbplaces ON $tbplaces.address = $tbshopsadr.id";
+			$w[]=$tbplaces.'.`user_wp`='.(int)$_SESSION['WP_USER']['user_wp'];
+		}
+
+		if($oA)
+			$w[]=$tbakcia.'.`discount`<>0';
+
+		if($w)
+			$f='WHERE '.implode(' AND ',$w);
+
+		if($w)
+			$f='WHERE '.implode(' AND ',$w);
+
+		$result = $MYSQL->query("SELECT MAX($tbakcia.amount) AS amt
+			                 	 FROM $tbakcia
+			                 	 INNER JOIN $tbtype  ON $tbtype.id  = $tbakcia.idtype
+			                 	 INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
+			                 	 /* INNER JOIN $tbcountryshop ON $tbcountryshop.shop_id = $tbshops.id */
+			                 	 $inner
+			                 	 $f");
+
+		return $result[0]['amt']/100;
 	}
 
 	function searchGifts($type_id,$gr_id,$rows,$begin=0,$order=1,$what='',$category=0,$currency=2,$cF='7500',$cT='30000',$name='',$region='',$mR=false,$mP=false,$oA=false){
@@ -87,6 +178,7 @@
 
 		$tbakcia       = "pfx_akcia";
 		$tbtype        = "pfx_type";
+		$tbcategory    = "pfx_cat_to_shop";
 		$tbcurrency    = "pfx_currency";
 		$tbshops       = "pfx_shops";
 		$tbshopsadr    = "pfx_shops_adress";
@@ -101,8 +193,12 @@
 		//else
 		//	$w[]=$tbakcia.'.`moderator`=1';
 
-		//if($category>0)
-		//	$w[]='';
+		if($category>0)
+		{
+			$inner.="
+				                 INNER JOIN $tbcategory ON $tbcategory.shop_id = $tbakcia.shop_id";
+			$w[]=$tbcategory.'.`cat_id`='.$category;
+		}
 
 		if($currency>0)
 			$w[]=$tbakcia.'.`currency_id`='.$currency;
@@ -111,9 +207,9 @@
 			$w[]=$tbakcia.'.`header` LIKE \'%'.mysql_real_escape_string($name).'%\'';
 
 		if($mR)
-			$w[]=$tbshopsadr.'.`adress`='.(int)$_SESSION['WP_USER']['town_name'];
+			$w[]=$tbshopsadr.'.`adress` LIKE \'%'.mysql_real_escape_string($_SESSION['WP_USER']['town_name']).'%\'';
 		elseif(!empty($region) and strlen(trim($region))>0)
-			$w[]=$tbshopsadr.'.`adress`='.(int)$region;
+			$w[]=$tbshopsadr.'.`adress` LIKE \'%'.mysql_real_escape_string($region).'%\'';
 
 		if($mR or $mP or (!empty($region) and strlen(trim($region))>0))
 			$inner.="
@@ -152,7 +248,7 @@
 				                 FROM $tbakcia
 				                 INNER JOIN $tbtype  ON $tbtype.id  = $tbakcia.idtype
 				                 INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
-				                 INNER JOIN $tbcountryshop ON $tbcountryshop.shop_id = $tbshops.id
+				                 /* INNER JOIN $tbcountryshop ON $tbcountryshop.shop_id = $tbshops.id */
 				                 $inner
 				                 $f
 				                 $by

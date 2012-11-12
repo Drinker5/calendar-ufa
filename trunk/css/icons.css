@@ -19,6 +19,10 @@
  background-position: -15px 0;
 }
 
+.icon-gift-green {
+ background-position: -30px 0;
+}
+
 .icon-address {
  background-position: 0 -15px;
 }
@@ -68,7 +72,8 @@
 }
 
 .icon-wish {
- background-position: 0 -105px;
+ background-position: 0 -106px;
+ height: 14px;
 }
 
 .icon-wish.active {
@@ -171,6 +176,10 @@
  background-position: -15px -285px;
 }
 
+.icon-check-in-green {
+ background-position: -30px -285px;
+}
+
 .icon-like {
  background-position: 0 -300px;
 }
@@ -268,7 +277,7 @@
 }
 
 .icon-favorite-place-green {
-	background-position: -32px -465px;
+	background-position: -30px -465px;
 }
 
 .icon-watch {
@@ -368,11 +377,11 @@
 }
 
 .icon-green-plus {
- background-position: 0 -660px;
+ background-position: -2px -661px;
 }
 
 .icon-green-plus.active {
- background-position: 0 -660px;
+ background-position: -2px -661px;
 }
 
 .icon-search {
@@ -422,6 +431,16 @@
 .icon-status.active {
  background-position: -15px -750px;
 }
+
+.icon-clock {
+ background-position: 1px -768px;
+}
+
+.icon-message {
+	background-position: 0 -784px;	
+	position: relative;
+}
+
 /* Большие иконки */
 .big-icon {
  display: block;
@@ -745,6 +764,10 @@
  margin-right: 4px;
 }
 
+.menu-icon.icon-green-plus {
+ background-position: -2px -661px;
+}
+
 .menu-icon.icon-gift {
  background-position: 0 0;
 }
@@ -793,9 +816,15 @@
  background-position: -2px -182px;
 }
 
+.menu-icon.icon-subscriber {
+ background-position: 0px -195px;
+}
+
+
 .menu-icon.icon-review {
  background-position: 0px -210px;
 }
+
 
 .i-logout {
  background: url(../pic/icons/logout.png) no-repeat;
@@ -803,6 +832,173 @@
  height: 14px;
  float: left;
  position: relative;
- top: 4px;
+ top: 3px;
  left: 7px;
+}
+
+.icon-star.action {
+ width: 10px;
+ height: 10px;
+ margin: 0!important;
+ background-image: url("../pic/star.png");
+ background-position: 0px 0px;
+}
+
+.icon-star {
+ width: 10px;
+ height: 10px;
+ background-image: url("../pic/star.png");
+ background-position: -10px 0px;
+}
+
+.m-icon {
+ height: 35px;
+ display: block;
+ margin-top: 4px;
+ margin-left: -4px;
+ float: left;
+ height: 31px;
+ padding-right: 10px;
+ background: url(../pic/icons/top-menu.png) no-repeat;
+}
+
+.m-gift {
+ background-position: -4px -2px;
+ width: 30px;
+}
+
+.m-stars {
+ background-position: -5px -43px;
+ width: 28px;
+}
+
+.m-sale {
+ background-position: -4px -84px;
+ width: 28px;
+}
+
+.add-photo {
+ background: url(../pic/icons/add_photo.png) no-repeat;
+ width: 15px;
+ height: 13px;
+ display: inline-block;
+ position: relative;
+ top: 3px;
+ margin-right: 5px;
+}
+
+
+
+/**
+ * Payment Icons
+ */
+ 
+.payment-icon {
+	display: block;
+	height: 31px;
+	background: url('../pic/payments_icon.png') top no-repeat;
+}
+.payment-icon.visa {
+	width: 37px;
+	background-position: -33px -12px
+}
+.payment-icon.mastercard {
+	width: 31px;
+	background-position: -35px -52px
+}
+.payment-icon.yandex {
+	width: 23px;
+	background-position: -37px -88px
+}
+.payment-icon.webmoney {
+	width: 26px;
+	background-position: -37px -129px
+}
+.payment-icon.kiwi {
+	width: 25px;
+	background-position: -38px -170px
+}
+.payment-icon.rbk {
+	width: 26px;
+	background-position: -37px -210px
+}
+.payment-icon.mail {
+	width: 19px;
+	background-position: -40px -253px
+}
+.payment-icon.intelectmoney {
+	width: 37px;
+	background-position: -30px -288px
+}
+.payment-icon.w1 {
+	width: 33px;
+	background-position: -33px -323px
+}
+.payment-icon.eleksnet {
+	width: 26px;
+	background-position: -37px -357px
+}
+.payment-icon.esgp {
+	width: 69px;
+	background-position: -15px -392px
+}
+.payment-icon.pinpay {
+	width: 51px;
+	background-position: -24px -433px
+}
+.payment-icon.unikassa {
+	width: 47px;
+	background-position: -27px -468px
+}
+.payment-icon.evroset {
+	width: 25px;
+	background-position: -36px -503px
+}
+.payment-icon.svyznoi {
+	width: 27px;
+	background-position: -37px -539px
+}
+.payment-icon.bankom1 {
+	width: 32px;
+	background-position: -35px -581px
+}
+.payment-icon.bankom2 {
+	width: 27px;
+	background-position: -38px -622px
+}
+.payment-icon.mts {
+	width: 26px;
+	background-position: -37px -664px
+}
+.payment-icon.beeline {
+	width: 26px;
+	background-position: -37px -706px
+}
+.payment-icon.megafon {
+	width: 29px;
+	background-position: -35px -746px
+}
+.payment-icon.contact {
+	width: 67px;
+	background-position: -15px -781px
+}
+.payment-icon.alfa-bank {
+	width: 15px;
+	background-position: -42px -824px
+}
+.payment-icon.faktura {
+	width: 51px;
+	background-position: -24px -859px
+}
+.payment-icon.promsvyz {
+	width: 26px;
+	background-position: -37px -894px
+}
+
+.icon-search-white {
+ background: url('../pic/ICONS_1.png') no-repeat -17px -676px;
+ width: 12px;
+ height: 12px;
+ display: inline-block;
+ position: relative;
 }

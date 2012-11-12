@@ -129,6 +129,10 @@ switch($_URLP[1]){
 	    if(isset($_SESSION['WP_USER']))
 	    require_once(path_root."jquery/jq_myplaces.php");
 	break;
+	case 'findplace': // Поиск мест
+	    if(isset($_SESSION['WP_USER']))
+	    require_once(path_root."jquery/jq_myfindplaces.php");
+	break;
 
 	case 'mycheckin': // Карта
 		if(isset($_SESSION['WP_USER']))
@@ -203,6 +207,11 @@ switch($_URLP[1]){
 	case 'status': //Меняем статус пользователя
 		if(isset($_SESSION['WP_USER']))
 		require_once(path_root."jquery/jq_status.php");
+	break;
+
+	case 'event': //Что нового?
+		if(isset($_SESSION['WP_USER']))
+		require_once(path_root."jquery/jq_event.php");
 	break;
 
 	case 'feed': //Лента новостей

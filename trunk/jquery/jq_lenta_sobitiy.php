@@ -4,7 +4,7 @@
 
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
-		$html='<p>Нет событий</p>';
+		$html=''; //<p>Нет событий</p>
 		$stamp=time();
 
         //Комментарии
@@ -13,6 +13,9 @@
 		$massFeed=$USER->ShowHistoryLenta($user_wp,$circle,$rows,$begin);
 		if(is_array($massFeed) and !isset($massFeed['error_id'])){
 			$html='';
+
+			$photo=ShowAvatar(array($_SESSION['WP_USER']['user_wp']),50,50,false);
+			if(is_array($photo))$photo=$photo[0]['avatar'];
 
 			for($i=0; $i<count($massFeed); $i++){
 
@@ -27,11 +30,12 @@
                         $_comments.='
                             <div class="wishlist-comment group" id="comments-'.$v['id'].'-id">
                                 <img src="'.$v['user']['photo'].'" class="small-avatar-img fl_l">
+                                '.($v['user']['user_wp']==$_SESSION['WP_USER']['user_wp']?'
                                 <a href="javascript:;" onclick="CommentsAction('.$massFeed[$i]['id'].',\'delete\','.$v['id'].',0)" class="opacity_link fl_r">
-                                    <i class="small-icon icon-delete active"></i>
-                                </a>
+                                    <i class="small-icon icon-close"></i>
+                                </a>':'').'
                                 <div class="comment-content wrapped">
-                                    <span class="comment-author">'.$v['user']['firstname'].' '.$v['user']['lastname'].'</span><em class="comment-date">'.$v['date'].'</em>
+                                    <a href="/'.$v['user']['user_wp'].'" class="comment-author">'.$v['user']['firstname'].' '.$v['user']['lastname'].'</a><em class="comment-date">'.ShowDateRus($v['date']).'</em>
                                     <br>
                                     <span class="comment-text">
                                         '.$v['msg'].'
@@ -45,17 +49,12 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
                             '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-whos-near"></i>
-                                            Добавить в друзья
-                                            <i class="small-icon active icon-green-plus"></i>
-                                        </strong>
+                                            <i class="tipE small-icon active icon-whos-near" original-title="Добавить в друзья"></i>
                                     </a>
                                 </li>
                             </ul>').'
@@ -85,21 +84,14 @@
                             </div>
                         </div>
                         <ul class="sub-action">
-                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                    <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
                                 </a>
-                            </li>').'
+                            </li>
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
-                                    <strong>
-                                        <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
-                                    </strong>
+                                    <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
                         </ul>
@@ -122,15 +114,17 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input id="comments-'.$massFeed[$i]['id'].'-add" type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -139,32 +133,22 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
                             '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-5"></i>
-                                            Ответный подарок
-                                        </strong>
+                                            <i class="tipE small-icon active icon-5" original-title="Ответный подарок"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-review"></i>
-                                            Поблагодарить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-review" original-title="Поблагодарить"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-invite"></i>
-                                            Пригласить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-invite" original-title="Пригласить"></i>
                                     </a>
                                 </li>
                             </ul>').'
@@ -196,7 +180,7 @@
                                         <span>'.$massFeed[$i]['user2']['firstname'].' '.$massFeed[$i]['user2']['lastname'].'</span>
                                     </a>
                                     <span class="fl_l timeline-middle">в</span>
-                                    <a href="/type-5-0-'.$massFeed[$i]['podarok']['shop_id'].'" class="fl_l no-margin tx_c person-link" style="width: 152px;">
+                                    <a href="/shop-'.$massFeed[$i]['podarok']['shop_id'].'" class="fl_l no-margin tx_c person-link" style="width: 152px;">
                                         <div class="bordered">
                                             <img src="'.$massFeed[$i]['podarok']['shop_logo'].'" alt="">
                                         </div>
@@ -206,21 +190,14 @@
                             </div>
                         </div>
                         <ul class="sub-action">
-                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                    <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
                                 </a>
-                            </li>').'
+                            </li>
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
-                                    <strong>
-                                        <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
-                                    </strong>
+                                    <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
                         </ul>
@@ -243,15 +220,17 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input id="comments-'.$massFeed[$i]['id'].'-add" type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -268,24 +247,17 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
                             '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon icon-photoalbum active"></i>
-                                            Посмотреть
-                                        </strong>
+                                            <i class="tipE small-icon active icon-photoalbum" original-title="Посмотреть"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-to-me"></i>
-                                            Поместить себе
-                                        </strong>
+                                            <i class="tipE small-icon active icon-to-me" original-title="Поместить себе"></i>
                                     </a>
                                 </li>
                             </ul>').'
@@ -308,21 +280,14 @@
                             </div>
                         </div>
                         <ul class="sub-action">
-                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                    <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
                                 </a>
-                            </li>').'
+                            </li>
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
-                                    <strong>
-                                        <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
-                                    </strong>
+                                    <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
                         </ul>
@@ -345,15 +310,17 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input id="comments-'.$massFeed[$i]['id'].'-add" type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -365,35 +332,33 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
                             '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-5"></i>
-                                            Подарить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-5" original-title="Ответный подарок"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-watch"></i>
-                                            Посмотреть
-                                        </strong>
+                                            <i class="tipE small-icon active icon-watch" original-title="Посмотреть"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
+                                            <i class="tipE small-icon active icon-invite" original-title="Пригласить"></i>
+                                    </a>
+                                </li>
+                                <!-- <li>
+                                    <a class="opacity_link add_me" id="wish-add-'.$massFeed[$i]['akcia_id'].'" href="javascript:;" data-status="0" data-id="'.$massFeed[$i]['akcia_id'].'" data-shop="'.$massFeed[$i]['shop_id'].'">
                                         <strong>
                                             <i class="small-icon active icon-wish"></i>
                                             Добавить себе
                                             <i class="small-icon active icon-green-plus"></i>
                                         </strong>
                                     </a>
-                                </li>
+                                </li> -->
                             </ul>').'
                         </div>
                         <div class="wrapped">
@@ -430,21 +395,14 @@
                             </div>
                         </div>
                         <ul class="sub-action">
-                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                    <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
                                 </a>
-                            </li>').'
+                            </li>
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
-                                    <strong>
-                                        <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
-                                    </strong>
+                                    <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
                         </ul>
@@ -467,15 +425,17 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input id="comments-'.$massFeed[$i]['id'].'-add" type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -487,33 +447,22 @@
 						$html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                        <div class="separator"></div>
                         <div class="right-menu fl_r">
                             '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <ul class="actions">
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-5"></i>
-                                            Подарить
-                                        </strong>
+                                            <i class="tipE small-icon active icon-5" original-title="Ответный подарок"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-watch"></i>
-                                            Посмотреть
-                                        </strong>
+                                            <i class="tipE small-icon active icon-watch" original-title="Посмотреть"></i>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#" class="opacity_link">
-                                        <strong>
                                             <i class="small-icon active icon-wish"></i>
-                                            Добавить себе
-                                            <i class="small-icon active icon-green-plus"></i>
-                                        </strong>
                                     </a>
                                 </li>
                             </ul>').'
@@ -547,21 +496,14 @@
                             </div>
                         </div>
                         <ul class="sub-action">
-                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                             <li>
                                 <a href="#" class="opacity_link">
-                                    <strong>
-                                        <i class="small-icon active icon-like"></i>
-                                        Мне нравится
-                                    </strong>
+                                    <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
                                 </a>
-                            </li>').'
+                            </li>
                             <li>
                                 <a href="#" class="opacity_link toggle-control">
-                                    <strong>
-                                        <i class="small-icon active icon-comments"></i>
-                                        Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
-                                    </strong>
+                                    <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                 </a>
                             </li>
                         </ul>
@@ -584,15 +526,17 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input id="comments-'.$massFeed[$i]['id'].'-add" type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';
@@ -600,11 +544,10 @@
 					case 9: // получил подарок
 						$html.='';
 					break;
-                    case 10: // Обновлен статус
+                    case 10: // Обновлен статус/Оставил сообщение
                         $html.='
                     <div class="timeline-elem toggle-stop group">
                         <div class="p_r">
-                            <div class="separator"></div>
                             <div class="right-menu fl_r">
                             </div>
                             <div class="wrapped">
@@ -618,28 +561,21 @@
                                         <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
                                         <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                     </div>
-                                    <p class="action">Обновлен статус</p>
+                                    <p class="action">'.($massFeed[$i]['user']['user_wp']==$user_wp?'У меня новости':'Оставил сообщение').'</p>
                                     <div class="content group">
                                         '.$massFeed[$i]['status'].'
                                     </div>
                                 </div>
                             </div>
                             <ul class="sub-action">
-                                '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
                                 <li>
-                                    <a href="#" class="opacity_link">
-                                        <strong>
-                                            <i class="small-icon active icon-like"></i>
-                                            Мне нравится
-                                        </strong>
+                                	<a href="#" class="opacity_link">
+                                        <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
                                     </a>
-                                </li>').'
+                                </li>
                                 <li>
-                                    <a href="#" class="opacity_link toggle-control">
-                                        <strong>
-                                            <i class="small-icon active icon-comments"></i>
-                                            Комментировать (<span id="comments-'.$massFeed[$i]['id'].'-count">'.$_comCount.'</span>)
-                                        </strong>
+                                	<a href="#" class="opacity_link toggle-control">
+                                        <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
                                     </a>
                                 </li>
                             </ul>
@@ -662,15 +598,17 @@
                             '.$_comments.'
                             <div id="comments-'.$massFeed[$i]['id'].'"></div>
                             <div class="feed-status-top group">
-                                <button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0)">Отправить</button>
-                                <div class="feed-status2 wrapped">
-                                    <div class="group">
-                                        <span class="arrow_box2 fl_l">Комментировать</span>
-                                        <div class="wrapped">
-                                            <input id="comments-'.$massFeed[$i]['id'].'-add" type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                        </div>
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
-                                </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>';

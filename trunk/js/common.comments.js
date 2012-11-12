@@ -5,13 +5,13 @@
    $.ajax({
      url:'/jquery-comments',
      type:'POST',
-     data:{type:type,id:id,msg:msg,n:n,page:'akcia',par:par},
+     data:{type:type,id:id,msg:msg,n:n,par:par},
      cache:false,
      success: function(data){
        var html,
            nCount         = count.innerHTML,
            idComments     = $('#comments-' + id);
-
+       alert(nCount);
        if(data){
          if(type=='add'){
            nCount++;

@@ -1,24 +1,18 @@
 <?php
 //Блок с информацие о друге
-	function ShowFriendBlock($user_wp, $avatar, $friend, $stamp){
+	function ShowFriendBlock($user_wp, $avatar, $friend){
 		global $USER;
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
 		$html='
-                   <a href="javascript:;" onclick="setFriends(\''.$friend['firstname'].' '.$friend['lastname'].'\',\''.$avatar.'\')"><div class="choose_friend active">
+                   <a href="javascript:;" onclick="setFriends(\''.$friend['firstname'].' '.$friend['lastname'].'\',\''.$avatar.'\',\''.$friend['user_wp'].'\')"><div class="choose_friend active">
                       <img src="'.$avatar.'" class="fl_l">
                       '.OnlineStatus($friend['status_chat'],'-small fl_l').'
                       <div class="choose">
-                        <span class="c_name">'.$friend['firstname'].' '.$friend['lastname'].'</span>
-                        <span class="c_button">Выбрать</span>
+                        <span class="c_name">'.$friend['firstname'].' '.$friend['lastname'].'</span><span class="c_button">Выбрать</span>
                       </div>
                    </div></a>';
 		return $html;
-	}
-
-//Количество людей
-	function ShowPeopleCount($user_wp,$online=0,$circle=0){
-		return -1;
 	}
 
 //Список людей
@@ -44,13 +38,13 @@
 					}
 					else $krugi[$ki]['checked']=false;
 				}
-				$html.=ShowFriendBlock($user_wp, $avatars[$k]['file'], $v, $stamp);
+				$html.=ShowFriendBlock($user_wp, $avatars[$k]['file'], $v);
 			}
 		}
 
 		$resultArray=array(
 				"html"=>$html,
-				"count"=>ShowPeopleCount($user_wp,$online=0,$circle=0),
+				"count"=>$USER->CountFriendsInCircle(0,$user_wp,$online,$circle),
 				"uid" =>$stamp
 		);
 
@@ -72,7 +66,7 @@
 				$avatar = ShowAvatar($arr_users,70,70);
 				for($i=0; $i <  count($friends); $i++){
 					$friend = $USER->Info_min($friends[$i]['user_wp'],0,0);
-					$html.=ShowFriendBlock($_SESSION['WP_USER']['user_wp'], $avatar[$i]['avatar'], $friend, $stamp);
+					$html.=ShowFriendBlock($_SESSION['WP_USER']['user_wp'], $avatar[$i]['avatar'], $friend);
 				}
 			}
 			$resultArray=array(
@@ -84,7 +78,7 @@
 		}
 
 		elseif(strlen($search)==0){
-			ShowPeopleList($_POST['user_wp'], $_POST['items'], $_POST['list'], $_POST['online'], $_POST['circle'], 'json');
+			ShowPeopleList($_POST['user_wp'], $_POST['items'], $_POST['list'], $_POST['online'], $_POST['circle'], $_POST['kolvo'], 'json');
 		}
 	}
 ?>

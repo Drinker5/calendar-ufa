@@ -1,0 +1,270 @@
+
+/*HELPER FOR FLOATING ELEMENTS*/
+	.clearfix:before,
+	.clearfix:after {content: " "; display: table;}
+	.clearfix:after {clear: both;}
+	.clearfix {*zoom: 1;}
+
+	
+/*STYLES FOR 28_КРОП_ФОТО*/
+	.close-crop i {cursor: pointer;}
+	.close-crop {
+		position: absolute;
+		top: 0;
+		right:0;}
+	
+	.crop-photo-area {
+		position: relative;
+		border: 1px solid #cfd4df;
+		background: #f3f9fd;
+		padding: 15px 30px;
+		margin: 20px 0;
+		-webkit-border-radius: 2px;
+		   -moz-border-radius: 2px;
+				border-radius: 2px;}
+				
+		.crop-photo-area .hint, 
+		.crop-photo-area .crop-image {text-align: center;}
+		.crop-photo-area .crop-image {margin: 15px 0;}
+		.crop-photo-area .crop-image img {max-width: 100%;}
+		
+	.crop-photo-area .btn-group  {float: right;}
+
+	.crop-photo-area #save_buttonus {margin-left: 14px;}
+		
+	
+/*Попап*/
+/*Любимое место*/
+
+	#favorite-place-content {width: 515px; }
+	#favorite-place-content  h2 {float: left;}
+	#favorite-place-content  p {margin-bottom: 10px;}
+
+	.title-place {
+		padding: 15px 15px 10px; 
+		color: #349cdf;
+		}
+	.branch-count {
+		float: right; 
+		font-size: 11px; 
+		font-weight: bold; 
+		margin-top: 3px
+		}
+	.branch-count span{
+		font-style: normal; 
+		color: #75849c; }
+
+	.search-place {
+		padding: 5px 15px 15px; 
+		color: #75849c;
+		font-size: 11px;
+		}
+		
+	.choose-place div,.timeline-search-friend div {position: relative; overflow: hidden}
+	.choose-place input[type="text"],.timeline-search-friend input[type="text"] {
+		color: #4A464D;
+		box-sizing: border-box;
+		width: 100%;
+		border: 1px solid #d9dce4;
+		padding: 4px 25px 4px 8px;
+		-webkit-border-radius: 3px;
+		   -moz-border-radius: 3px;
+				border-radius: 3px;
+				}
+	.choose-place input[type="submit"],.timeline-search-friend input[type="submit"] {
+		background: url(../pic/search.png) no-repeat right;
+		position: absolute;
+		top: 6px;
+		right: 12px;
+		cursor: pointer;
+		width: 11px;
+		height: 14px;
+		}
+	
+	.timeline-search-friend input[type="submit"] {top: 7px;}
+	
+/*INPUT PLACEFOLDER*/
+	.choose-place input::-webkit-input-placeholder {
+		font-size: 11px;
+		color: #75849c;}
+	.choose-place input:-moz-placeholder {
+		font-size: 11px;
+		color: #75849c;}
+	.choose-place input:-ms-input-placeholder {
+		font-size: 11px;
+		color: #75849c;}
+    
+	
+	.favorite-place-list{
+		height: 320px;
+		border-top: 1px solid #e0e8ee;
+		overflow-y: scroll;}
+		
+	.favorite-place-list li{border-bottom: 1px solid #e0e8ee;}
+	.favorite-place-list li:hover{background: #eef5f8;}
+
+	.favorite-place-list a{
+		padding: 10px 15px; 
+		display:block;}
+	.favorite-place-list li.active a{
+		color: #95c11f;
+		font-weight: bold;}
+		
+	.favorite-place-list .icon-address{margin-right: 7px}
+	.favorite-place-list .icon-favorite-place,
+	.favorite-place-list .icon-favorite-place-green{float: right;}
+
+	.favorite-place-popover .arrow{top: 40%}
+	.favorite-place-popover .big-arrow{top: 40%}
+	   
+	   
+	.favorite-place-list::-webkit-scrollbar {width: 10px;}
+	.favorite-place-list::-webkit-scrollbar-track   {background: #fffefe;}
+	.favorite-place-list::-webkit-scrollbar-thumb  {background: #eef5f8;}
+	.favorite-place-list::-webkit-scrollbar-thumb:hover  {background: #d5ecf6;}
+	
+	
+	
+	
+/*Лента Новостей*/
+	.wrapped > i.active {
+		opacity: .3!important;
+	}
+	.timeline-search-box {
+		padding-top: 10px;
+		background: #f3f9fd;
+	}
+	.timeline-search-box .sort {margin-top: 2px;}
+	.timeline-search-box .sort .selectBox{width: 170px;}
+	.timeline-search-friend div{
+		width: 60%;
+		float: left;
+	}
+	.timeline-elem .photo-stack img {
+	padding: 3px 3px 3px 0;
+	background: #fff;
+	height: 70px;
+	}
+	.timeline-elem .photo-stack img:first-child {padding-left: 3px;}
+	
+	.timeline-elem .opacity_link {opacity: 0 !important;}	
+	.timeline-elem:hover .opacity_link {opacity: 0.7 !important;}
+	.timeline-elem:hover .opacity_link:hover {opacity: 1 !important;}
+	
+	
+/*Сообщение*/
+
+	.message {
+		position: relative;
+		background: #ededed;
+		font-family: Helvetica, Arial, sans-serif;
+		height: 100%}
+
+	.message .logo {text-align: center; margin-bottom: 40px;}
+	
+
+	.message #container {
+		overflow:auto;  
+		 width: 520px;
+		 margin: 170px auto 150px;}
+		 
+	.message #container > div > div {margin-bottom: 40px;}
+	
+	.message #container .text-block-1 {font-size: 13px; line-height: 20px;}
+	.message #container .hint {font-size: 30px;line-height: 27px;}
+	.message #container .text-block-2 {
+		text-align: center;
+		float: right;
+		width: 200px;
+		font-size: 9px;}
+	
+	.footer-position {
+		width: 525px;
+		margin: 0 auto;	}
+	
+	.message footer { 
+		position: relative; 
+		display: table;  
+		clear:both;
+		padding-bottom: 10px;}
+		
+	.message footer nav {float: left;}
+
+	.message footer nav ul {
+	 line-height: 23px;}
+
+	.message footer nav ul li {
+		 font-size: 11px;
+		 font-weight: bold;
+		 display: inline-block;
+		 zoom: 1;
+		 *display: inline;
+		 margin: 0 10px;}
+
+	.message footer nav ul li:first-child {margin-left: 0;}
+	.message footer nav a {
+		 color: #808080;
+		 text-decoration: none;}
+
+	.message footer .social {
+		 position: absolute;
+		 right: -170px;
+		 width: 92px;
+		 height: 23px;}
+
+	.message footer .social ul li {
+		 display: block;
+		 float: left;
+		 position: relative;}
+
+	.message footer .social ul li a {
+		 display: block;
+		 width: 24px;
+		 height: 23px;
+		 margin-left: 10px;
+		}
+	.message .first {margin-left: 0px !important;}
+	
+	.message footer .social .fb {background: url('../pic/intro/sprite.png') no-repeat 0 0;}
+	.message footer .social .tw {background: url('../pic/intro/sprite.png') no-repeat -34px 0;}
+	.message footer .social .gp {background: url('../pic/intro/sprite.png') no-repeat -68px 0;}
+
+	.message footer nav ul li:hover, .message footer .social ul li:hover {opacity: 0.7;}
+	.message footer nav ul li:active, .message footer .social ul li:active {opacity: 1;}
+		
+			
+@media all and (min-height: 620px) {
+  .message footer {
+     position: fixed!important;
+	 bottom:0;
+  }
+}
+	
+/*Фотоальбом*/	
+	#add-photoalbum {
+		margin-bottom: 4px;
+	}
+	.cover-photoalbum  img{
+		border: 2px solid #FAFBFB;
+		border-radius: 2px;
+		margin: 0;
+		}
+	.cover-photoalbum.stack {height: 102px!important;}
+	.album-descriptions {margin-left: 15px!important;}
+	.album-descriptions .text .photo-count{margin-top: 10px;}
+	.album-descriptions .text .date {margin-top: 2px!important;}
+	
+	/*Попап настройки альбома*/
+	.my-fotoalbum-template {padding-bottom: 15px;}
+	.my-fotoalbum-template h3{
+		font-weight: normal;
+		padding: 6px 12px 3px;
+	}
+	.my-fotoalbum-template label {padding: 5px 12px;}
+	.my-fotoalbum-template label:hover{
+		background: #EFF0F3
+	}
+	
+	
+	
+	.friend-actions {margin-top: 5px;}

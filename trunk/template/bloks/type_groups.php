@@ -7,9 +7,9 @@
     //Начальная валюта
     $cID=2;
     $cCurrent='руб';
-    $cFrom='2000';
-    $cTo='6000';
-    $cMax='10000'; //Функция по нахождению максимальной цены?!?!
+    $cFrom='0';
+    $cTo=getMaxCost($type_id,$gr_id,0,$cID); //Функция по нахождению максимальной цены?!?!
+    //$cMax=getMaxCost($type_id,$gr_id,0,$cID);
 
     $subs_count=countGifts($type_id,$gr_id,0,$cID,$cFrom*100,$cTo*100); //Add Function
     $rows=20;
@@ -41,7 +41,7 @@
                                 </div>
                             </td>
                             <td class="col2">
-                                <input type="text" id="giftRegion" placeholder="Введите адрес или название заведения">
+                                <input type="text" id="giftRegion" placeholder="Введите адрес">
                             </td>
                             <td class="col3">
                                 <label><input type="checkbox" id="giftMyRegion">В моем регионе</label>
@@ -56,7 +56,7 @@
                             </td>
                             <td class="col2">
                                 <span id="rangeAmount"><span id="cFrom"><?=$cFrom?></span> <span id="currency"><?=$cCurrent?></span> - <span id="cTo"><?=$cTo?></span> <span id="currency"><?=$cCurrent?></span></span>
-                                <span id="cMax" style="display:none;"><?=$cMax?></span>
+                                <!-- <span id="cMax" style="display:none;"><?=$cMax?></span> -->
                                 <div class="uRange"></div>
                             </td>
                             <td class="col3">
@@ -70,16 +70,15 @@
                                 </div>
                             </td>
                             <td class="col2" colspan="2">
+					              <div class="b-icons">
 <?php
     foreach($catFull as $key=>$value)
     {
         echo'
-                                <div class="category-icons active fl_l tx_c">
-                                    <a href="#" class="big-category-icon category-icon-eat'.(isset($value['sub'])?' popover-btn':'').'" data-content="'.htmlspecialchars(json_encode($value)).'"></a><br>
-                                    '.$value['mainname'].'
-                                </div>';
+						              <div class="b-icon"><a href="javascript:;" onclick="setCat('.$key.')" class="big-category-icon category-icon-eat" data-content="'.htmlspecialchars(json_encode($value)).'"></a><span class="b-desc item'.$key.'">'.$value['mainname'].'</span></div>';
     }
 ?>
+					              </div><span class="btn btn-green s-search fl_r"><i class="icon-search-white"></i>Начать поиск</span>
                             </td>
                         </tr>
                         </tr>
@@ -92,58 +91,65 @@
                         rows    = <?=$rows?>,
                         begin   = rows,
                         category= 0,
-                        currency= 2,
-                        cFrom   = <?=$cFrom?>,
-                        cTo     = <?=$cTo?>;
+                        currency= 2;
 
                     function choosenGifts(type){
-                        var name      =$('#giftName').val(),
-                            order     =$('#giftOrder').val(),
-                            region    =$('#giftRegion').val(),
-                            myRegion  =$('#giftMyRegion').prop('checked'),
-                            myPlace   =$('#giftMyPlace').prop('checked'),
-                            onlyAction=$('#giftOnlyAction').prop('checked');
+                        var name      = $('#giftName').val(),
+                            cFrom     = $('#cFrom').html(),
+                            cTo       = $('#cTo').html(),
+                            order     = $('#giftOrder').val(),
+                            region    = $('#giftRegion').val(),
+                            myRegion  = $('#giftMyRegion').prop('checked'),
+                            myPlace   = $('#giftMyPlace').prop('checked'),
+                            onlyAction= $('#giftOnlyAction').prop('checked'),
+                            idGifts   = $('#idGifts');
 
                         if(type=='n'){
+                        	max=0;
                             page=1;
                             begin=0;
+                            idGifts.html('');
+                            $('div#loadmoreajaxloader').show();
                         }
 
-                        if(max>page)$('div#loadmoreajaxloader').show();
-                        $.ajax({
-                            url:'/jquery-gifts',
-                            type:'POST',
-                            data:{type_id:<?=$type_id?>,gr_id:<?=$gr_id?>,list:begin,items:rows,order:order,name:name,region:region,mR:myRegion?1:0,mP:myPlace?1:0,oA:onlyAction?1:0,cat:category,currency:currency,cFrom:cFrom,cTo:cTo},
-                            cache:false,
-                            success: function(data){
-                                var html,
-                                    idGifts=$('#idGifts');
+                        if(max>page && type=='p')
+                        	$('div#loadmoreajaxloader').show();
 
-                                if(data){
-                                    if(max>page){
-                                        $('div#loadmoreajaxloader').hide();
+                        if(max>page || type=='n'){
+                            $.ajax({
+                                url:'/jquery-gifts',
+                                type:'POST',
+                                data:{type_id:<?=$type_id?>,gr_id:<?=$gr_id?>,list:begin,items:rows,order:order,name:name,region:region,mR:myRegion?1:0,mP:myPlace?1:0,oA:onlyAction?1:0,cat:category,currency:currency,cFrom:cFrom,cTo:cTo},
+                                cache:false,
+                                success: function(data){
+                                    var html;
+
+                                    if(data){
                                         html = jQuery.parseJSON(data);
 
                                         if(type=='n'){
                                             idGifts.empty();
                                             max=html.max;
+                                            begin=rows;
+                                        }else{
+                                            page =page+1;
+                                            begin=begin+rows;
                                         }
 
-                                        idGifts.append(html.html);
-                                        page =page+1;
-                                        begin=begin+rows;
-                                    }
-                                    else{
                                         $('div#loadmoreajaxloader').hide();
+                                        idGifts.append(html.html);
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
+                        else
+                        	$('div#loadmoreajaxloader').hide();
                     }
 
                     function setCat(p){
+                        $('.item' + category).attr('class','b-desc item' + category);
                         category=p;
-                        choosenGifts('n');
+                        $('.item' + p).attr('class','b-desc item' + p + ' active');
                     }
 
                     function setCurrency(p,n){ //,f,t
@@ -152,7 +158,6 @@
                         //cTo=cTo/t;
                         $('#currencyM').html(n);
                         $('<span id="currency">' + n + '</span>').replaceAll('span#currency');
-                        choosenGifts('n');
                     }
 
                     $(window).scroll(function(){
@@ -162,19 +167,12 @@
                     });
 
                     jQuery(function($){
-                        //$("#giftName,#giftRegion").keyup(function(){ //,#giftMyRegion,#giftMyPlace,#giftOnlyAction
-                        //    choosenGifts('n');
-                        //});
-                        $("#giftName,#giftRegion,#giftOrder,#giftMyRegion,#giftMyPlace,#giftOnlyAction").change(function(){
+                    	$(".s-search").click(function(){
+	                    	choosenGifts('n');
+                    	});
+                        $("#giftOrder").change(function(){
                             choosenGifts('n');
                         });
-                        //$(".uRange").slider({
-                        //    slide: function( event, ui ) {
-                        //        cFrom=$("#cFrom").html();
-                        //        cTo=$("#cTo").html();
-                        //        choosenGifts('n');
-                        //    }
-                        //});
                     });
                 </script>
 
@@ -191,8 +189,6 @@
                     </div>
                 </div>
                 <div class="separator"></div>
-                <div class="group" id="idGifts">
-                <?=searchGifts($type_id,$gr_id,$rows,0,1,'html',0,$cID,$cFrom*100,$cTo*100)?>
-                <!-- <div id="loadmoreajaxloader" style="display:none; text-align:center;"><img src="/pic/loader.gif" alt="loader" width="32" height="32" /></div> -->
-                </div>
+                <div class="group" id="idGifts"><?=searchGifts($type_id,$gr_id,$rows,0,1,'html',0,$cID,$cFrom*100,$cTo*100)?></div>
+                <div id="loadmoreajaxloader" style="display:none; text-align:center;"><img src="/pic/loader.gif" alt="loader" width="32" height="32" /></div>
             </div>

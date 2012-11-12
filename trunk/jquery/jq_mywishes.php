@@ -10,6 +10,9 @@
       $myWishes=$USER->ShowIHochu($user_wp,$rows,$begin, $par, $wish_cnt);
       $stamp=time();
 
+      $foto=ShowAvatar(array($_SESSION['WP_USER']['user_wp']),50,50,false);
+      if(is_array($foto))$foto=$foto[0]['avatar'];
+
       //Комментарии
       $maxCount=3; //Количество выводимых комментариев, если их больше заданного числа
 
@@ -20,18 +23,11 @@
         //идентификатор желания или вишлиста
         $id='';
 
-      foreach($myWishes as $k => $v){
-        //echo "key=".$k."; value=".$v['akcia_id']."<br />";
-      }
-
         for ($i=0; $i<count($myWishes); $i++){
             $arr_id[] = $myWishes[$i]['akcia_id'];
         }
 
-        $photo = ShowFotoAkcia($arr_id,130,91);
-        //$photo = '\pic\wishlist.png';
-
-        //print_r($myWishes);
+        $photo = ShowFotoAkcia($arr_id,100,100);
 
         for ($i=0; $i<count($myWishes);$i++){
 
@@ -50,6 +46,43 @@
                 "wish-reason"   => $myWishes[$i]['reason'],
                 "wish-date"     => ShowDateRus($myWishes[$i]['adddata'])
               );
+
+              if ($user_wp == $_SESSION['WP_USER']['user_wp']){
+                $wish_add_html = '';
+                $li_actions = "<li>
+                                  <a href=\"#\" class=\"popover-btn wish-edit\" rel=\"".$stamp."\" data-content=\"".htmlspecialchars(json_encode($cart))."\">
+                                      <i class=\"small-icon icon-edit\"></i>Редактировать<i class=\"small-icon icon-grey-arrow\"></i>
+                                  </a>
+                               </li>
+                               <li>
+                                  <a href=\"#\" id=\"del_wish\" data-wish=\"".$id."\" data-status=\"".$myWishes[$i]['status']."\">
+                                      <i class=\"small-icon icon-delete\"></i>Удалить
+                                  </a>
+                               </li>";
+              }
+              else {
+                if (!($USER->CheckHochu($myWishes[$i]['akcia_id'])) && ($myWishes[$i]['akcia_id'] != 0)){
+                    $wish_add_html = "<p>
+                                        <a class=\"add-to-me opacity_link add_me\" id=\"wish-add-".$myWishes[$i]['akcia_id']."\" href=\"javascript:;\" data-status=\"0\" data-id=\"".$myWishes[$i]['akcia_id']."\" data-shop=\"".$myWishes[$i]['shop_id']."\">
+                                            <i class=\"small-icon icon-wish\"></i>
+                                            Добавить желание себе
+                                            <i class=\"small-icon icon-add\"></i>
+                                        </a>
+                                      </p>";
+                }
+                else
+                    $wish_add_html = "";
+
+                if ($myWishes[$i]['status'] == 0)
+                    $li_actions = "<a href=\"#\" class=\"make-gift show opacity_link group\">
+                                      <span class=\"big-circle-icon circle-icon-make-gift fl_r tx_c\"></span>
+                                      <div class=\"wrapped\">
+                                          Сделать<br>подарок
+                                      </div>
+                                   </a>";
+                else
+                    $li_actions = '<br />';
+              }
 
 
               //Место
@@ -74,10 +107,10 @@
                                 <div class="wishlist-comment group" id="comments-'.$v['id'].'-id">
                                     <img src="'.$v['user']['photo'].'" class="small-avatar-img fl_l">
                                     <a href="javascript:;" onclick="CommentsAction('.$id.',\'delete\','.$v['id'].')" class="opacity_link fl_r">
-                                        <i class="small-icon icon-delete active"></i>
+                                        <i class="small-icon icon-close"></i>
                                     </a>
                                     <div class="comment-content wrapped">
-                                        <span class="comment-author">'.$v['user']['firstname'].' '.$v['user']['lastname'].'</span><em class="comment-date">'.$v['date'].'</em>
+                                        <span class="comment-author">'.$v['user']['firstname'].' '.$v['user']['lastname'].'</span><em class="comment-date">'.ShowDateRus($v['date']).'</em>
                                         <br>
                                         <span class="comment-text">
                                             '.$v['msg'].'
@@ -88,7 +121,7 @@
               if ($myWishes[$i]['akcia_id'] == 0){
                 $html .= "<div id=\"wish".$id."\" class=\"wish-item group toggle-stop\">
                             <div class=\"big-avatar bordered fl_l\">
-                                <a href=\"/wlist-".$id."\" class=\"wish-target\">
+                                <a href=\"/wlist-".$id."\">
                                 <img src=\"/pic/wishlist.jpg\">
                                 </a>
                             </div>
@@ -127,22 +160,13 @@
                 $wish_cnt++;
                 $html .= "<div id=\"wish".$id."\" class=\"wish-item group toggle-stop\">
                             <div class=\"big-avatar bordered fl_l\">
-                                <a href=\"/gift-".$id."\" class=\"wish-target\">
+                                <a href=\"/gift-".$id."\">
                                 <img src=\"".$photo[$i]['foto']."\">
                                 </a>
                             </div>
                             <div class=\"fl_r\">
                                 <ul class=\"wishlist-actions\">
-                                    <li>
-                                        <a href=\"#\" class=\"popover-btn wish-edit\" rel=\"".$stamp."\" data-content=\"".htmlspecialchars(json_encode($cart))."\">
-                                            <i class=\"small-icon icon-edit\"></i>Редактировать<i class=\"small-icon icon-grey-arrow\"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href=\"#\" id=\"del_wish\" data-wish=\"".$id."\" data-status=\"".$myWishes[$i]['status']."\">
-                                            <i class=\"small-icon icon-delete\"></i>Удалить
-                                        </a>
-                                    </li>
+                                    $li_actions
                                     <li>
                                         <a href=\"#\" class=\"comments opacity_link toggle-control\">
                                           <strong>
@@ -170,6 +194,7 @@
                                   $html .= "<p id=\"p_reason".$id."\">
                                                 Повод: <span id=\"reason".$id."\" class=\"reason\"> ".$myWishes[$i]['reason']."</span>
                                             </p>";
+                                  $html .= $wish_add_html;
               }
 
               $html .= '</div>
@@ -193,18 +218,23 @@
                                 <div class="feed-status-top group">';
 
                                 if ($myWishes[$i]['akcia_id'] == 0)
-                                    $html .= '<button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$id.',\'add\',\'akcia_id\', \'wlist\')">Отправить</button>';
+                                    $html .= '
+                                <form action="" onsubmit="CommentsAction('.$id.',\'add\',\'akcia_id\', \'wlist\'); return false;">';
                                 else
-                                    $html .= '<button class="btn btn-green fl_r no-margin" onclick="CommentsAction('.$id.',\'add\',\'akcia_id\', \'akcia\')">Отправить</button>';
+                                    $html .= '
+                                <form action="" onsubmit="CommentsAction('.$id.',\'add\',\'akcia_id\', \'akcia\'); return false;">';
 
-              $html .= '            <div class="feed-status2 wrapped">
-                                        <div class="group">
-                                            <span class="arrow_box2 fl_l">Комментировать</span>
-                                            <div class="wrapped">
-                                                <input id="comments-'.$id.'-add" type="text" class="no-margin" style="width: 100%;" placeholder="Оставь свое сообщение или отзыв">
-                                            </div>
-                                        </div>
+              $html .= '
+                                    <div class="leave-comment">
+                                        <img src="'.$foto.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$id.'-add" placeholder="Комментировать..."></textarea> 
                                     </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
                                 </div>
                             </div>
 
@@ -230,8 +260,16 @@
         return $return_array;
       }
       else{
-        if (!empty($par)) echo "У Вас нет исполненных желаний!";
-        else echo "У Вас нет желаний!";
+        if ($user_wp == $_SESSION['WP_USER']['user_wp']){
+          $perf_w_null = "У Вас нет исполненных желаний!";
+          $w_null      = "У Вас нет желаний!";
+        }
+        else{
+          $perf_w_null = 'Нет исполненных желаний!';
+          $w_null      = 'Нет желаний!';
+        }
+        if (!empty($par)) echo $perf_w_null;
+        else echo $w_null;
       }
     }
 

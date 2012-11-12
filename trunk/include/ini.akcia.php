@@ -171,6 +171,7 @@
 
 	    	$id = varr_int($id);
 	    	$tbshops    = "pfx_shops";
+	    	$tbshopsaddr= "pfx_shops_adress";
 	    	$tbakcia    = "pfx_akcia";
 	    	$tbtype     = "pfx_type";
 			$tbcurrency = "pfx_currency";
@@ -183,10 +184,11 @@
 				$where = " AND $tbakcia.klient_id = ".$_SESSION['KLIENT']['id'];
 			} else $where = " AND $tbakcia.moderator=1";
 
-	    	$akcia = $MYSQL->query("SELECT $tbakcia.shop_id, $tbakcia.group_id, $tbakcia.header, $tbakcia.mtext, $tbakcia.preview, IFNULL($tbakcia.discdata1,'0000-00-00') datastart, IFNULL($tbakcia.discdata2,'0000-00-00') dataend, $tbakcia.amount, $tbakcia.currency_id, $tbtype.dogovor, $tbakcia.idtype, $tbshops.phone, $tbshops.name shopname, $tbakcia.link, $tbakcia.klient_id, $tbtype.name_".LANG_SITE." type_name, $tbakcia.discount, $tbakcia.kolvo
+	    	$akcia = $MYSQL->query("SELECT $tbakcia.shop_id, $tbakcia.group_id, $tbakcia.header, $tbakcia.mtext, $tbakcia.preview, IFNULL($tbakcia.discdata1,'0000-00-00') datastart, IFNULL($tbakcia.discdata2,'0000-00-00') dataend, $tbakcia.amount, $tbakcia.currency_id, $tbtype.dogovor, $tbakcia.idtype, $tbshops.phone, $tbshops.name shopname, $tbakcia.link, $tbakcia.klient_id, $tbtype.name_".LANG_SITE." type_name, $tbakcia.discount, $tbakcia.kolvo, $tbshopsaddr.adress, $tbshopsaddr.latitude, $tbshopsaddr.longitude
 			                       FROM $tbakcia
 			                       INNER JOIN $tbtype  ON $tbtype.id  = $tbakcia.idtype
 			                       INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
+			                       INNER JOIN $tbshopsaddr ON $tbshopsaddr.shop_id = $tbakcia.shop_id
 			                      WHERE $tbakcia.id = $id AND $tbakcia.del<>1 $where");
 
 	    	if(is_array($akcia) && count($akcia) == 1){
@@ -211,7 +213,9 @@
 				    $country_id = $country_id[0]['parent'];
 				}
 
-		       return array(
+								
+
+				return array(
 		         'id'          => $id,
 		         'header'      => htmlspecialchars(stripslashes(trim($akcia[0]['header']))),
 		         'mtext'       => htmlspecialchars(stripslashes(trim($akcia[0]['mtext']))),
@@ -230,12 +234,16 @@
 	        	 'currency'    => @$currency[0]['mask'],
 	        	 'currencypay' => @$currency[0]['currency'],
 	        	 'groups'      => @$gr,
+	        	 'address'     => explode('::',$akcia[0]['adress']),
+	        	 'latitude'    => $akcia[0]['latitude'],
+	        	 'longitude'   => $akcia[0]['longitude'],
 	        	 'country'     => @$country,
 				 'country_id'  => @$country_id,
 		         'preview'     => (int) $akcia[0]['preview'],
 		         'datastart'   => MyDataTime($akcia[0]['datastart'],'date'),
 	        	 'datastop'    => MyDataTime($akcia[0]['dataend'],'date'),
 	        	 'photo'       => $photo,
+	        	 'photobig'    => $photobig,
 	        	 'photobig'    => $photobig,
 		       );
 	    	}

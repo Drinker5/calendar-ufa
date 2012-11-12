@@ -8,9 +8,11 @@ body {
 /* links */
 
 
+/*
 a:visited {
     color: inherit;
 }
+*/
 
 a {
     text-decoration: none;
@@ -300,7 +302,7 @@ a {
 
 .sidebar-menu li a {
     display: block;
-    padding: 2px 6px 2px 9px;
+    padding: 1px 6px 2px 9px;
     text-decoration: none;
     color: #8999b3;
     font-size: 13px;
@@ -318,7 +320,7 @@ a {
 
 .sidebar-menu li .notice-wrap {
     position: absolute;
-    top: 4px;
+    top: 2px;
     right: 7px;
     font-size: 12px;
     font-weight: bold;
@@ -419,7 +421,8 @@ a {
 }
 
 #content {
-    width: 780px;
+ width: 745px;
+ margin-right: 29px;
 }
 
 #secondary {
@@ -608,11 +611,12 @@ a {
 
 ul#actions li a {
     display: block;
-    padding: 4px 6px 4px 7px;
+    padding: 5px 5px 5px 26px;
     text-decoration: none;
     color: #5b6880;
     text-align: left;
-    width: 80px;
+    position: relative;
+    width: 70px;
     font-weight: bold;
     -webkit-transition: background-color 0.3s ease;
        -moz-transition: background-color 0.3s ease;
@@ -630,7 +634,6 @@ ul#actions li:hover {
 
 ul#actions li:last-child {
     border: none;
-    padding-bottom: 4px;
 }
 /* Main styles
 ---------------------------*/
@@ -646,9 +649,9 @@ ul#actions li:last-child {
 
 .friend-item {
     position: relative;
-    width: 250px;
-    padding: 10px 0;
+    width: 238px;
     margin-right: 10px;
+    padding: 10px 0;
     margin-bottom: 4px;
     -webkit-transition: background-color 0.3s ease;
        -moz-transition: background-color 0.3s ease;
@@ -661,7 +664,7 @@ ul#actions li:last-child {
 }
 
 .friend-container.wider .friend-item {
-    width: 380px;
+    width: 362px;
 }
 
 .friend-container.wider .friend-item .content {
@@ -1113,10 +1116,12 @@ ul#actions li:last-child {
     font-size: 11px;
 }
 
-.timeline-elem:first-child {
-    margin-top: 20px;
-}
 
+.timeline-elem:hover .p_r {background: #f3f9fd!important;}
+.timeline-elem:hover .p_r > .wrapped {border-right: 1px solid #E4E6EB;}
+.timeline-elem:hover .date.fl_r{margin-right: -1px;} 
+.timeline-elem:hover .content.group{margin-right: -1px;}
+	
 .timeline-elem:first-child > .wrapped,
 .timeline-elem:first-child .right-menu {
     padding-top: 0;
@@ -1126,6 +1131,7 @@ ul#actions li:last-child {
     padding-top: 20px;
     padding-bottom: 13px;
 }
+
 
 .timeline-elem .content .info {
     padding-left: 15px;
@@ -1154,8 +1160,8 @@ ul#actions li:last-child {
 }
 
 .timeline-elem .right-menu {
-    width: 150px;
-    padding-top: 20px;
+    width: 30px;
+    padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 10px;
 }
@@ -1184,6 +1190,10 @@ ul#actions li:last-child {
     margin-right: 5px;
 }
 
+.timeline-elem > .p_r > .wrapped > .small-icon {
+    margin: 0 3px;
+}
+
 .timeline-elem .name {
     font-size: 12px;
     color: #3d99d5;
@@ -1204,7 +1214,7 @@ ul#actions li:last-child {
 
 .timeline-elem .sub-action {
     position: absolute;
-    width: 150px;
+    width: 30px;
     bottom: 10px;
     right: 0;
 }
@@ -1225,8 +1235,6 @@ ul#actions li:last-child {
 
 .timeline-elem .sub-action li a:hover {
     opacity: 1;
-    background-color: #EFF0F3;
-    background-color: rgba(239, 240, 243, 0.5);
 }
 
 .timeline-elem .actions li a, .timeline-elem .actions ul li a:visited {
@@ -1245,13 +1253,12 @@ ul#actions li:last-child {
 
 .timeline-elem .actions li a:hover {
     opacity: 1;
-    background-color: #EFF0F3;
-    background-color: rgba(239, 240, 243, 0.5);
 }
 
 .timeline-elem .centered {
     position: relative;
     padding-right: 15px;
+	width: 70%;
 }
 
 .timeline-middle {
@@ -1502,7 +1509,7 @@ ul#actions li:last-child {
 }
 
 .gift-search-block .category-icons {
-    margin-left: 20px;
+    margin-left: 15px;
     font-size: 10px;
 }
 
@@ -1555,12 +1562,13 @@ ul#actions li:last-child {
 
 .gift-list-item {
     width: 106px;
-    padding: 18px 25px 0 25px;
+    padding: 18px 20px 0 20px;
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
 }
 
 .gift-list-item:hover {
     background-color: #f4f5f5;
-    padding: 18px 24px 0 24px;
     border-right: 1px solid #edeeee;
     border-left: 1px solid #edeeee;
     border-top: 2px solid #dedfde;
@@ -1685,24 +1693,30 @@ ul#actions li:last-child {
     -webkit-transform-origin: bottom left;
     -moz-transform-origin: bottom left;
     transform-origin: bottom left;
-    -webkit-transform: rotate(2deg);
-    -moz-transform: rotate(2deg);
-    transform: rotate(2deg);
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
 
 .stack.rotated:after {
     -webkit-transform-origin: bottom left;
     -moz-transform-origin: bottom left;
     transform-origin: bottom left;
-    -webkit-transform: rotate(4deg);
-    -moz-transform: rotate(4deg);
-    transform: rotate(4deg);
-}
-
-.stack:hover:after, .stack:hover:before {
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
     transform: rotate(0deg);
+}
+
+.stack:hover:before {
+    -webkit-transform: rotate(2deg);
+    -moz-transform: rotate(2deg);
+    transform: rotate(2deg);
+}
+
+.stack:hover:after {
+    -webkit-transform: rotate(4deg);
+    -moz-transform: rotate(4deg);
+    transform: rotate(4deg);
 }
 
 /* misc
