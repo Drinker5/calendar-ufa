@@ -398,6 +398,11 @@
 			id: 'add',
 			text: 'Добавить',
 			click: function() {
+			
+				for(var i in suggestions){
+					if(suggestions[i].added == true){ privacy = 0; break; }
+				}
+				
 				$.ajax({
 					type: 'POST',
 					url: '/jquery-calendar',cache:false, 
@@ -432,6 +437,11 @@
 		{   id: 'edit',
 			text: 'Изменить',
 			click: function() {
+				
+				for(var i in suggestions){
+					if(suggestions[i].added == true){ privacy = 0; break; }
+				}
+				
 				$.ajax({
 					type: 'POST',
 					url: '/jquery-calendar',cache:false, 
