@@ -21,6 +21,8 @@
 	var format_year = "yyyy";
 	var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 	var lastView; 
+	var suggestions = [];
+	var privacy = 0;
 	/* Источники данных */
 	var fcSources = { 
 		akcia : { 
@@ -407,6 +409,8 @@
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
 						remind: $("#event_remind :selected").val(),
+						privacy: privacy,
+						PrivFriends: suggestions,
 						notes: event_notes.val(),
 						op: 'add'
 					},
@@ -440,6 +444,8 @@
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
 						remind: $("#event_remind :selected").val(),
+						privacy: privacy,
+						PrivFriends: suggestions,
 						notes: event_notes.val(),
 						op: 'edit'
 					},
@@ -481,7 +487,6 @@
 		}]
 	});
 	
-	var suggestions = [];
 	$(function(){
 		$.getJSON("/jquery-calendar?friendlist", function(data) { suggestions = data; });
 		//Присоединяем автозаполнение
@@ -549,10 +554,12 @@
 	
 	$("#privacy_nobody").click(function(){
 		$("#privacy_friends_div").hide();
+		privacy = 0;
 	});
 
 	$("#privacy_all").click(function(){
 		$("#privacy_friends_div").show();
+		privacy = 1;
 	});
 	
 	$("#textforsearch").keyup(function(){

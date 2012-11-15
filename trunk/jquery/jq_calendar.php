@@ -21,6 +21,8 @@ $repeat = @$_POST['repeat'];
 $finish = @$_POST['finish'];
 $remind = @$_POST['remind'];
 $textsearch = @$_POST['textsearch'];
+$PrivFriends = @$_POST['PrivFriends'];
+$privacy = @$_POST['privacy'];
 
 $color = 'red';
 
@@ -45,6 +47,14 @@ if(isset($_POST['after'])){
 */
 switch ($op) {
 	case 'add':
+		if ($privacy==1){
+			$values = '';
+			foreach  ($PrivFriends as $key=>$value){
+				if ($value['added'])
+					$values.='(' . $value['friend_wp'] . '),';
+					$privacy=0;
+				}
+		}					
 		$sql = 'INSERT INTO `discount_users_events` (
 			`owner_wp`,
 			`data_start`, 
@@ -53,7 +63,8 @@ switch ($op) {
 			`zametki`,
 			`title`,
 			`repeat`,
-			`finish`) 
+			`finish`,
+			`visible_all`) 
 			VALUES 
 			("' . $_SESSION['WP_USER']['user_wp'] . '",
 			 "' . date("Y-m-d H:i:s", strtotime($start)) . '",
@@ -62,8 +73,8 @@ switch ($op) {
 			 "' . $notes . '",			 
 			 "' . $title . '",
 			 "' . $repeat . '",
-			 "' . $finish . '")';
-
+			 "' . $finish . '",
+			 "' . $privacy . '")';
 		if (mysql_query($sql)) {
 			echo mysql_insert_id();
 			$USER->AddDeystvie(0,$_SESSION['WP_USER']['user_wp'],10,mysql_insert_id());
