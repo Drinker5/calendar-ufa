@@ -78,7 +78,7 @@ function phone_with_code($phone,$codes)
 <div class="nav-panel group">
     <ul class="fl_r right">
         <li class="opacity_link"><a href="/my-profile">Мой профиль</a></li>
-        <li class="opacity_link"><a class="active" href="/my-phones">Телефон</a></li>
+        <li class="opacity_link active"><a href="/my-phones">Телефон</a></li>
         <!--<li class="opacity_link"><a href="/my-wallets">Счет</a></li>-->
         <li class="opacity_link"><a href="/my-alerts">Оповещения</a></li>
         <li class="opacity_link"><a href="/my-avatar">Изменить аватар</a></li>

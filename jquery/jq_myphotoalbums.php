@@ -2,8 +2,8 @@
 //Вывод блока с фотоальбомом
 function ShowAlbumsBlock($user_wp,$album,$stamp,$cart){
 	$html='
-	<div class="album fl_l" id="'.$cart['album-id'].'">
-		<a href="my-photoalbums?album_id='.$cart['album-id'].'" class="fl_l cover-photoalbum stack rotated"><img src="'.$album['logo'].'" alt="" /></a>
+	<div class="album fl_l" id="div'.$cart['album-id'].'">
+		<a href="'.$user_wp.'-photoalbums?album_id='.$cart['album-id'].'" class="fl_l cover-photoalbum stack rotated"><img src="'.$album['logo'].'" alt="" /></a>
 		<div class="content fl_l album-descriptions">
 			<div class="text">
 				<div class="name">'.$album['header'].'</div>';
@@ -22,7 +22,7 @@ function ShowAlbumsBlock($user_wp,$album,$stamp,$cart){
 				<a class="opacity_link" href="#">
 					<i original-title="Комментарии" class="tipN active small-icon icon-review"></i>
 				</a>
-				<a id="delete" class="opacity_link" href="#">
+				<a id="'.$cart['album-id'].'" class="delete" class="opacity_link" href="#">
 					<i original-title="Удалить альбом" class="tipN active small-icon icon-delete"></i>
 				</a>
 				<span class="popover-btn actions opacity_link" data-content="'.htmlspecialchars(json_encode($cart)).'">
@@ -130,14 +130,19 @@ $html='
 function Options($user_wp,$mode=0){ //По умолчанию возвращает HTML код
 	global $USER, $options;
 	$albums=$USER->ShowListPhotoAlbums($user_wp);
-	foreach($albums as $key => $value){
-		$name[$value['album_id']] = $value['header']; //Массив с именами альбомов и id
+	if(is_array($albums)){
+		foreach($albums as $key => $value){
+			$name[$value['album_id']] = $value['header']; //Массив с именами альбомов и id
+		}
+		foreach($name as $key => $value){
+			$options.= '<option value="'.$key.'">'.$value.'</option>';
+		}
+		if($mode==0){return $options;}
+		if($mode==1){return $name;} //При mode=1 возвращает массив id => name
+		}
+	else {
+		return false;
 	}
-	foreach($name as $key => $value){
-		$options.= '<option value="'.$key.'">'.$value.'</option>';
-	}
-	if($mode==0){return $options;}
-	if($mode==1){return $name;} //При mode=1 возвращает массив id => name
 }	
 
 function PhotoAlbumsEdit($user_wp,$what=''){

@@ -3,7 +3,7 @@
 		global $USER, $MYSQL, $SHOP;
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
-		$html='<p>Таких подарков у вас еще не было.</p>';
+		$html='<p>К сожалению, у тебя еще нет подарков.</p>';
 		$stamp=time();
 
 		$myGifts=$USER->ShowPodarki($type_id,0,$par,$rows,$begin);

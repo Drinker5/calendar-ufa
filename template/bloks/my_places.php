@@ -19,6 +19,10 @@
 
 <div class="separator"></div>
 
+<style>
+
+</style>
+
 <div class="edit-places-container">
 	<div class="map fl_l">
 		<div class="map-block-top">
@@ -52,7 +56,17 @@
 			//$places[$i]['adress'];
 			$markers_lat[$i]=$places[$i]["latitude"];
 			$markers_lon[$i]=$places[$i]["longitude"];
-			$markers.="{geometry:{'type':'Point', 'coordinates':[".$places[$i]["longitude"].",".$places[$i]["latitude"]."]}, properties:{'image':'https://dl.dropbox.com/u/23467346/pic/modernmonument.png', 'name':'".$places[$i]['name']."', 'address':'".str_replace('::', ', ', $places[$i]['adress'])."', 'id':'pin".$i."'}},";
+			$markers.="{
+				geometry:{'type':'Point', 'coordinates':[".$places[$i]["longitude"].",".$places[$i]["latitude"]."]},
+				properties:{
+					'image'  :'https://dl.dropbox.com/u/23467346/pic/modernmonument.png',
+					'name'   :'".$places[$i]['name']."',
+					'shop_id':'".$places[$i]['shop_id']."',
+					'rating' :'<div class=\"rating\"><a href=\"\" class=\"small-icon icon-star action\"></a><a href=\"\" class=\"small-icon icon-star action\"></a><a href=\"\" class=\"small-icon icon-star action\"></a><a href=\"\" class=\"small-icon icon-star\"></a><a href=\"\" class=\"small-icon icon-star\"></a></div>',
+					'address':'".str_replace('::', ', ', $places[$i]['adress'])."',
+					'id'     :'pin".$i."'
+				}
+			},";
 		}
 		$max_lat=max($markers_lat);
 		$min_lat=min($markers_lat);
@@ -86,72 +100,72 @@
 
 	<script>
 <?php if($myPos){ ?>
-    var map=mapbox.map('map').zoom(<?=$zoom?>).center({lat: <?=$lat?>, lon: <?=$lon?>});
-    map.addLayer(mapbox.layer().id('jam-media.map-tckxnm3s'));
-    map.ui.zoomer.add();
+		var map=mapbox.map('map').zoom(<?=$zoom?>).center({lat: <?=$lat?>, lon: <?=$lon?>});
+		map.addLayer(mapbox.layer().id('jam-media.map-tckxnm3s'));
+		map.ui.zoomer.add();
 
-    var markerLayer = mapbox.markers.layer();      
-    //var interaction = mapbox.markers.interaction(markerLayer);
-    map.addLayer(markerLayer);
+		var markerLayer = mapbox.markers.layer();
+		//var interaction = mapbox.markers.interaction(markerLayer);
+		map.addLayer(markerLayer);
 
-    if (!navigator.geolocation) {
-      //geolocation is not available
-    } else {
-          navigator.geolocation.getCurrentPosition(
-          function(position) {
-              map.zoom(<?=$zoom?>).center({
-                  lat: position.coords.latitude,
-                  lon: position.coords.longitude
-              });
-              markerLayer.add_feature({
-                  geometry: {
-                      coordinates: [
-                          position.coords.longitude,
-                          position.coords.latitude]
-                  },
-                  properties: {
-                      'image': 'https://dl.dropbox.com/u/23467346/pic/male-2.png',
-                      'id':'pin',
-                  }
-              });
-              markerLayer.factory(function(f){
-                var img = document.createElement('img');
-                img.className = 'marker-image';
-                img.setAttribute('src', f.properties.image);
+		if (!navigator.geolocation) {
+			//geolocation is not available
+		} else {
+			navigator.geolocation.getCurrentPosition(
+				function(position) {
+					map.zoom(<?=$zoom?>).center({
+						lat: position.coords.latitude,
+						lon: position.coords.longitude
+					});
+					markerLayer.add_feature({
+						geometry: {
+							coordinates: [
+								position.coords.longitude,
+								position.coords.latitude]
+						},
+						properties: {
+							'image': 'https://dl.dropbox.com/u/23467346/pic/male-2.png',
+							'id':'pin',
+						}
+					});
+					markerLayer.factory(function(f){
+						var img = document.createElement('img');
+						img.className = 'marker-image';
+						img.setAttribute('src', f.properties.image);
 
-                //Смещение к координатам маркера
-                MM.addEvent(img, 'click', function(e){
-                  map.ease.location({
-                    lat:position.coords.latitude,
-                    lon:position.coords.longitude
-                  }).zoom(map.zoom()).optimal();
-                  $('.marker-image').attr({src:f.properties.image});
-                  img.setAttribute('src', 'https://dl.dropbox.com/u/23467346/pic/male-2.png'); //https://dl.dropbox.com/u/23467346/pic/alien.png
-                  $('.place').removeClass('active');
-                  $('.place[rel='+f.properties.id+']').fadeOut(function(){
-                    setTimeout(function(){
-                      $('.place[rel='+f.properties.id+']').prependTo('.places-list').fadeIn(function(){
-                        setTimeout(function(){
-                          $('.place[rel='+f.properties.id+']').addClass('active');
-                        },
-                        1);
-                      });
-                    },
-                    300);
-                  });
-                });
-                return img;
-              });
-              //interaction.formatter(function(feature){
-              //  var o = 'Я тут';
-              //
-              //  return o;
-              //});
-          },
-          function(err) {
-              //position could not be found
-          });
-  }
+						//Смещение к координатам маркера
+						MM.addEvent(img, 'click', function(e){
+							map.ease.location({
+								lat:position.coords.latitude,
+								lon:position.coords.longitude
+							}).zoom(map.zoom()).optimal();
+							$('.marker-image').attr({src:f.properties.image});
+							img.setAttribute('src', 'https://dl.dropbox.com/u/23467346/pic/male-2.png'); //https://dl.dropbox.com/u/23467346/pic/alien.png
+							$('.place').removeClass('active');
+							$('.place[rel='+f.properties.id+']').fadeOut(function(){
+								setTimeout(function(){
+									$('.place[rel='+f.properties.id+']').prependTo('.places-list').fadeIn(function(){
+										setTimeout(function(){
+											$('.place[rel='+f.properties.id+']').addClass('active');
+											},
+										1);
+									});
+								},
+								300);
+							});
+						});
+						return img;
+					});
+					//interaction.formatter(function(feature){
+						//  var o = 'Я тут';
+						//
+						//  return o;
+						//});
+				},
+				function(err) {
+				//position could not be found
+			});
+		}
 <?php }else{ ?>
 		var map=mapbox.map('map').zoom(<?=$zoom?>).center({<?=$map_cnt?>});
 		map.addLayer(mapbox.layer().id('jam-media.map-tckxnm3s'));
@@ -195,7 +209,7 @@
 		});
 		map.addLayer(markerLayer);
 		mapbox.markers.interaction(markerLayer).formatter(function(feature){
-			var o='<b>'+feature.properties.name+'</b><br />'+feature.properties.address;
+			var o='<div class="title"><a href="/shop-'+feature.properties.shop_id+'">'+feature.properties.name+'</a></div>'+feature.properties.rating+' <div class="adress">'+feature.properties.address+'</div><div class="info"><i class="small-icon icon-check-in-green"></i> 214 <br><span><b>checkins</b></span></div><div class="info right"><i class="small-icon icon-gift-green"></i> 214 <br><span><b>подарков</b></span></div><div class="down-arrow"></div>';
 			return o;
 		});
 

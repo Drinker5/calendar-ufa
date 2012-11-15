@@ -1,0 +1,4 @@
+#menu .r-tools .small-avatar {margin-top: -25px!important;}
+#menu .r-tools {max-width: 230px}
+#menu ul li:active, #menu ul li.active { background: #2279C1}
+.timeline-elem.toggle-stop{min-height: 1%;}

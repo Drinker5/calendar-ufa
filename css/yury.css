@@ -1,4 +1,4 @@
-.wish_add, .wish_make {
+.wish_add, .wish_make, .scrollup {
  -webkit-transition: all 0.2s ease;
  -moz-transition: all 0.2s ease;
  -o-transition: all 0.2s ease;
@@ -35,13 +35,17 @@ input {
  font-size: 12px !important;
 }
 
+.px28 {
+ font-size: 28px !important;
+}
+
 .text-l .small-icon {
  margin-right: 5px;
 }
 
 .text-l li {
  font-size: 12px;
- color: #75849c;
+ color: #485465;
  margin-top: 5px;
 }
 
@@ -54,7 +58,7 @@ input {
 }
 
 h3 a {
- color: #5aafe5;
+ color: #0e87d7;
  text-decoration: none;
 }
 
@@ -79,9 +83,9 @@ h3 a:hover {
  background-color: #ebebeb;
  background-image: -webkit-gradient(linear, left top, left bottom, from(#ebebeb), to(#f7f7f7));
  background-image: -webkit-linear-gradient(top, #ebebeb, #f7f7f7);
- background-image:    -moz-linear-gradient(top, #ebebeb, #f7f7f7);
- background-image:      -o-linear-gradient(top, #ebebeb, #f7f7f7);
- background-image:         linear-gradient(to bottom, #ebebeb, #f7f7f7);
+ background-image: -moz-linear-gradient(top, #ebebeb, #f7f7f7);
+ background-image:-o-linear-gradient(top, #ebebeb, #f7f7f7);
+ background-image:linear-gradient(to bottom, #ebebeb, #f7f7f7);
  behavior: url(../PIE.htc);
 }
 
@@ -225,6 +229,11 @@ h3 a:hover {
 h4 {
  font-size: 11px;
  margin-bottom: 12px;
+}
+
+.fav-places h4, .news-feed h4 {
+ font-size: 12px;
+ color: #97B425;
 }
 
 h4:before {
@@ -597,7 +606,7 @@ h4:before {
 
 @keyframes triangle
 {
-0%   { transform: rotate(180deg), -ms-transform: rotate(180deg);}
+0%{ transform: rotate(180deg), -ms-transform: rotate(180deg);}
 25%  {background: yellow;}
 50%  {background: blue;}
 100% { transform: rotate(180deg), -ms-transform: rotate(180deg);
@@ -606,21 +615,21 @@ h4:before {
 
 @-moz-keyframes triangle
 {
-0%   { -moz-transform: rotate(0deg)}
+0%{ -moz-transform: rotate(0deg)}
 100% { -moz-transform: rotate(180deg); 
 }
 }
 
 @-webkit-keyframes triangle
 {
-0%   {-webkit-transform: rotate(0deg)}
+0%{-webkit-transform: rotate(0deg)}
 100% {-webkit-transform: rotate(180deg);
 }
 }
 
 @-o-keyframes triangle
 {
-0%   {-o-transform: rotate(0deg);}
+0%{-o-transform: rotate(0deg);}
 100% {-o-transform: rotate(180deg);}
 }
 */
@@ -634,9 +643,9 @@ h4:before {
  background-color: #3ea6dd;
  background-image: -webkit-gradient(linear, left top, left bottom, from(#3ea6dd), to(#1882b6));
  background-image: -webkit-linear-gradient(top, #3ea6dd, #1882b6);
- background-image:    -moz-linear-gradient(top, #3ea6dd, #1882b6);
- background-image:      -o-linear-gradient(top, #3ea6dd, #1882b6);
- background-image:         linear-gradient(to bottom, #3ea6dd, #1882b6);
+ background-image: -moz-linear-gradient(top, #3ea6dd, #1882b6);
+ background-image:-o-linear-gradient(top, #3ea6dd, #1882b6);
+ background-image:linear-gradient(to bottom, #3ea6dd, #1882b6);
  top: 8px;
  behavior: url(../PIE.htc);
 }
@@ -1200,7 +1209,7 @@ input[type="search"]::-webkit-search-results-decoration {
  box-shadow: 0 0 0 1px #dee0e2;
 }
 
-.choose_friend .icon-online-small {
+.choose_friend .icon-online-small, .choose_friend .icon-offline-small {
  margin: 0 5px 0 6px;
 }
 
@@ -1491,17 +1500,17 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .category-icon-eat:hover {
-	background-position: 0 0;
+ background-position: 0 0;
 }
 .category-icon-eat.active {
-	background-position: -42px 0 !important;
+ background-position: -42px 0 !important;
 }
 
 .hint {
  font-family: 'Festus';
  -webkit-font-smoothing: antialiased;
  font-size: 22px;
- color: #009ad7;
+ color: #0d86d5;
 }
 
 .geo_icon {
@@ -1538,7 +1547,6 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .geo {
  padding-top: 10px !important;
- border-top: 1px solid #edeff3;
  border-bottom: none;
 }
 
@@ -1582,8 +1590,12 @@ input[type="search"]::-webkit-search-results-decoration {
 .tipsy-e .tipsy-arrow { top: 50%; margin-top: -4px; right: 0; width: 5px; height: 9px; background-position: top right; }
 .tipsy-w .tipsy-arrow { top: 50%; margin-top: -4px; left: 0; width: 5px; height: 9px; }
 
+.title h2 {
+ color: #0d86d5;
+}
+
 .title h2 span {
- color: #716e6b;
+ color: #706d6b;
 }
 
 .photo-add {
@@ -1591,7 +1603,6 @@ input[type="search"]::-webkit-search-results-decoration {
  bottom: 35px;
  padding: 3px 8px 5px 8px;
  border: 1px solid #bfbfbf;
- right: 38px;
  margin-bottom: 1px;
  font: normal 11px Tahoma, sans-serif;
 }
@@ -1604,7 +1615,6 @@ input[type="search"]::-webkit-search-results-decoration {
  color: #75849b;
  position: relative;
  top: 23px;
- right: 40px;
  cursor: pointer;
 }
 
@@ -1647,4 +1657,108 @@ input[type="search"]::-webkit-search-results-decoration {
 .icon-search-white {
  top: 2px;
  margin-right: 5px;
+}
+
+.payments-gifts {
+ display: block;
+ background: url(../pic/gifts.png);
+ width: 194px;
+ height: 135px;
+ margin: 0 auto 30px auto;
+}
+
+.center {
+ text-align: center;
+}
+
+#map {
+ margin-bottom: 7px;
+}
+
+.info a {
+ color: #0e87d7;
+}
+
+.scrollup {
+ width: 49px;
+ height: 55px;
+ opacity: 0.5;
+ position: fixed;
+ bottom: 20px;
+ margin-left: 72px;
+ display: none;
+ background: url('../pic/top.png') no-repeat;
+}
+
+.scrollup:hover {
+ opacity: 1;
+}
+
+.scrollup:active {
+ opacity: 0.7;
+}
+
+.delete_avatar {
+ color: #0d86d5;
+}
+
+.hint.avatar {
+ margin-top: 12px;
+}
+
+#popup-bottom {
+ background: rgba(149,193,31,.7);
+ width: 180px;
+ padding: 10px;
+ height: 50px;
+ border-radius: 5px;
+ position: fixed;
+ bottom: 10px;
+ left: 10px;
+}
+
+#popup-bottom img {
+ width: 50px;
+ height: 50px;
+ display: block;
+ float: left;
+ margin-right: 10px;
+ border-radius: 3px;
+}
+
+#popup-bottom .p-name {
+ color: #fff;
+ font: 600 13px Helvetica, Arial, sans-serif;
+ line-height: 12px;
+ -webkit-font-smoothing: antialiased;
+ display: block;
+ width: 80px;
+ margin-bottom: 3px;
+}
+
+#popup-bottom .p-purpose {
+ display: block;
+ font: 400 11px Helvetica, Arial, sans-serif;
+ color: #476500;
+}
+
+.pin {
+ display: block;
+ width: 26px;
+ height: 31px;
+ padding: 14px 11px 11px 11px;
+}
+
+.pin.blue {
+ background: url(../pic/pin-blue.png) no-repeat;
+}
+
+.pin.green {
+ background: url(../pic/pin-green.png) no-repeat;
+}
+
+.pin img {
+ height: 25px;
+ width: 25px;
+ border-radius: 2px;
 }

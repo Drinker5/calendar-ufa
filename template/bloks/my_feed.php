@@ -40,15 +40,16 @@
                     </ul>
                 </div>
 -->
-            <div id="content" class="fl_r">
-                <div class="title margin">
+                           <div class="title margin">
                     <h2>Лента новостей</h2>
                 </div>
                 <div class="nav-panel no-margin-bottom group">
                     <ul class="right">
                         <li class="active all"><a href="javascript:;" onclick="getFeedAllUser()">Все <span class="title-count">(<?=$subs_count?>)</span></a></li>
                         <li class="online"><a href="javascript:;" onclick="getFeedOnlineUser()">Друзья онлайн <span class="title-count">(<?=$subs_count_online?>)</span></a></li>
-                        <li><a href="/my-friends?t=request">Заявки в друзья <span class="green_stiker"><?=$subs_count_friends>0?'+':''?><?=$subs_count_friends?></span></a></li>
+<?php if($subs_count_friends>0){ ?>
+                        <li><a href="/my-friends?t=request">Заявки в друзья <span class="green_stiker">+<?=$subs_count_friends?></span></a></li>
+<?php } ?>
                     </ul>
                 </div>
 <!--
@@ -166,84 +167,84 @@
 					myFeed();
 				}
 
-					function CommentsAction(id,type,n,t){
-						var msg     = $("#comments-" + id + "-add").val(),
-							msgCount= $("#comments-" + id + "-add").val().length,
-							//count   = $("#comments-" + id + "-count").get(0),
-							count0  = $("#comments-" + id + "-count-other").get(0)||-1;
+				function CommentsAction(id,type,n,t){
+					var msg     = $("#comments-" + id + "-add").val(),
+						msgCount= $("#comments-" + id + "-add").val().length,
+						//count   = $("#comments-" + id + "-count").get(0),
+						count0  = $("#comments-" + id + "-count-other").get(0)||-1;
 
-						if(type=='add' && msgCount<3)
-							alert("CommentsAction: НЕ МЕНЕЕ 3 СИМВОЛОВ");
-						else if(type=='add' && msgCount>70)
-							alert("CommentsAction: НЕ БОЛЕЕ 70 СИМВОЛОВ");
-						else
-						{
+					if(type=='add' && msgCount<3)
+						alert("CommentsAction: НЕ МЕНЕЕ 3 СИМВОЛОВ");
+					else if(type=='add' && msgCount>70)
+						alert("CommentsAction: НЕ БОЛЕЕ 70 СИМВОЛОВ");
+					else
+					{
+						$.ajax({
+							url:'/jquery-comments',
+							type:'POST',
+							data:{type:type,id:id,msg:msg,n:n},
+							cache:false,
+							success: function(data){
+								var html,
+									//nCount         = count.innerHTML,
+									nCountOther    = count0.innerHTML,
+									idComments     = $('#comments-' + id);
+
+								if(data){
+									if(type=='add'){
+										//nCount++;
+										nCountOther++;
+										html = jQuery.parseJSON(data);
+										idComments.append(html.html);
+										$("#comments-" + id + "-add").val('');
+									} else if(type=='delete'){
+										//nCount--;
+										nCountOther--;
+										$('#comments-' + n + '-id').slideUp('slow',function(){
+											$(this).remove();
+										});
+										if(t==1)
+											$('<span id="comments-' + id + '-count-other">' + nCountOther +'</span>').replaceAll('span#comments-' + id + '-count-other');
+										if(nCountOther==0)
+											$('.toggle-change').remove();
+									}
+									//$('#comments-' + id + '-count').html(nCount);
+								}
+							}
+						});
+					}
+				}
+
+				function CommentsShow(id,num){
+					var idCommentsFull = $('#comments-' + id + '-full');
+
+					//$(this).toggle(function(){
+						if(cToggle==1){
 							$.ajax({
 								url:'/jquery-comments',
 								type:'POST',
-								data:{type:type,id:id,msg:msg,n:n},
+								data:{type:'show',id:id,num:num},
 								cache:false,
 								success: function(data){
-									var html,
-										//nCount         = count.innerHTML,
-										nCountOther    = count0.innerHTML,
-										idComments     = $('#comments-' + id);
+									var html;
 
 									if(data){
-										if(type=='add'){
-											//nCount++;
-											nCountOther++;
-											html = jQuery.parseJSON(data);
-											idComments.append(html.html);
-											$("#comments-" + id + "-add").val('');
-										} else if(type=='delete'){
-											//nCount--;
-											nCountOther--;
-											$('#comments-' + n + '-id').slideUp('slow',function(){
-												$(this).remove();
-											});
-											if(t==1)
-												$('<span id="comments-' + id + '-count-other">' + nCountOther +'</span>').replaceAll('span#comments-' + id + '-count-other');
-											if(nCountOther==0)
-												$('.toggle-change').remove();
-										}
-										//$('#comments-' + id + '-count').html(nCount);
+										cToggle=0;
+										html=jQuery.parseJSON(data);
+										idCommentsFull.append(html.html);
 									}
 								}
 							});
 						}
-					}
-
-					function CommentsShow(id,num){
-						var idCommentsFull = $('#comments-' + id + '-full');
-
-						//$(this).toggle(function(){
-							if(cToggle==1){
-								$.ajax({
-									url:'/jquery-comments',
-									type:'POST',
-									data:{type:'show',id:id,num:num},
-									cache:false,
-									success: function(data){
-										var html;
-
-										if(data){
-											cToggle=0;
-											html=jQuery.parseJSON(data);
-											idCommentsFull.append(html.html);
-										}
-									}
-								});
-							}
-							else
-								idCommentsFull.slideToggle('slow');
-							//else
-							//	idCommentsFull.slideDown('slow');
-						//},
-						//function(){
-							//idCommentsFull.slideUp('slow');
-						//});
-					}
+						else
+							idCommentsFull.slideToggle('slow');
+						//else
+						//	idCommentsFull.slideDown('slow');
+					//},
+					//function(){
+						//idCommentsFull.slideUp('slow');
+					//});
+				}
 
 				$(window).scroll(function(){
 					if($(window).scrollTop()==$(document).height()-$(window).height()){

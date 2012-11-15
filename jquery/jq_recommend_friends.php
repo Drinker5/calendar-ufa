@@ -27,19 +27,22 @@ function userInfoHtml($user_id)
     $output ='';
     $output .= '<div class="friend-item fl_l">';
     $output .= '<div class="bordered medium-avatar fl_l">';
-    $output .= '<img src="'.$new_usr['photo'].'" alt="">';
+    $output .= '<a href="/'.$user_id.'"><img src="'.$new_usr['photo'].'" alt=""></a>';
     $output .= '</div>';
     $output .= '<div class="content wrapped">';
     $output .= OnlineStatus($new_usr['status_chat']);
-    $output .= '<span class="name">'.$new_usr['firstname'].' '.$new_usr['lastname'].'</span>';
+    $output .= '<span class="name"><a href="/'.$user_id.'">'.$new_usr['firstname'].' '.$new_usr['lastname'].'</a></span>';
     $output .= '<br>';
     $output .= '<span class="place">'.$new_usr['country_name'].', '.$new_usr['town_name'].'</span>';
     $output .= '</div>';
-    $output .= '<span class="popover-btn find-friend-actions opacity_link">';
-    $output .= '<i class="small-icon icon-action"></i>';
-    $output .= 'Действия';
-    $output .= '<i class="small-icon icon-grey-arrow"></i>';
-    $output .= '</span>';
+    $output .= '<div class="tools_block hide absolute tx_r">
+                            <span class="fl_l">
+                               <a href="#" class="add_new_friend opacity_link" data-user="'.$user_id.'" data-name="'.$new_usr['firstname'].' '.$new_usr['lastname'].'"><i original-title="Добавить в друзья" class="tipN active small-icon icon-add-friend"></i></a>
+                                <a href="#" class="opacity_link"><i original-title="Сделать подарок" class="tipN active small-icon icon-gift"></i></a>
+                                <a href="#" class="opacity_link"><i original-title="Написать сообщение" class="tipN active small-icon icon-chat"></i></a>
+                                <a href="#" class="opacity_link"><i original-title="Пригласить" class="tipN active small-icon icon-invite"></i></a>
+                            </span>
+                        </div>';
     $output .= '</div>';
     return $output;
 }

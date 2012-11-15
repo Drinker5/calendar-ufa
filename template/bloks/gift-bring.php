@@ -1,5 +1,6 @@
 <?php
 	$who=$USER->Info_min($_URLP[2],75,75);
+	$_SESSION['may_bring']='yes';
 ?>
 <div class="title margin"><h2>Подарки</h2></div>
 <div class="nav-panel no-margin-bottom group"></div>
@@ -74,73 +75,73 @@
     <div class="line group">
         <div class="title fl_l">Банковской картой</div>
         <div class="systems-icons fl_l group">
-            <a href="#" original-title="visa" class="fl_l tipN"><i class="payment-icon visa"></i></a>
-            <a href="#" original-title="mastercard" class="fl_l tipN"><i class="payment-icon mastercard"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="visa" class="fl_l tipN"><i class="payment-icon visa"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="mastercard" class="fl_l tipN"><i class="payment-icon mastercard"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 
     <div class="line group">
         <div class="title fl_l">Электронные деньги</div>
         <div class="systems-icons fl_l">
-            <a href="#" original-title="yandex" class="fl_l tipN"><i class="payment-icon yandex"></i></a>
-            <a href="#" original-title="webmoney" class="fl_l tipN"><i class="payment-icon webmoney"></i></a>
-            <a href="#" original-title="kiwi" class="fl_l tipN"><i class="payment-icon kiwi"></i></a>
-            <a href="#" original-title="rbk" class="fl_l tipN"><i class="payment-icon rbk"></i></a>
-            <a href="#" original-title="mail" class="fl_l tipN"><i class="payment-icon mail"></i></a>
-            <a href="#" original-title="intelectmoney" class="fl_l tipN"><i class="payment-icon intelectmoney"></i></a>
-            <a href="#" original-title="w1" class="fl_l tipN"><i class="payment-icon w1"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="yandex" class="fl_l tipN"><i class="payment-icon yandex"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="webmoney" class="fl_l tipN"><i class="payment-icon webmoney"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="kiwi" class="fl_l tipN"><i class="payment-icon kiwi"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="rbk" class="fl_l tipN"><i class="payment-icon rbk"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="mail" class="fl_l tipN"><i class="payment-icon mail"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="intelectmoney" class="fl_l tipN"><i class="payment-icon intelectmoney"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="w1" class="fl_l tipN"><i class="payment-icon w1"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 
     <div class="line group">
         <div class="title fl_l">Платежные терминалы</div>
         <div class="systems-icons fl_l">
-            <a href="#" original-title="kiwi" class="fl_l tipN"><i class="payment-icon kiwi"></i></a>
-            <a href="#" original-title="eleksnet" class="fl_l tipN"><i class="payment-icon eleksnet"></i></a>
-            <a href="#" original-title="esgp" class="fl_l tipN"><i class="payment-icon esgp"></i></a>
-            <a href="#" original-title="pinpay" class="fl_l tipN"><i class="payment-icon pinpay"></i></a>
-            <a href="#" original-title="unikassa" class="fl_l tipN"><i class="payment-icon unikassa"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="kiwi" class="fl_l tipN"><i class="payment-icon kiwi"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="eleksnet" class="fl_l tipN"><i class="payment-icon eleksnet"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="esgp" class="fl_l tipN"><i class="payment-icon esgp"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="pinpay" class="fl_l tipN"><i class="payment-icon pinpay"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="unikassa" class="fl_l tipN"><i class="payment-icon unikassa"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 
     <div class="line group">
         <div class="title fl_l">Салоны связи</div>
         <div class="systems-icons fl_l">
-            <a href="#" original-title="evroset" class="fl_l tipN"><i class="payment-icon evroset"></i></a>
-            <a href="#" original-title="svyznoi" class="fl_l tipN"><i class="payment-icon svyznoi"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="evroset" class="fl_l tipN"><i class="payment-icon evroset"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="svyznoi" class="fl_l tipN"><i class="payment-icon svyznoi"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 
     <div class="line group">
         <div class="title fl_l">Банкоматы</div>
         <div class="systems-icons fl_l">
-            <a href="#" original-title="evroset" class="fl_l tipN"><i class="payment-icon bankom1"></i></a>
-            <a href="#" original-title="svyznoi" class="fl_l tipN"><i class="payment-icon bankom2"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="evroset" class="fl_l tipN"><i class="payment-icon bankom1"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="svyznoi" class="fl_l tipN"><i class="payment-icon bankom2"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 
     <div class="line group">
         <div class="title fl_l">Мобильный телефон</div>
         <div class="systems-icons fl_l">
-            <a href="#" original-title="mts" class="fl_l tipN"><i class="payment-icon mts"></i></a>
-            <a href="#" original-title="megafon" class="fl_l tipN"><i class="payment-icon megafon"></i></a>
-            <a href="#" original-title="beeline" class="fl_l tipN"><i class="payment-icon beeline"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="mts" class="fl_l tipN"><i class="payment-icon mts"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="megafon" class="fl_l tipN"><i class="payment-icon megafon"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="beeline" class="fl_l tipN"><i class="payment-icon beeline"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 
     <div class="line group">
         <div class="title fl_l">Денежные переводы</div>
         <div class="systems-icons fl_l">
-            <a href="#" original-title="contact" class="fl_l tipN"><i class="payment-icon contact"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="contact" class="fl_l tipN"><i class="payment-icon contact"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 
     <div class="line group">
         <div class="title fl_l">Интернет банкинг</div>
         <div class="systems-icons fl_l">
-            <a href="#" original-title="alfa-bank" class="fl_l tipN"><i class="payment-icon alfa-bank"></i></a>
-            <a href="#" original-title="faktura.ru" class="fl_l tipN"><i class="payment-icon faktura"></i></a>
-            <a href="#" original-title="PSB" class="fl_l tipN"><i class="payment-icon promsvyz"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="alfa-bank" class="fl_l tipN"><i class="payment-icon alfa-bank"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="faktura.ru" class="fl_l tipN"><i class="payment-icon faktura"></i></a>
+            <a href="/gift-<?=$_URLP[1]?>-<?=$_URLP[2]?>-end" original-title="PSB" class="fl_l tipN"><i class="payment-icon promsvyz"></i></a>
         </div> <!-- /.systems-icons -->
     </div> <!-- /.line -->
 

@@ -2,9 +2,12 @@
 $GLOBALS['PHP_FILE'] = __FILE__;
 $GLOBALS['FUNCTION'] = __FUNCTION__;
 
+$infoik=$USER->Info_min(@$_POST['users']);
+
 
 $akcia_id = varr_int(@$_POST['gift_id']);
-$users_wp = @$_POST['users'] ;
+$users_wp[0] = @$_POST['users'] ;
+$users_wp[0]['user_mobile']= $infoik['mobile'] ;
 $msg      = varr_str(@$_POST['msg']);
 $pin      = varr_str(@$_POST['pin']);
 $privat   = varr_int(@$_POST['privat']);

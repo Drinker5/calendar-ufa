@@ -5,23 +5,41 @@
 		$GLOBALS['PHP_FILE']=__FILE__;
 		$GLOBALS['FUNCTION']=__FUNCTION__;
 		$html='
-		<div class="friend-item fl_l">
+		<div class="friend-item fl_l" id="u'.$friend['user_wp'].'">
 			<a class="bordered medium-avatar fl_l" href="/'.$friend['user_wp'].'"><img src="'.$avatar.'" alt="" /></a>
 			<div class="content wrapped">'.OnlineStatus($friend['status_chat']).'
 				<span class="name"><a href="/'.$friend['user_wp'].'">'.$friend['firstname'].' '.$friend['lastname'].'</a></span>
 				<br />
 				<span class="place">'.$friend['country_name'].', '.$friend['town_name'].'</span>
 			</div>';
-		if($friend['user_wp']!=$_SESSION['WP_USER']['user_wp']){
-			$html.='<span class="popover-btn ';
-			if($USER->IsFriend($friend['user_wp'])){
-				if($user_wp!=$_SESSION['WP_USER']['user_wp'])$html.='my-friend-actions-short';
-				else                                         $html.='my-friend-actions';
+		if($USER->IsFriend($friend['user_wp'])){
+			$html.='
+				<div class="tools_block hide absolute tx_r">
+					<span class="fl_l">
+						<a href="/type-5" class="opacity_link"><i original-title="Сделать подарок" class="tipN active small-icon icon-gift"></i></a>
+						<a href="#" class="opacity_link"><i original-title="Написать сообщение" class="tipN active small-icon icon-chat"></i></a>
+						<a href="#" class="opacity_link"><i original-title="Пригласить" class="tipN active small-icon icon-invite"></i></a>
+					</span>';
+			if($friend['user_wp']!=$_SESSION['WP_USER']['user_wp']){
+				$html.='<span class="popover-btn ';
+				if($USER->IsFriend($friend['user_wp'])){
+					if($user_wp!=$_SESSION['WP_USER']['user_wp'])$html.='my-friend-actions-short';
+					else                                         $html.='my-friend-actions';
+				}
+				else                                   $html.='find-friend-actions';
+				$html.=' opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'"><i class="small-icon icon-settings"></i></span>';
 			}
-			else                                   $html.='find-friend-actions';
-			$html.=' opacity_link" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'"><i class="small-icon icon-action"></i> Действия <i class="small-icon icon-grey-arrow"></i></span>';
+			$html.='</div>';
 		}
-		$html.='</div>';
+		else $html.='<div class="tools_block hide absolute tx_r">
+                            <span class="fl_l">
+                               <a href="#" class="add_new_friend opacity_link" data-user="'.$friend['user_wp'].'" data-name="'.$friend['firstname'].' '.$friend['lastname'].'"><i original-title="Добавить в друзья" class="tipN active small-icon icon-add-friend"></i></a>
+                                <a href="#" class="opacity_link"><i original-title="Сделать подарок" class="tipN active small-icon icon-gift"></i></a>
+                                <a href="#" class="opacity_link"><i original-title="Написать сообщение" class="tipN active small-icon icon-chat"></i></a>
+                                <a href="#" class="opacity_link"><i original-title="Пригласить" class="tipN active small-icon icon-invite"></i></a>
+                            </span>
+                        </div>';
+    $html.='</div>';
 		return $html;
 	}
 
@@ -82,6 +100,7 @@
 				$avatar = ShowAvatar($arr_users,70,70);
 				for($i=0; $i <  count($friends); $i++){
 					$friend = $USER->Info_min($friends[$i]['user_wp'],0,0);
+					$krugi=$MYSQL->query("SELECT `krug_id`, `name_".LANG_SITE."` `name` FROM `pfx_krugi` WHERE `show`=1");
 					$checkin = "";
 					if(@$friends[$i]['checkin']) $checkin = "<em></em>";
 					$cart=array(

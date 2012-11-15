@@ -1,6 +1,6 @@
 body {
     font-family: Helvetica, Arial, sans-serif;
-    color: #75849c;
+    color: #485465;
     font-size: 62.5%;
     background-color: #fff;
 }
@@ -15,7 +15,7 @@ a:visited {
 */
 
 a {
-    text-decoration: none;
+    text-decoration: none;t
     color: #92929C;
 }
 /* Структура страницы
@@ -29,6 +29,7 @@ a {
 #sidebar {
     width: 200px;
     color: #5B677F;
+    position: relative !important;
 }
 
 #sidebar .status-icon {
@@ -310,7 +311,7 @@ a {
 }
 
 .sidebar-menu li.active a {
-/*     font-weight: bold; */
+    font-weight: bold;
     color: #4f72ab;
 }
 
@@ -422,7 +423,7 @@ a {
 
 #content {
  width: 745px;
- margin-right: 29px;
+margin-right: 36px;
 }
 
 #secondary {
@@ -679,7 +680,7 @@ ul#actions li:last-child {
 
 .friend-item .content {
     position: relative;
-    zwidth: 145px;
+    width: 145px;
     height: 60px;
     padding-left: 12px;
     /*padding-bottom: 16px;*/
@@ -1116,7 +1117,6 @@ ul#actions li:last-child {
     font-size: 11px;
 }
 
-
 .timeline-elem:hover .p_r {background: #f3f9fd!important;}
 .timeline-elem:hover .p_r > .wrapped {border-right: 1px solid #E4E6EB;}
 .timeline-elem:hover .date.fl_r{margin-right: -1px;} 
@@ -1134,7 +1134,11 @@ ul#actions li:last-child {
 
 
 .timeline-elem .content .info {
-    padding-left: 15px;
+    padding-left: 5px;
+}
+
+.timeline-elem .content a {
+ color: #0e87d7;
 }
 
 .timeline-elem .content .info .description {
@@ -1208,8 +1212,12 @@ ul#actions li:last-child {
 
 .timeline-elem .action {
     font-size: 11px;
-    color: #92929c;
+    color: #485465;
     margin-bottom: 5px;
+}
+
+.timeline-elem .action a {
+    color: #485465;
 }
 
 .timeline-elem .sub-action {
@@ -1291,6 +1299,8 @@ ul#actions li:last-child {
     background-color: transparent;
     width: 270px;
     padding: 6px;
+    border: 1px solid #d9dce4;
+    border-radius: 3px;
 }
 
 .add-album-description select {
@@ -1678,12 +1688,12 @@ ul#actions li:last-child {
 }
 
 .stack:before {
-    top: 4px;
+    top: 2px;
     z-index: -10;
 }
 
 .stack:after {
-    top: 8px;
+    top: 6px;
     z-index: -20;
 }
 
@@ -1725,6 +1735,10 @@ ul#actions li:last-child {
     display: none;
 }
 
+.absolute {
+	position: absolute;
+}
+
 .imp-hide {
     display: none !important;
 }
@@ -1741,16 +1755,11 @@ ul#actions li:last-child {
     color: #464D52;
     cursor: pointer;
     font-size: 12px;
-    opacity: 0.7;
     text-decoration: none;
     -webkit-transition: opacity 0.4s ease;
        -moz-transition: opacity 0.4s ease;
          -o-transition: opacity 0.4s ease;
             transition: opacity 0.4s ease;
-}
-
-.opacity_link:hover {
-    opacity: 1;
 }
 
 .fl_l {

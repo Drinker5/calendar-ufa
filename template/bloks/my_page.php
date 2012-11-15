@@ -46,16 +46,13 @@
 	$mT=array('10051'=>'ТУР 19 ноября по Росии','10019'=>'Comedy Club Best 2011','10132'=>'Back To Bass Fall Tour 2012');
 	$mA=array('10051'=>'«Любовь спасёт мир» (2010)','10019'=>'Cамый лучший Фильм. 2011','10132'=>'Sting: The Best of 25 Years (2CD Version)');;
 ?>
-
-            <!-- <div id="content" class="fl_r<?=$USER_INFO['zvezda']==1?' cumir':''?>"> -->
 <?php if($USER_INFO['zvezda']==1){ ?>
                 <div class="banner-cumir">
                     <img src="stars/photo/<?=$USER_INFO['user_wp']?>/banner.jpg" />
                 </div>
-
                 <div class="group">
                     <div class="fl_l text-cumir">
-                        <h2 class="name blue px12 clear"><?php echo trim($USER_INFO['firstname']." ".$USER_INFO['lastname']); ?></h2>
+                        <h2 class="name blue clear"><?php echo trim($USER_INFO['firstname']." ".$USER_INFO['lastname']); ?></h2>
                         <ul class="text-l">
                         	<?php echo ($USER_INFO['town_id'] > 0)?"<li><i class=\"small-icon icon-address\"></i>г. ".$USER_INFO['town_name'].", ".$USER_INFO['country_name']."</li>":"";?>
                             <li><strong>День рождение: <?=$USER_INFO['birthday']?></strong></li>
@@ -75,7 +72,7 @@
 <?php }else{ ?>
                 <div class="group">
                     <div class="fl_l" style="width: 520px;">
-                        <h2 class="name blue px12 clear"><?php echo trim($USER_INFO['firstname']." ".$USER_INFO['lastname']); ?></h2>
+                        <h2 class="name blue clear"><?php echo trim($USER_INFO['firstname']." ".$USER_INFO['lastname']); ?></h2>
                         <ul class="text-l">
                         	<?php echo ($USER_INFO['town_id'] > 0)?"<li><i class=\"small-icon icon-address\"></i>г. ".$USER_INFO['town_name'].", ".$USER_INFO['country_name']."</li>":"";?>
 	                        <li>День рождение: <b><?=$USER_INFO['birthday']?></b></li>
@@ -288,7 +285,17 @@
 			//$places[$i]['adress'];
 			$markers_lat[$i]=$places[$i]["latitude"];
 			$markers_lon[$i]=$places[$i]["longitude"];
-			$markers.="{geometry:{'type':'Point', 'coordinates':[".$places[$i]["longitude"].",".$places[$i]["latitude"]."]}, properties:{'image':'https://dl.dropbox.com/u/23467346/pic/modernmonument.png', 'name':'".$places[$i]['name']."', 'address':'".str_replace('::', ', ', $places[$i]['adress'])."', 'id':'pin".$i."'}},";
+			$markers.="{
+				geometry:{'type':'Point', 'coordinates':[".$places[$i]["longitude"].",".$places[$i]["latitude"]."]},
+				properties:{
+					'image'  :'https://dl.dropbox.com/u/23467346/pic/modernmonument.png',
+					'name'   :'".$places[$i]['name']."',
+					'shop_id':'".$places[$i]['shop_id']."',
+					'rating' :'<div class=\"rating\"><a href=\"\" class=\"small-icon icon-star action\"></a><a href=\"\" class=\"small-icon icon-star action\"></a><a href=\"\" class=\"small-icon icon-star action\"></a><a href=\"\" class=\"small-icon icon-star\"></a><a href=\"\" class=\"small-icon icon-star\"></a></div>',
+					'address':'".str_replace('::', ', ', $places[$i]['adress'])."',
+					'id'     :'pin".$i."'
+				}
+			},";
 		}
 		$max_lat=max($markers_lat);
 		$min_lat=min($markers_lat);
@@ -318,13 +325,14 @@
 		}
 	}
 
-	if($myPos and $_SESSION['WP_USER']['user_wp']==$USER_INFO['user_wp']){
+	//if($myPos and $_SESSION['WP_USER']['user_wp']==$USER_INFO['user_wp']){
+	if($myPos){
 ?>
 
                 <div class="fav-places group">
                     <div class="separator no-margin-top"></div>
 	                <h4>Любимые места</h4>
-	                <div class="fancy" id="map" alt="map-wide" style="width:780px; height:172px;"></div>
+	                <div class="fancy" id="map" alt="map-wide" style="width:745px; height:172px;"></div>
 	                <a class="fl_r no c-db" href="/my-places">редактировать</a>
                 </div>
 
@@ -400,13 +408,14 @@
 							//position could not be found
 						});
 					}
+				
 				</script>
 <?php } elseif($myPos===false) { ?>
 
                 <div class="fav-places group">
                     <div class="separator no-margin-top"></div>
 	                <h4>Любимые места</h4>
-	                <div class="fancy" id="map" alt="map-wide" style="width:780px; height:172px;"></div>
+	                <div class="fancy" id="map" alt="map-wide" style="width:745px; height:172px;"></div>
 	                <?php echo ($_SESSION['WP_USER']['user_wp']==$USER_INFO['user_wp'])?"<a class=\"fl_r no c-db\" href=\"/my-places\">редактировать</a>":""; ?>
                 </div>
 
@@ -435,32 +444,23 @@
 
 						//Смещение к координатам маркера
 						MM.addEvent(img, 'click', function(e){
+							console.log('Zoom: '+map.zoom()+'. Move: '+moveMarker(map.zoom())+'.');
 							map.ease.location({
-								lat:f.geometry.coordinates[1],
+								lat:(f.geometry.coordinates[1]+moveMarker(map.zoom())),
 								lon:f.geometry.coordinates[0]
 							}).zoom(map.zoom()).optimal();
-							$('.marker-image').attr({src:f.properties.image});
-							img.setAttribute('src', 'https://dl.dropbox.com/u/23467346/pic/alien.png');
-							$('.place').removeClass('active');
-							$('.place[rel='+f.properties.id+']').fadeOut(function(){
-								setTimeout(function(){
-									$('.place[rel='+f.properties.id+']').prependTo('.places-list').fadeIn(function(){
-										setTimeout(function(){
-											$('.place[rel='+f.properties.id+']').addClass('active');
-										},
-										1);
-									});
-								},
-								300);
-							});
+							//$('.marker-image').attr({src:f.properties.image});
+							//img.setAttribute('src', 'https://dl.dropbox.com/u/23467346/pic/alien.png');
 						});
 						return img;
 					});
+					
 					map.addLayer(markerLayer);
 					mapbox.markers.interaction(markerLayer).formatter(function(feature){
-						var o='<b>'+feature.properties.name+'</b><br />'+feature.properties.address;
+						var o='<div class="title"><a href="/shop-'+feature.properties.shop_id+'">'+feature.properties.name+'</a></div>'+feature.properties.rating+' <div class="adress">'+feature.properties.address+'</div><div class="info"><i class="small-icon icon-check-in-green"></i> 214 <br><span><b>checkins</b></span></div><div class="info right"><i class="small-icon icon-gift-green"></i> 214 <br><span><b>подарков</b></span></div><div class="down-arrow"></div>';
 						return o;
 					});
+					
 				</script>
 <?php } ?>
 
@@ -515,7 +515,7 @@
                 <!-- <div class="feed-events"> -->
                 	<div class="timeline" id="idLenta"><?=LentaList($USER_INFO['user_wp'],5,0)?></div>
                 	<div id="loadmoreajaxloader" style="display:none; text-align:center;"><img src="/pic/loader.gif" alt="loader" width="32" height="32" /></div>
-                <!-- </div> -->
+                <!-- </div> --></div>
 
 				<script type="text/javascript">
 					var page   = 1,
@@ -678,6 +678,23 @@
 							myLenta();
 						}
 					});
+
+					setInterval(function(){
+						$.ajax({
+							url:'/jquery-comments',
+							type:'POST',
+							data:{type:'autoload',time:'<?=date('Y-m-d H:i:s')?>'},
+							cache:false,
+							success: function(data){
+								var html;
+
+								if(data){
+									html=jQuery.parseJSON(data);
+									$('#idLenta').append(html.html);
+								}
+							}
+						});
+					},60000);
 
 /*
 					jQuery(function($){

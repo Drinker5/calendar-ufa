@@ -15,7 +15,6 @@
 
 
 ?>
-            <div id="content" class="fl_r">
                <div class="title margin">
                   <h2>Подарки</h2>
                </div>
@@ -320,4 +319,3 @@
 		       });
             </script>
 
-            </div>

@@ -14,7 +14,6 @@
     $subs_count=countGifts($type_id,$gr_id,0,$cID,$cFrom*100,$cTo*100); //Add Function
     $rows=20;
 ?>
-            <div id="content" class="fl_r">
                 <div class="title margin">
                     <h2>Подарки</h2>
                     <div class="separator"></div>
@@ -191,4 +190,3 @@
                 <div class="separator"></div>
                 <div class="group" id="idGifts"><?=searchGifts($type_id,$gr_id,$rows,0,1,'html',0,$cID,$cFrom*100,$cTo*100)?></div>
                 <div id="loadmoreajaxloader" style="display:none; text-align:center;"><img src="/pic/loader.gif" alt="loader" width="32" height="32" /></div>
-            </div>

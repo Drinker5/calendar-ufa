@@ -426,7 +426,7 @@ $(document).ready(function() {
  });
 function forget_password(element)
 {
-  var email = $('#recover forget_email').val();
+  var email = $('#recover input[name=forget_email]').val();
   $.ajax({
     url:'/jquery-forgot',
     cache:false,

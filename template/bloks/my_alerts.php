@@ -47,13 +47,13 @@ else
         <li class="opacity_link"><a href="/my-profile">Мой профиль</a></li>
         <li class="opacity_link"><a href="/my-phones">Телефон</a></li>
         <!--<li class="opacity_link"><a href="/my-wallets">Счет</a></li>-->
-        <li class="opacity_link"><a class="active" href="/my-alerts">Оповещения</a></li>
+        <li class="opacity_link active"><a href="/my-alerts">Оповещения</a></li>
         <li class="opacity_link"><a href="/my-avatar">Изменить аватар</a></li>
         <li class="opacity_link"><a href="/my-password">Изменить пароль</a></li>
         <!--<li class="opacity_link"><a href="/my-subscribes">Подписки</a></li>-->
     </ul>
 </div>
-<div class="tools_block">
+<div class="tools_block" style="width:auto;">
     <p id='msg'><?=@$msg?></p>
     <form action="/my-alerts" method="POST">
         <div class="tools">

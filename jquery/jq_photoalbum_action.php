@@ -109,21 +109,24 @@ elseif(isset($_POST['type'])){
 		break;
 		
 		case 'add': // Добавляем новый фотоальбом
-			if(isset($_POST['title']) && strlen($_POST['title']) > 0 && isset($_POST['photos']) && is_array($_POST['photos']) && isset($_POST['circles']) && is_array($_POST['circles'])){
-				foreach($_POST['circles'] as $key=>$value)
-	              $pravo[] = array('krug_id'=>varr_int($value));
-	            $pravo = serialize($pravo);
-	            $GLOBALS['PHP_FILE'] = __FILE__; $GLOBALS['FUNCTION'] = __FUNCTION__;
-	            $album_id = $MYSQL->query("INSERT INTO pfx_users_photos_album (data_add,user_wp,header,opis,pravo) VALUES (now(),".varr_int($_SESSION['WP_USER']['user_wp']).",'".varr_str($_POST['title'])."','".varr_str($_POST['opis'])."','$pravo')");
-	            if($album_id > 0){
-	               foreach($_POST['photos'] as $key=>$value){
-	            	$MYSQL->query("INSERT INTO pfx_users_photos (album_id,user_wp,header,domen,photo,logo) VALUES ($album_id,".varr_int($_SESSION['WP_USER']['user_wp']).",'".varr_str($value['opis'])."','".upload_url."','".basename($value['img'])."',".varr_int($value['main']).")");
-	               }
-	               $USER->AddDeystvie(0,0,4,$album_id);
-	               echo 'ok';
-	            }
+			if(isset($_POST['title']) && strlen($_POST['title']) > 0 && isset($_POST['photos']) && is_array($_POST['photos']) /*&& is_array($_POST['circles'] && isset($_POST['circles'])*/ ){
+				if(isset($_POST['circles'])){
+					foreach($_POST['circles'] as $key=>$value)
+					  $pravo[] = array('krug_id'=>varr_int($value));
+				}
+				else $pravo[] = array('krug_id'=>'0');
+					$pravo = serialize($pravo);
+					$GLOBALS['PHP_FILE'] = __FILE__; $GLOBALS['FUNCTION'] = __FUNCTION__;
+					$album_id = $MYSQL->query("INSERT INTO pfx_users_photos_album (data_add,user_wp,header,opis,pravo) VALUES (now(),".varr_int($_SESSION['WP_USER']['user_wp']).",'".varr_str($_POST['title'])."','".varr_str($_POST['opis'])."','$pravo')");
+					if($album_id > 0){
+					   foreach($_POST['photos'] as $key=>$value){
+						$MYSQL->query("INSERT INTO pfx_users_photos (album_id,user_wp,header,domen,photo,logo) VALUES ($album_id,".varr_int($_SESSION['WP_USER']['user_wp']).",'".varr_str($value['opis'])."','".upload_url."','".basename($value['img'])."',".varr_int($value['main']).")");
+					   }
+					   $USER->AddDeystvie(0,0,4,$album_id);
+					   echo 'ok';
+					}
 			} else {
-				echo "<font style=\"color:red\">Ошибка передачи обязательных параметров</font>";
+				echo "Выберите настройки приватности";
 	            exit();
 			}
 		break;

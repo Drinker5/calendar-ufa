@@ -32,6 +32,8 @@
 		<script type="text/javascript" src="/js/plugins/ui/jquery.tipsy.js"></script>
 		<script type="text/javascript" src="/js/jkerny.min.js"></script>
 
+		<script type="text/javascript" src="/js/jquery.jnotify.js"></script>
+		<script type="text/javascript" src="/js/jquery.titlealert.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.uniform.js"></script>
 
 <?php
@@ -246,7 +248,7 @@ doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veri
 		</script>
 <?php
 	}
-	if(@$_URLP[1]=='friends'){
+	if(@$_URLP[1]=='friends' or @$_URLP[1]=='findfriends'){
 ?>
 		<script id="subscriber-action-template" type="text/template">
 			<div>
@@ -290,14 +292,11 @@ doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veri
 		<script id="my-friend-action-template" type="text/template">
 			<div data-id="{{{friend-id}}}" class="friend-id">
 				<ul class="friend-actions">
-					<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
-					<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
-					<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
-					<li><a href="#" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
-					<div class="separator"></div>
 					{{#friend-krugi}}
 						<li><label class="crcledt"><input type="checkbox"{{#checked}} checked="checked"{{/checked}} value="{{{krug_id}}}" />{{{name}}}</label></li>
 					{{/friend-krugi}}
+					<div class="separator"></div>
+					<li><a href="#" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}" data-list="true"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
 				</ul>
 			</div>
 		</script>
@@ -308,7 +307,7 @@ doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veri
 					<li><a href="#"><i class="small-icon icon-gift"></i> Сделать подарок</a></li>
 					<li><a href="#"><i class="small-icon icon-chat"></i> Начать чат</a></li>
 					<li><a href="#"><i class="small-icon icon-invite"></i> Отправить приглашение</a></li>
-					<li><a href="#" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
+					<li><a href="#" class="id_friend_del" data-user="{{{friend-wp}}}" data-name="{{{friend-name}}}" data-list="true"><i class="small-icon icon-delete-friend"></i> Убрать из друзей</a></li>
 				</ul>
 			</div>
 		</script>

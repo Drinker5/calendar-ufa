@@ -47,7 +47,7 @@ function showAvatarsSlider($user_id)
 						</div>
 						<div class="separator"></div>
 						<ul class="profile-actions group">
-							<li><a href="#" class="big-circle-icon circle-icon-make-gift"></a><br />Сделать подарок</li>
+							<li><a href="/type-5" class="big-circle-icon circle-icon-make-gift"></a><br />Сделать подарок</li>
 							<li><a href="#" class="big-circle-icon circle-icon-chat"></a><br />Начать чат</li>
 							<li><a href="#" class="big-circle-icon circle-icon-invite"> </a><br />Пригласить</li>
 						</ul>
@@ -152,8 +152,9 @@ function showAvatarsSlider($user_id)
 							<span class="notice-wrap"><?=$count_gifts?></span>
 						</li>
 						<li<?php if(@$_URLP[1]=='friends')echo ' class="active"'; ?>>
-							<a href="/my-friends"><i class="menu-icon icon-whos-near"></i> Мои друзья</a>
-							<span class="notice-wrap popover-btn" id="add-friend"><i class="menu-icon icon-green-plus"></i></span>
+							<a href="/my-friends"><i class="menu-icon icon-man-near"></i> Мои друзья</a>
+							<!--span class="notice-wrap popover-btn" id="add-friend"><i class="small-icon icon-green-plus"></i></span-->
+							<span class="notice-wrap"><?=$USER->CountFriends(0, $_SESSION['WP_USER']['user_wp'])?></span>
 						</li>
 						<li<?php if(@$_URLP[1]=='wishes')echo ' class="active"'; ?>>
 							<a href="/my-wishes"><i class="menu-icon icon-wish"></i> Мои желания</a>
@@ -168,6 +169,9 @@ function showAvatarsSlider($user_id)
 							<a href="/my-photoalbums"><i class="menu-icon icon-photoalbum"></i> Мои фотоальбомы</a>
 						</li>
 						<div class="separator"></div>
+						<li<?php if(@$_URLP[1]=='findfriends')echo ' class="active"'; ?>>
+							<a href="/my-findfriends"><i class="menu-icon icon-search-friend"></i> Поиск друзей</a>
+						</li>
 						<li<?php if(@$_URLP[1]=='feed')echo ' class="active"'; ?>>
 							<a href="/my-feed"><i class="menu-icon icon-address"></i> Лента новостей</a>
 						</li>

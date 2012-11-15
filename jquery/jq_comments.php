@@ -1,6 +1,11 @@
 <?php
 switch(@$_POST['type'])
 {
+    case'autoload':
+        if(isset($_POST['id']) && $_POST['id'] > 0){
+            echo json_encode(array('html'=>''));
+        }
+    break;
     case'show':
 		if(isset($_POST['id']) && $_POST['id'] > 0 && isset($_POST['num']) && $_POST['num'] > 0){
 		  if (isset($_POST['par'])){

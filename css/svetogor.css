@@ -610,3 +610,23 @@
     font-weight: bold;
     color: #4F72AB;
 }
+
+.cumir .text-cumir {width: 320px; padding-top: 15px;}
+.cumir .photos_mini {margin: 0px;}
+.cumir .timeline .right-menu {width: 130px; height: 100%;}
+.cumir .timeline .wrapped {width: 600px;}
+.cumir .timeline .centered.wrapped {width: 490px;}
+.cumir .timeline-elem:hover .p_r > .wrapped {border: none!important;}
+.cumir .timeline-elem .sub-action {width: 140px; bottom: 40px;}
+
+.cumir .music-disc {padding: 20px 0px 20px 0px;}
+.cumir .music-disc .block {width: 42%; font-size: 10px;}
+.cumir .music-disc strong {font-size: 11px;}
+.cumir .music-disc p {margin: 5px 0px 5px 0px;}
+.cumir .music-disc .button { width: 32%;}
+.cumir .music-disc .right_blok { width: 35%;}
+.cumir .music-disc .button .wrapped, .cumir .music-disc .right_blok .wrapped {font-size: 10px;}
+.cumir .music-disc .button .wrapped {position: relative; top: 8px; left: -10px;}
+.cumir .music-disc .right_blok .wrapped {position: relative; top: 8px; left: -10px; text-align: right;}
+.cumir .music-disc img.fl_l {margin-right: 10px;}
+.cumir .music-disc img.fl_r {margin-left: 10px;}
