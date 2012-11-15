@@ -240,5 +240,10 @@ switch($_URLP[1]){
 		if(isset($_SESSION['WP_USER']))
 		require_once(path_root."jquery/jq_calendar.php");
 	break;
+
+	case 'notifications': // Уведомления
+		if(isset($_SESSION['WP_USER']))
+		require_once(path_root."jquery/jq_notifications.php");
+	break;
 }
 ?>

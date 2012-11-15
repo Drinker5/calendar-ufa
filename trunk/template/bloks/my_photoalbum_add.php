@@ -6,9 +6,11 @@ else               $user_wp=(int)$_URLP[0];
 $subs_count=$USER->CountPhotoAlbums($user_wp);
 ?>
 <div class="title margin tx_r">
-	<h2 class="tx_l">Фотоальбомы <span class="title-count">(<?=$subs_count?>)</span></h2>
+	<h2 class="tx_l">Фотоальбомы 
+	<?php if($subs_count>0) echo '<span class="title-count">('.$subs_count.')</span>';?>
+	</h2>
 	<h3 class="tx_l"> Добавить фотоальбом</h3>
-	<?php if($_URLP[0]=='my')echo '<a href="#" id="add-photo-but" class="btn btn-green" style="position: absolute; right: 0; top: 0;"><i class="small-icon icon-white-plus"></i>Добавить фото<input multiple="multiple" type="file" name="file" style="position: absolute; right: 0px; top: 0px; margin: 0px; padding: 0px; cursor: pointer; opacity: 0;"></a>';?>
+	<?php if($_URLP[0]=='my')echo '<a href="#" id="add-photo-but" class="btn btn-green" style="position: absolute; right: 0; top: 0;"><i class="small-icon icon-white-plus"></i>Добавить фото</a>';?>
 	<div class="separator"></div>
 </div>
 <?PhotoAlbumsEdit($user_wp);?>

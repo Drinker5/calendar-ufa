@@ -30,6 +30,7 @@
 						$file='bloks/my_calendar.php';
 						$TITLE='Мой календарь';
 						$scripts.="	<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/gleb.css\" />
+									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/aigul.css\" />
 									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/jquery-ui-timepicker-addon.css\" />
 									<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/fullcalendar.css\" />
 									<script type=\"text/javascript\" src=\"js/common.calendar.js\"></script>
@@ -138,7 +139,8 @@
 							<link type="text/css" rel="stylesheet" href="css/jquery.selectBox.css" />
 							<script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
 							<link type="text/css" rel="stylesheet" href="css/jquery.safari-checkbox.css" />
-							<script type="text/javascript" src="js/jquery.checkbox.min.js"></script>';
+							<script type="text/javascript" src="js/jquery.checkbox.min.js"></script>
+							<script type="text/javascript" src="js/common.friends.js"></script>';
 					break;
 
 					//!Уведомления
@@ -327,7 +329,9 @@
 			$AKCIA_INFO = $AKCIA->Show($akcia_id,185,184);
 			//if(!is_array($AKCIA_INFO)) header("Location: /".@$_SESSION['WP_USER']['user_wp']);
 			$TITLE = $AKCIA_INFO['header'];
-			if(strlen(@$_URLP[2])!=0)$file = 'bloks/gift-bring.php';
+			if(strlen(@$_URLP[3])!=0 and @$_URLP[3]=='end')$file = 'bloks/gift-end.php';
+			elseif(strlen(@$_URLP[2])!=0)$file = 'bloks/gift-bring.php';
+			
 			else                    $file = 'bloks/gift.php';
             $scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>';
 			//$scripts .= "
@@ -395,7 +399,6 @@
 
                     case 'wishes':
                         $user_wp  = (int)$_URLP[0];
-						$left_menu= 1;
 						$file ='bloks/my_wishes.php';
 						$TITLE='Желания';
 						$scripts.='<script type="text/javascript" src="js/common.wishes.js"></script>
@@ -408,6 +411,9 @@
 
 						$TITLE .= " - Фотоальбомы";
 						$file = "bloks/my_photoalbums.php";
+                        $scripts .= '<script type="text/javascript" src="js/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+            			             <script type="text/javascript" src="js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+            						 <link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />';
 						/*$scripts .= "
 							<script type=\"text/javascript\" src=\"js/jquery.mousewheel.js\"></script>
 							<link type=\"text/css\" href=\"css/jquery.jscrollpane.css\" rel=\"stylesheet\" media=\"all\" />

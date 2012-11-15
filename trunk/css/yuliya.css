@@ -244,12 +244,13 @@
 	#add-photoalbum {
 		margin-bottom: 4px;
 	}
-	.cover-photoalbum  img{
+	.cover-photoalbum img{
 		border: 2px solid #FAFBFB;
 		border-radius: 2px;
 		margin: 0;
+		width: 113px !important;
+		height: 98px !important;
 		}
-	.cover-photoalbum.stack {height: 102px!important;}
 	.album-descriptions {margin-left: 15px!important;}
 	.album-descriptions .text .photo-count{margin-top: 10px;}
 	.album-descriptions .text .date {margin-top: 2px!important;}

@@ -627,63 +627,67 @@
  * Map Pin
  */
 
-.white-pin {
-    position: relative;
-    width: 169px;
-    height: 128px;
-    
-    border: 1px solid #f2f7e3;
-    border-radius: 3px;
-
-    -webkit-box-shadow: 0 0 0 1px #94c11e,
-                        2px 3px 2px #b3b8a3;
-
-    -moz-box-shadow: 0 0 0 1px #94c11e,
-                     2px 3px 2px #b3b8a3;
-    
-    box-shadow: 0 0 0 1px #94c11e,
-                2px 3px 2px #b3b8a3;
-
-    padding: 5px 9px 0 9px;
-}
-.white-pin .down-arrow {
-    position: absolute;
-    bottom: -14px;
-    left: 50%;
-    margin-left: -10px;
-    width: 19px;
-    height: 13px;
-    background: url('../pic/pin_down_arrow.png') no-repeat;
-    border-top: 1px solid #fff;
-}
-.white-pin .title {
-    color: #0d86d5;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 15px;
-}
-.white-pin .rating {
-    margin-top: 3px;
-}
-.white-pin .adress {
-    margin-bottom: 15px;
-}
-.white-pin .info {
-    width: 67px;
-    display: inline-block;
-    text-align: center;
-    font-size: 14px;
-    line-height: 16px;
-    font-weight: bold;
-    color: #95c11f;
-}
-.white-pin .info.right {
-    margin-left: 31px;
-}
-.white-pin .info span {
-    font-size: 11px;
-    font-weight: normal;
-}
+	div.marker-popup{
+		position:relative;
+		z-index:10000000;
+		width: 169px;
+		/*height: 128px;*/
+		border: 1px solid #f2f7e3 !important;
+		border-radius: 3px;
+		-webkit-box-shadow: 0 0 0 1px #94c11e, 2px 3px 2px #b3b8a3 !important;
+		-moz-box-shadow:    0 0 0 1px #94c11e, 2px 3px 2px #b3b8a3 !important;
+		box-shadow:         0 0 0 1px #94c11e, 2px 3px 2px #b3b8a3 !important;
+		padding: 5px 9px 5px 9px !important;
+		/*top:26px;*/
+	}
+	.marker-popup .down-arrow{
+		position: absolute;
+		bottom: -14px;
+		left: 50%;
+		margin-left: -10px;
+		width: 19px;
+		height: 13px;
+		background: url('../pic/pin_down_arrow.png') no-repeat;
+		border-top: 1px solid #fff;
+	}
+	.marker-popup .title, .marker-popup .title a {
+		color: #0d86d5;
+		font-weight: bold;
+		font-size: 12px;
+		line-height: 15px;
+	}
+	.marker-popup .rating {
+		margin-top: 3px;
+	}
+	.marker-popup .adress {
+		margin-bottom: 15px;
+	}
+	.marker-popup .info {
+		width: 67px;
+		display: inline-block;
+		text-align: center;
+		font-size: 14px;
+		line-height: 16px;
+		font-weight: bold;
+		color: #95c11f;
+	}
+	.marker-popup .info.right {
+		margin-left: 31px;
+	}
+	.marker-popup .info span {
+		font-size: 11px;
+		font-weight: normal;
+	}
+	.marker-popup:after {
+		border-top-color:#fff;
+		border-width:0 !important;
+		margin-left:0 !important;
+	}
+	.marker-popup:before {
+		border-top-color:#f2f7e3 !important;
+		border-width:0 !important;
+		margin-left:0 !important;
+	}
 
 /**
  * Comments

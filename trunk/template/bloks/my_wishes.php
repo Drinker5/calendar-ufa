@@ -24,7 +24,7 @@
  $par = '';
 
  if(is_array($wish_array)){
-     echo "<div id=\"content\" class=\"fl_r\">
+     echo "
              <div class=\"title margin\">
                 <h2 id=\"count_wishes\">$header<span class=\"title-count\">(".$wish_array['all'].")</span></h2>
              </div>

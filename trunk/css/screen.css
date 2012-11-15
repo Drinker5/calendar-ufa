@@ -1,4 +1,3 @@
-/* Import stylesheets and hide them from IE/Mac \*/
 @import url("reset.css");
 @import url("master.css");
 @import url("stanislav.css");
@@ -17,4 +16,3 @@
 @import url("yury.css");
 @import url("yuliya.css");
 @import url("fonts.css");
-/* end import/hide */

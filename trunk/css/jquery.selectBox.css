@@ -31,9 +31,9 @@
 	display: block;
 	white-space: nowrap;
 	overflow: hidden;
-	font-weight: bold;
+	font-weight: normal;
 	font-size: 12px;
-	color: #4f72ab;
+	color: #665;
 }
 
 .selectBox-dropdown .selectBox-arrow {
@@ -147,4 +147,14 @@
 .selectBox-inline.selectBox-disabled .selectBox-options A {
 	background-color: transparent !important;
 	text-decoration:none;
+}
+
+.ui-combobox-input {
+ font-weight: normal !important;
+ color: #665 !important;
+ font-size: 11px !important;
+}
+
+.input_block {
+ font-weight: normal !important;
 }

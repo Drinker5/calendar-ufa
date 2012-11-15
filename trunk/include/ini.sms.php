@@ -5,7 +5,7 @@
 class T_SMS{
     var $user = 'mymobigift';
     var $password = 'sms3452255';
-    var $response = 'GiftByNet';
+    var $response = 'Tooeezzy';
     //var $response = 'MyMobiGift';
     //var $response = 'WebPassport';    
     var $status = 1;

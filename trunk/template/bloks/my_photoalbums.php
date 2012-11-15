@@ -37,7 +37,9 @@
     else {
 ?>
     <div class="title margin tx_r">
-	    <h2 class="tx_l">Фотоальбомы <span class="title-count">(<?=$subs_count?>)</span></h2>
+	    <h2 class="tx_l">Фотоальбомы 
+		<?php if($subs_count>0) echo '<span class="title-count">('.$subs_count.')</span>';?>
+		</h2>
 	    <?php if($_URLP[0]=='my')echo '<a href="/my-photoalbums-add" class="btn btn-green"><i class="small-icon icon-white-plus"></i>Добавить фотоальбом</a>';?>
 	    <div class="separator"></div>
     </div>
@@ -54,21 +56,19 @@
 		'transitionOut'	: 'none',
 	});
 	var page=1, max=<?=ceil($subs_count/$rows)?>, rows=<?=$rows?>, begin=rows;
-    $('#delete').live('click',function(){
+	$('.delete').live('click',function(){
  		if(confirm('Удалить выбранный альбом?')){
-			 $.ajax({
-	         url:'/jquery-photoalbumaction',
-	         cache:false, type:'POST',
-	         data: {type:'delete',album_id:$('#СЮДА ВПИСАТЬ ID БЛОКА').val()},
-	         success:function(result){
-	      	    if(result == 'ok'){
-	      		  location.href = '/my-photoalbums';
-	      	    } else {alert(result);}
+			var id = parseInt($(this).attr('id'));
+			$('#div'+id).remove();
+			$.ajax({
+			url:'/jquery-photoalbumaction',
+			cache:false, type:'POST',
+			data: {type:'delete',album_id:id},
+			success:function(result){
+				if(result == 'ok'){
+				} else {alert('Не удалось удалить');}
 	         }
 	      });
-			
- 		   var id = parseInt($(this).attr('rel'));
- 		   $('#div'+id).remove();
  		}
     });
 	

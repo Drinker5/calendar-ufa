@@ -34,12 +34,28 @@ div.modal_page_img
     -o-border-radius: 2px;
     border-radius: 2px;
     margin-bottom: 20px;
+    width:auto;
+    height:auto;
 }
 #button-group
 {
     float:right;
 }
-div#img
+div.modal_page_img > #img
 {
-    margin: 15px 0;
+    margin: 15px auto;
+    width:auto;
+    height:auto;
+
+}
+
+.modal_page_img > #close_but
+{
+    margin:0;
+    top:0;
+    right:0;
+}
+.btn a
+{
+    color: white;
 }

@@ -80,9 +80,9 @@
 				);
 
 				$html.='<div class="subscr_block fl_l"><div class="bordered big-avatar fl_l"><a href="/shop-'.$value['shop_id'].'"><img src="'.$value['shop_logo'].'" /></a></div><div class="subscr_content wrapped"><a class="name popover-btn" href="#" rel="'.$stamp.'" data-content="'.htmlspecialchars(json_encode($cart)).'">'.$value['shop_name'].'</a><br />';
-				foreach($value['shop_groups'] as $key2=>$value2){
-					$html.='<span class="section">'.$value2['name'].'</span><br />';
-				}
+//				foreach($value['shop_groups'] as $key2=>$value2){
+//					$html.='<span class="section">'.$value2['name'].'</span><br />';
+//				}
 				$html.='<a href="#" class="delete_subscr opacity_link del_subscribe" data-shop="'.$value['shop_id'].'"><i class="small-icon icon-delete"></i> Удалить</a></div></div>';
 			}
 

@@ -606,7 +606,7 @@
                                         <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
                                         <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                     </div>
-                                    <p class="action">'.($massFeed[$i]['user']['user_wp']==$user_wp?'У меня новости':'Оставил сообщение').'</p>
+                                    <p class="action">'.($massFeed[$i]['user']['user_wp']==$user_wp?'У меня новости':'Оставил'.(@$userInfo['sex']==2?'а':'').' сообщение').'</p>
                                     <div class="content group">
                                         '.$massFeed[$i]['status'].'
                                     </div>

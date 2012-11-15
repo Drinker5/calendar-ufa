@@ -1712,80 +1712,78 @@ class T_USERS {
 		global $MYSQL;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
-	    $GLOBALS['FUNCTION'] = __FUNCTION__;
+		$GLOBALS['FUNCTION'] = __FUNCTION__;
 
-	    $tbfriends = "pfx_users_friends";
-	    $tbusers   = "pfx_users";
-	    $tbuserstars = "pfx_users_stars";
-	    $tbfriendscircle = "pfx_users_krugi";
-	    $where = "";
-	    $par     = varr_int($par);
-	    $rows    = varr_int($rows);
+		$tbfriends = "pfx_users_friends";
+		$tbusers   = "pfx_users";
+		$tbuserstars = "pfx_users_stars";
+		$tbfriendscircle = "pfx_users_krugi";
+		$where = "";
+		$par     = varr_int($par);
+		$rows    = varr_int($rows);
 		$page    = varr_int($page-1);
 		$begin   = varr_int($page*$rows);
 		$circle  = varr_int($circle);
 
-	    $fio_ru = $fio;
-	    //$fio_en = translit_ru($fio_ru);
+		$fio_ru = $fio;
+		//$fio_en = translit_ru($fio_ru);
 
-	    $fio_array = explode(" ",$fio_ru);
-	    if(is_array($fio_array)){
-	       $i=0;
-	       foreach($fio_array as $key=>$value){
-	       	 $i++;
-	       	 if($i%2){} else @$where .= " OR ";
-	       	   $where .= "$tbusers.lastname LIKE '$value%' OR $tbusers.firstname LIKE '$value%'";
-	       }
-	    }
+		$fio_array = explode(" ",$fio_ru);
+		if(is_array($fio_array)){
+			$i=0;
+			foreach($fio_array as $key=>$value){
+				$i++;
+				if($i%2){} else @$where .= " OR ";
+				$where .= "$tbusers.lastname LIKE '$value%' OR $tbusers.firstname LIKE '$value%'";
+			}
+		}
 
 		if($rows!=0) $limit = " LIMIT $begin,$rows"; else $limit = "";
 
-	    switch($par){
-	    	case 0: // Поиск всех пользователей
-	    		return $MYSQL->query("SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, IFNULL($tbusers.zvezda,0) zvezda
-	                                         FROM $tbusers
-	                                         WHERE $tbusers.user_wp <> ".(int)$_SESSION['WP_USER']['user_wp']." AND
-	                                         ($where)
-											 $limit
-	                                         ");
-	    	break;
+		switch($par){
+			case 0: // Поиск всех пользователей
+				return $MYSQL->query("
+					SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, IFNULL($tbusers.zvezda,0) zvezda
+					FROM $tbusers
+					WHERE $tbusers.user_wp <> ".(int)$_SESSION['WP_USER']['user_wp']." AND ($where)
+					$limit
+				");
+				break;
 
-	    	case 1: // Поиск в списке друзей
-	    	    $inner = ""; $where2 = "";
-	    	    if($circle >= 2){
-	    	    	$inner  = "INNER JOIN $tbfriendscircle ON $tbfriendscircle.friends_id = $tbfriends.id";
-	    	    	$where2 = " AND $tbfriendscircle.krug_id = $circle ";
-	    	    }
-	    		return $MYSQL->query("SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, $tbfriends.good, IFNULL($tbusers.zvezda,0) zvezda
-	                                         FROM $tbfriends
-	                                          INNER JOIN $tbusers ON $tbusers.user_wp = $tbfriends.friend_wp
-	                                          $inner
-	                                         WHERE $tbfriends.user_wp = ".(int)$_SESSION['WP_USER']['user_wp']." AND $tbfriends.good=1 AND
-	                                         ($where) $where2
-							                 $limit
-	                                         ");
-	    	break;
+				case 1: // Поиск в списке друзей
+					$inner = ""; $where2 = "";
+					if($circle >= 2){
+						$inner  = "INNER JOIN $tbfriendscircle ON $tbfriendscircle.friends_id = $tbfriends.id";
+						$where2 = " AND $tbfriendscircle.krug_id = $circle ";
+					}
+					return $MYSQL->query("
+						SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, $tbfriends.good, IFNULL($tbusers.zvezda,0) zvezda, $tbfriends.id AS fid
+						FROM $tbfriends
+						INNER JOIN $tbusers ON $tbusers.user_wp = $tbfriends.friend_wp
+						$inner
+						WHERE $tbfriends.user_wp = ".(int)$_SESSION['WP_USER']['user_wp']." AND $tbfriends.good=1 AND ($where) $where2
+						$limit
+					");
+				break;
 
-	    	case 2: // Поиск в списке ЗВЕЗД
-	    	    return $MYSQL->query("SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, IFNULL($tbusers.zvezda,0) zvezda
-	                                         FROM $tbusers
-	                                         WHERE IFNULL($tbusers.zvezda,0) = 1 AND
-	                                         ($where)
-											 $limit
-	                                         ");
-	    	break;
+				case 2: // Поиск в списке ЗВЕЗД
+					return $MYSQL->query("
+						SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, IFNULL($tbusers.zvezda,0) zvezda
+						FROM $tbusers
+						WHERE IFNULL($tbusers.zvezda,0) = 1 AND ($where)
+						$limit
+					");
+				break;
 
-	    	default: // Поиск по звезным категориям
-	    		return $MYSQL->query("SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, IFNULL($tbusers.zvezda,0) zvezda
-	                                         FROM $tbusers
-	    		                            INNER JOIN $tbuserstars ON $tbuserstars.user_wp = $tbusers.user_wp
-	                                         WHERE IFNULL($tbusers.zvezda,0) = 1 AND $tbuserstars.star_id = $par AND
-	                                         ($where)
-											 $limit
-	                                         ");
-	    	break;
-
-	    }
+				default: // Поиск по звезным категориям
+					return $MYSQL->query("SELECT DISTINCT $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.otchestvo, IFNULL($tbusers.zvezda,0) zvezda
+					FROM $tbusers
+					INNER JOIN $tbuserstars ON $tbuserstars.user_wp = $tbusers.user_wp
+					WHERE IFNULL($tbusers.zvezda,0) = 1 AND $tbuserstars.star_id = $par AND ($where)
+					$limit
+				");
+			break;
+		}
 	}
 
 

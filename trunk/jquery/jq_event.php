@@ -27,7 +27,7 @@
                                         <h3 class="name fl_l"><a href="/'.$userInfo['user_wp'].'">'.$userInfo['firstname'].' '.$userInfo['lastname'].'</a></h3>
                                         <em class="date fl_r">'.ShowDateRus(date('Y-M-d H:i:s')).'</em>
                                     </div>
-                                    <p class="action">'.($user_wp==$whom?'У меня новости':'Оставил сообщение').'</p>
+                                    <p class="action">'.($user_wp==$whom?'У меня новости':'Оставил'.($userInfo['sex']==2?'а':'').' сообщение').'</p>
                                     <div class="content group">
                                         '.ToText($_POST['status']).'
                                     </div>

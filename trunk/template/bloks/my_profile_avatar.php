@@ -42,12 +42,12 @@ function getSimpleAvatarHtml($path,$id,$main=false)
         <li class="opacity_link"><a href="/my-phones">Телефон</a></li>
         <!--<li class="opacity_link"><a href="/my-wallets">Счет</a></li>-->
         <li class="opacity_link"><a href="/my-alerts">Оповещения</a></li>
-        <li class="opacity_link"><a class="active" href="/my-avatar">Изменить аватар</a></li>
+        <li class="opacity_link active"><a href="/my-avatar">Изменить аватар</a></li>
         <li class="opacity_link"><a href="/my-password">Изменить пароль</a></li>
         <!--<li class="opacity_link"><a href="/my-subscribes">Подписки</a></li>-->
     </ul>
 </div>
-<div class="tools_block">
+<div class="tools_block" style="width:auto;">
     <div class="modal_page_img" style="display: none">
         <div class="small-icon icon-close" id="close_but"></div>
         <p class='hint'>Выбранная область будет сохранена как фотография на твоей странице</p>
@@ -216,6 +216,7 @@ function getFiles(files)
 //Показываем превью с кропом и кнопками сохранения
 function CropAndSave(response)
 {
+    $('#img').width(response.w);
     $(".modal_page_img").show();
     $(".tools").hide();
     $('#image_container').html('<img src="'+response.photo+'" width="'+response.w+'" height="'+response.h+'" id="target">');

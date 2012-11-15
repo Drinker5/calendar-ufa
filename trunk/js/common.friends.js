@@ -4,6 +4,7 @@ function delfriend(that, list){
 	var id=that.data('user'),
 			name=that.data('name'),
 			frblock=that.parents('.fr-requests');
+	console.log(list);
 	if(list==false)span=$('#fr-requests');
 	else           span=$('#fr-all');
 	if(frblock.length>0)var msg='Вы действительно не хотите принимать дружбу пользователя '+name+'?';
@@ -34,19 +35,23 @@ function delfriend(that, list){
 jQuery(document).ready(function($) {
 	$('.id_friend_del').live('click', function(e){
 		e.preventDefault();
-		delfriend($(this), false);
+		var list=$(this).data('list');
+		delfriend($(this), list);
 	});
 
 	//!Добавление друга
 	$('.add_new_friend').live('click', function(e){
 		e.preventDefault();
-		var that=$(this), id=that.data('user'), name=that.data('name');
+		var that=$(this), id=that.data('user'), name=that.data('name'), frblock=that.parent('.fl_l');;
 		console.log('Нажал на кнопку добавления друга. id='+id+'. name='+name+'.');
 		$.ajax({
 			url:'/jquery-friendaction', cache:false, type:'POST', data:{friend_add:id},
-			success:function(result){
+			success:function(result){8
 				console.log(result);
-				if(result=='ok')that.removeClass('add_new_friend').html('<i class="small-icon icon-man-near"></i> Уже приглашён');
+				if(result=='ok'){
+					if(frblock.length>0)that.removeClass('add_new_friend').html('<i class="small-icon icon-man-near"></i>');
+					else that.removeClass('add_new_friend').html('<i class="small-icon icon-man-near"></i> Уже приглашён');
+				}
 			}
 		});
 	});

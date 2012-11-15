@@ -287,7 +287,7 @@ GROUP BY  `shop`.`id` ".$sort_query);
 			return $sort_shops;
 
 		}
-		function Search($query, $sort_param='name',$category=1, $sort_type='ASC', $limit=5, $offset=0)
+		function Search($query, $sort_param='name',$category=1, $flags, $sort_type='ASC', $limit=5, $offset=0)
 		{
 			global $MYSQL;
 			$GLOBALS['PHP_FILE'] = __FILE__;
@@ -296,11 +296,13 @@ GROUP BY  `shop`.`id` ".$sort_query);
 			$query = varr_str(strtolower(trim($query)));
 			$list_of_query = explode(' ', $query);
 			$query = implode('%', $list_of_query);
+			$cond_ang_join = $this-> _GetConditions($flags);
 			$result = $MYSQL->query("SELECT  `shop`.`id` AS  `shop_id` FROM  `discount_shops` AS  `shop`
 LEFT JOIN  `discount_shops_adress` AS  `adres` ON  `shop`.`id` =  `adres`.`shop_id`
 LEFT JOIN  `discount_cat_to_shop` AS  `shop_cat` ON  `shop_cat`.`shop_id` =  `shop`.`id` 
-LEFT JOIN  `discount_categories` AS  `cat` ON  `cat`.`menu_id` =  `shop_cat`.`cat_id` 
-WHERE (LOWER(`shop`.`name`) LIKE '%{$query}%' OR LOWER(`adres`.`adress`) LIKE '%{$query}%') AND (`cat`.`menu_id`=$category OR `cat`.`menu_level`=$category) 
+LEFT JOIN  `discount_categories` AS  `cat` ON  `cat`.`menu_id` =  `shop_cat`.`cat_id`
+{$cond_ang_join['join']}
+WHERE (LOWER(`shop`.`name`) LIKE '%{$query}%' OR LOWER(`adres`.`adress`) LIKE '%{$query}%') AND (`cat`.`menu_id`=$category OR `cat`.`menu_level`=$category) {$cond_ang_join['condition']} 
 GROUP BY  `shop`.`id` LIMIT {$offset},{$limit} ");
 			if ( ! (is_array($result) && count($result) > 0))
 				return 0;
@@ -314,6 +316,53 @@ GROUP BY  `shop`.`id` LIMIT {$offset},{$limit} ");
 			else
 				return 0;
 		}
+		function _GetConditions($flags)
+		{
+			$user_wp = $_SESSION['WP_USER']['user_wp'];
+			$GLOBALS['PHP_FILE'] = __FILE__;
+			$GLOBALS['FUNCTION'] = __FUNCTION__;
+			$result = array('condition'=>array(),'join'=>array());
+			if ($flags['flag-friend-here']> 0 && $flags['flag-ihere'] > 0)
+			{
+				$result['join'][] = " LEFT JOIN `pfx_users_ihere` ON `pfx_users_ihere`.`user_wp`=$user_wp OR `pfx_users_ihere`.`user_wp`=(SELECT CASE WHEN  `pfx_users_friends`.`user_wp`= $user_wp
+THEN  `pfx_users_friends`.`friend_wp` 
+ELSE  `pfx_users_friends`.`user_wp` 
+END AS `wp`
+FROM  `pfx_users_friends` 
+WHERE  (`pfx_users_friends`.`user_wp`=$user_wp
+OR  `pfx_users_friends`.`friend_wp` =$user_wp) AND `good`=1 GROUP BY `wp`) ";
+			$result['condition'][] = " `pfx_users_ihere`.`address_id` = `adres`.`id` ";
+			}
+			else
+			{
+				if ($flags['flag-ihere'] > 0){
+					$result['join'][] = " LEFT JOIN `pfx_users_ihere` ON `pfx_users_ihere`.`user_wp`=$user_wp ";
+					$result['condition'][] = " `pfx_users_ihere`.`address_id` = `adres`.`id` ";
+				}
+				if ($flags['flag-friend-here'] > 0){
+					$result['join'][] = " LEFT JOIN `pfx_users_ihere` ON `pfx_users_ihere`.`user_wp`=(SELECT CASE WHEN  `pfx_users_friends`.`user_wp`= $user_wp
+	THEN  `pfx_users_friends`.`friend_wp` 
+	ELSE  `pfx_users_friends`.`user_wp` 
+	END AS `wp`
+	FROM  `pfx_users_friends` 
+	WHERE  (`pfx_users_friends`.`user_wp`=$user_wp
+	OR  `pfx_users_friends`.`friend_wp` =$user_wp) AND `good`=1 GROUP BY `wp`) ";
+					$result['condition'][] = " `pfx_users_ihere`.`address_id` = `adres`.`id` ";
+				}
+			}
+			if ($flags['flag-act'] > 0){
+				$result['join'][] = " LEFT JOIN `pfx_akcia` ON `pfx_akcia`.`shop_id`=`shop`.`id` ";
+				$result['condition'][] = " `pfx_akcia`.`shop_id` = `shop`.`id` ";
+			}
+			$result['join'] = implode(' ', $result['join']);
+			$result['condition'] = implode(' AND ', $result['condition']);
+			if (strlen($result['condition']) > 0)
+				$result['condition']=' AND '.$result['condition'];
+
+			
+			return $result;
+		}
+		
 		function AddToFavorite($adress_id)
 		{
 			global $MYSQL;

@@ -120,9 +120,9 @@ jQuery(document).ready(function($) {
 
     $('.edit-message-link')
         .popover('content', $('#popover-message-edit').html(), true)
-        .popover('setOption', 'position', 'left')
-        .popover('setOption', 'verticalOffset', -7)
-        // .popover('setOption', 'horizontalOffset', -136)
+        .popover('setOption', 'position', 'right')
+        .popover('setOption', 'verticalOffset', 0)
+        .popover('setOption', 'horizontalOffset', 6)
         .popover('setClasses', 'payment-message edit');
         
     $('.all-info-link')
@@ -280,10 +280,10 @@ jQuery(document).ready(function($) {
     $( ".uRange" ).slider({ /* Range slider */
         range: true,
         min: 0,
-        max: $("#cTo").html(),
-        values: [ $("#cFrom").html(), $("#cTo").html() ],
+        max: 500,
+        values: [ 75, 300 ],
         slide: function( event, ui ) {
-            rAmount.html( "<span id=\"cFrom\">" + ui.values[ 0 ] + "</span> <span id=\"currency\">" + $("#currency").html() + "</span> - <span id=\"cTo\">" + ui.values[ 1 ] + "</span> <span id=\"currency\">" + $("#currency").html() + "</span>" );
+            rAmount.html( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
         }
     });
     
@@ -293,10 +293,24 @@ jQuery(document).ready(function($) {
     $('#content select').not('#country,#user_townid').selectBox();
 
 
-    $('.tipN').tipsy({gravity: 'n',fade: true, html:true});
-    $('.tipS').tipsy({gravity: 's',fade: true, html:true});
-    $('.tipW').tipsy({gravity: 'w',fade: true, html:true});
-    $('.tipE').tipsy({gravity: 'e',fade: true, html:true});
+    $('.tipN').tipsy({gravity: 'n',fade: true, html:true, live: true});
+    $('.tipS').tipsy({gravity: 's',fade: true, html:true, live: true});
+    $('.tipW').tipsy({gravity: 'w',fade: true, html:true, live: true});
+    $('.tipE').tipsy({gravity: 'e',fade: true, html:true, live: true});
+ 
+	$(window).scroll(function(){
+		if ($(this).scrollTop() > 700) {
+			$('.scrollup').fadeIn();
+		} else {
+			$('.scrollup').fadeOut(0);
+		}
+	}); 
+	
+	$('.scrollup').click(function(){
+		$("html, body").animate({ scrollTop: 0 }, 400);
+		return false;
+	});
+
 
 
 });

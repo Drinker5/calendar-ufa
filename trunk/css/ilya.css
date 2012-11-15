@@ -329,7 +329,7 @@
 /*TOOLS BLOCK*/
 label
 {
-    color: #888681;
+    color: #665;
     font-size: 12px;
     display: block;
     padding: 10px 0px 10px 0px;
@@ -337,7 +337,7 @@ label
 
 #content input[type="text"], #content input[type="password"]
 {
-    color: #9a9a9a;
+    color: #665;
     font-size: 11px;
     border: 1px solid #d9dce4;
     padding: 6px;
@@ -426,10 +426,21 @@ error
 {
     padding: 0px;
 }
+
+.tools_block .tools>.left_sidebar>dl>dt>label {
+ font-weight: bold;
+}
+
+.tools_block .tools>.left_sidebar>dl>dt>p {
+ font-weight: bold;
+ color: #665;
+}
+
 .tools_block .tools>.left_sidebar>dl>dt>label.inline_label
 {
-    color: #888681;
-    font-size: 12px;
+    color: #665;
+    font-size: 11px;
+    font-weight: normal;
     display: inline-block;
     margin: 0px 20px 0px 0px;
 }
@@ -454,14 +465,15 @@ error
 
 .tools_block .tools>.left_sidebar>dl>dt>select>option
 {
-    color: #888681;
+    color: #665;
     font-size: 12px;
 }
 .tools_block .tools>.left_sidebar>dl>dt>textarea
 {
-    color: #888681;
+    color: #665;
     font-size: 12px;
     border: 1px solid #d9dce4;
+    font-family: Helvetica, Arial, sans-serif;
     padding: 6px;
     border-radius: 3px;
     -moz-border-radius: 3px;
@@ -478,17 +490,19 @@ error
 .tools_block .tools>.right_sidebar
 {
     margin-left: 540px;
-    padding-left: 40px;
-    width: 200px;
+    padding-left: 20px;
+    margin-top: 10px;
+    width: 180px;
     border-left:  1px solid #ddd;
 }
 
 .tools_block .tools>.right_sidebar>label {
     display: block;
-    font-size: 10px;
+    font-size: 11px;
     padding: 2px 6px 2px 7px;
     text-decoration: none;
-    color: #5B677F;
+    color: #665 !important;
+    font-weight: normal;
     line-height: 15px;
     cursor: pointer;
     -webkit-transition: background-color 0.3s ease;
@@ -503,8 +517,9 @@ error
 
 .tools_block .tools>.right_sidebar>p
 {
-    color: #888681;
+    color: #665;
     font-size: 12px;
+    font-weight: normal;
 }
 /*.tools_block>.tools>.right_sidebar>label>input
 {
@@ -513,7 +528,7 @@ error
 
 
 /*TEL TOOLS*/
-.tel_tools                                                      {    width: 80%;      }
+.tel_tools { width: 80%; }
 .tel_tools .grid20, .tel_tools .grid50, .tel_tools .grid30      
 {    
     margin-left: 0px;
@@ -522,7 +537,7 @@ error
 .tel_tools label, .tel_tools input, .tel_tools select
 {
     font-size: 12px;
-    color: #888681;
+    color: #665;
 }
 .tel_tools select
 {
@@ -543,7 +558,7 @@ error
 #podpiski_tools label, #podpiski_tools input
 {
     font-size: 12px;
-    color: #888681;
+    color: #665;
     padding: 0px;
 }
 
@@ -576,7 +591,7 @@ error
 {
     font-size: 24px;
     width: 76px;
-    color: #888681;
+    color: #665;
     font-size: 12px;
     border: 1px solid #d9dce4;
     padding: 6px;
@@ -613,7 +628,7 @@ error
 #schet_tools .right_sidebar tbody tr 
 {
     font-size: 12px;
-    color: #888681;
+    color: #665;
     padding: 5px 0px 5px 5px;
     background: #fff;
     -webkit-transition: background 0.5s ease;
@@ -750,7 +765,7 @@ error
 }
 #avatar_tools .right_sidebar a
 {
-    color: #888681;
+    color: #665;
     font-size: 12px;
     line-height: 20px;
     text-decoration: none;
@@ -789,7 +804,7 @@ error
     padding: 14px 0px 14px 14px;
     border-top: 1px solid #ddd;
     font-size: 11px;
-    color: #888681;
+    color: #665;
 }
 .modal_page_img>#panel>#save_buttonus
 {
@@ -1378,7 +1393,7 @@ error
 .online_friends .sortus .selectBox{margin-top: -2px; width: 154px;}
 .online_friends .select_search-block-bottom {padding: 15px 10px 5px 10px;}
 .online_friends .select_search-block-bottom .icon-search{ top: 6px;}
-.tools_block {width: 150px; display: none; position: absolute; left: 90px; bottom: 10px; line-height: 15px; color: #5B6880; font-size: 10px; text-decoration: none; font-weight: bold;}
+.tools_block {width: 150px; left: 90px; bottom: 10px; line-height: 15px; color: #5B6880; font-size: 10px; text-decoration: none; font-weight: bold;}
 .tools_block .my-friend-actions {position: static}
 .tools_block i {margin-right: 10px}
 .friend-item:hover .tools_block {display: block}
@@ -1394,7 +1409,7 @@ error
 	position: relative;
 	border: 1px solid #cfd4df;
 	background: #f8f9f9;
-	padding: 15px 0px;
+	padding: 12px 0px;
 	margin: 20px 0;
         width: 340px;
 	-webkit-border-radius: 2px;
@@ -1409,7 +1424,7 @@ error
 .invite_a_friend .mes_block {width: 280px; padding: 16px 30px 2px 30px;}
 .invite_a_friend .mes_block textarea, .invite_a_friend .mes_block .mail
 {
-    color: #9A9A9A;
+    color: #665;
     font-size: 11px;
     font-family: Helvetica, Arial, sans-serif;
     border: 1px solid #D9DCE4;

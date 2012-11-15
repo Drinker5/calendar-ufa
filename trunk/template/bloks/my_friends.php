@@ -27,50 +27,55 @@
 <div class="title margin">
 	<h2>Друзья <span class="title-count">(<?=$friends_all?>)</span></h2>
 </div>
-
 <div class="nav-panel group">
-<?php
-	if(@$_REQUEST['t']!='request'){
-?>
-	<div class="search-friend group">
-		<div class="p_r fl_l">
-			<input type="text" class="bordered" placeholder="Введите имя друга" id="fio" onkeyup="/*this.value=this.value.replace(/[^a-zA-Zа-я-А-ЯёЁ0-9 ]+/ig,'');*/ search=true; friends(); return false;" />
-			<i class="small-icon icon-search"></i>
-		</div>
-	</div>
-<?php
-	}
-?>
-
+<div class="nav_block">
 	<ul class="fl_l left">
 		<li<?php if(!isset($_REQUEST['t']) && !isset($_REQUEST['c']))  echo ' class="active"' ?>><a href="/<?=$my?>-friends">Все <span class="black" id="fr-all">(<?=$friends_all?>)</span></a></li>
 		<li<?php if(isset($_REQUEST['t']) && $_REQUEST['t']=='online') echo ' class="active"' ?>><a href="/<?=$my?>-friends?t=online">Друзья онлайн <span class="black">(<?=$USER->CountFriends(0, $user_wp, 1)?>)</span></a></li>
 <?php
 	if($_URLP['0']=='my'){
-		echo '<li';
-		if(isset($_REQUEST['t']) && $_REQUEST['t']=='request')echo ' class="active"';
-		echo '><a href="/'.$my.'-friends?t=request">Заявки в друзья <span class="black" id="fr-requests">('.$USER->CountFriends(1, $user_wp).')</span></a></li>';
-	}
-?>
-	</ul>
-
-<?php
-	if(@$_REQUEST['t']!='request'){
-		$circles=Circles();
-		if(is_array($circles)){
-			echo '<ul class="fl_r right">';
-			foreach($circles as $key=>$value){
-				echo '<li';
-				if(@$_REQUEST['c']==$value['krug_id'])echo ' class="active"';
-				echo '><a href="/'.$my.'-friends?c='.$value['krug_id'].'">'.$value['name'].'</a></li>';
-			}
-			echo '</ul>';
+		$count_zayvki=$USER->CountFriends(1, $user_wp);
+		if($count_zayvki>0){
+			echo '<li';
+			if(isset($_REQUEST['t']) && $_REQUEST['t']=='request')echo ' class="active"';
+			echo '><a href="/'.$my.'-friends?t=request">Заявки в друзья <span class="green_stiker">+'.$count_zayvki.'</span></a></li>';
 		}
 	}
 ?>
+	</ul>
+	<div class="cleared"></div>
 </div>
+	<?php
+	if(@$_REQUEST['t']!='request'){
+?>
+<div class="search-block">
 
+        <div class="select_search-block-bottom">
+            <div class="search-friend group fl_l">
+                <div class="p_r">
+                    <input type="text" class="bordered" placeholder="Введите имя друга" id="fio" onkeyup="/*this.value=this.value.replace(/[^a-zA-Zа-я-А-ЯёЁ0-9 ]+/ig,'');*/ search=true; friends(); return false;" />
+			<i class="small-icon icon-search"></i>
+                </div>
+            </div>
+            <div class="sortus fl_r">
+                <span class="name">Сортировка по: </span>
+                <select id="region-select" class="selectBox" style="display: none; " onChange="if(value!=''){location=value}else{options[selectedIndex=0];}">
+                	<option>Выберите параметр</option>
 <?php
+		$circles=Circles();
+		if(is_array($circles)){
+			foreach($circles as $key=>$value){
+				echo '<option value="/'.$my.'-friends?c='.$value['krug_id'].'">'.$value['name'].'</option>';
+			}
+		}
+?>
+                </select>
+            </div>
+       </div>
+    </div>
+</div>
+<?php
+	}
 //!Заявки в друзья
 	if(@$_REQUEST['t']=='request' && $_URLP['0']=='my'){
 		echo '<div class="friend-container wider group">';
@@ -164,9 +169,9 @@
 			$.ajax({
 				url:'/jquery-showmyfriends', type:'POST', data:{user_wp:<?=$user_wp?>, list:begin, items:rows, circle:circle, online:'<?=$online?>', fio:fio}, cache:false,
 				success:function(data){
-					//alert(fio);
 					var html, idLenta=$('#idLenta'), newElems;
 					if(data){
+						//console.log(data);
 						if(max>page){
 							$('div#loadmoreajaxloader').hide();
 							html =jQuery.parseJSON(data);

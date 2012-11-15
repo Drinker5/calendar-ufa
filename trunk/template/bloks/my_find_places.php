@@ -23,9 +23,9 @@
                </form>
             </td>
             <td class="col3">
-                <label><div class="checker" id="uniform-undefined"><span><input type="checkbox" style="opacity: 0; "></span></div>Места, в которых я был/а</label>
-                <label><div class="checker" id="uniform-undefined"><span><input type="checkbox" style="opacity: 0; "></span></div>Места, в которых были мои друзья</label>
-                <label><div class="checker" id="uniform-undefined"><span><input type="checkbox" style="opacity: 0; "></span></div>Заведения, где проходят акции</label>
+                <label><div class="checker" id="uniform-undefined"><span><input type="checkbox" class='flags' name='ihere' style="opacity: 0; "></span></div>Места, в которых я был/а</label>
+                <label><div class="checker" id="uniform-undefined"><span><input type="checkbox" class='flags' name='friendhere' style="opacity: 0; "></span></div>Места, в которых были мои друзья</label>
+                <label><div class="checker" id="uniform-undefined"><span><input type="checkbox" class='flags' name='act' style="opacity: 0; "></span></div>Заведения, где проходят акции</label>
             </td>
         </tr>
         <tr>
@@ -317,18 +317,23 @@ shop = function()
 //коллекция всех заведений
 shops = []
 //объект поиска
-search = {params:{'search_query':'','sort':'name','category':'1','action':'search'}}
+search = {params:{'search_query':'','sort':'name','category':'1','action':'search','flag-ihere':'0','flag-friend-here':'0','flag-act':'0'}}
 search.init = function()
 {
     this.params['search_query'] = $('input[name=search_query]').val();
     this.params['sort'] = $('select[name=shop_sort]').val();
     this.params['category'] = $('div.category-icons.active input[name=category]').val();
+    this.params['flag-ihere'] = ($('input[name=ihere]').prop('checked'))?1:0;
+    this.params['flag-friend-here'] = ($('input[name=friendhere]').prop('checked'))?1:0;
+    this.params['flag-act'] = ($('input[name=act]').prop('checked'))?1:0;
+
 } 
 
 $(document).ready(function()
 {
     $('input[name=search_submit]').click(search_submit);
     $('select[name=shop_sort]').change(search_submit);
+    $('input.flags').click(search_submit_for_checkbox);
     $('div.place-love.not-fav').click(add_favorite_place);
     search_submit();
     $('a.big-category-icon').click(select_category);
@@ -349,6 +354,12 @@ function search_submit()
         }
     });
     return false;
+}
+//wrapper для функции search_submit на checkbox'ах
+function search_submit_for_checkbox()
+{
+    search_submit();
+    return true;
 }
 function add_markers(data)
 {
