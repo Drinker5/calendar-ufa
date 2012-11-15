@@ -47,14 +47,7 @@ if(isset($_POST['after'])){
 */
 switch ($op) {
 	case 'add':
-		if ($privacy==1){
-			$values = '';
-			foreach  ($PrivFriends as $key=>$value){
-				if ($value['added'])
-					$values.='(' . $value['friend_wp'] . '),';
-					$privacy=0;
-				}
-		}					
+			
 		$sql = 'INSERT INTO `discount_users_events` (
 			`owner_wp`,
 			`data_start`, 
@@ -75,9 +68,26 @@ switch ($op) {
 			 "' . $repeat . '",
 			 "' . $finish . '",
 			 "' . $privacy . '")';
+			 
+	
 		if (mysql_query($sql)) {
-			echo mysql_insert_id();
-			$USER->AddDeystvie(0,$_SESSION['WP_USER']['user_wp'],10,mysql_insert_id());
+			$event_id = mysql_insert_id();
+			echo $event_id;
+			if ($privacy==0){
+				$values = '';
+				$sql =  "INSERT INTO  `discount_users_events_visible` (`event_id` , `friend_wp`) VALUES ";
+
+				foreach  ($PrivFriends as $key=>$value){
+					if ($value['added'] == 'true')
+						$values.='(' . $event_id . ',' . $value['friend_wp'] . '),';
+				}
+				//Удаляет запятую с конца
+				if($values != ''){ $values = substr($values, 0, strlen($values)-1);
+					$sql .= $values;
+					mysql_query($sql);
+				}
+			}	
+			$USER->AddDeystvie(0,$_SESSION['WP_USER']['user_wp'],10,$event_id);
 		}
 		break;
 	case 'editdate':
