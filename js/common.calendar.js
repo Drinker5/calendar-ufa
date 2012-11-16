@@ -219,6 +219,9 @@
 			event_start.datetimepicker('setDate', start);
 			event_end.datetimepicker('setDate', end);
 			event_after.val($.datepicker.formatDate(format_for_after, end));
+			
+
+			
 			var Day = parseInt($.fullCalendar.formatDate(start, format_day),10);
 			var Month = parseInt($.fullCalendar.formatDate(start, format_month),10);
 			var Year = $.fullCalendar.formatDate(start, format_year);
@@ -243,6 +246,24 @@
 			event_repeat.selectBox("value", event.repeat);
 			event_finish.selectBox("value", event.finish);
 			event_remind.selectBox("value", event.remind);
+			
+			for(var i in event.friends){
+				var friend = event.friends[i], //TODO: тут Номер друга, а нужно имя
+						span = $("<span>").text(friend),
+						a = $("<a>").addClass("remove").attr({
+							href: "javascript:",
+							title: "Убрать " + friend
+						}).text("x").appendTo(span);
+				
+				span.attr("wp",event.friends[i]);
+				//Добавляем friend к div friend 
+				span.insertBefore("#to");
+					
+				//Удаление из списка добавленного друга
+				for(var p in suggestions){
+					if(suggestions[p].friend_wp == event.friends[i]){ suggestions[p].added = true; break; }
+				}
+			}
 			event_notes.val(event.notes);
 			
 			var Day = parseInt($.fullCalendar.formatDate(event.start, format_day),10);
@@ -465,7 +486,7 @@
 					}
 				});
 				$(this).dialog('close');
-	emptyForm();
+				emptyForm();
 			}
 		},
 		{   id: 'cancel',

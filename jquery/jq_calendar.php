@@ -109,6 +109,33 @@ switch ($op) {
 				`zametki`	  = "' . $notes . '"
 				WHERE `id` 	  = "' . $id . '"';
 		if (mysql_query($sql)) { echo $id; }
+		
+		//Не показывать никому либо Список на просмотр
+		if($privacy == 0){
+			//Количество людей которые в приватности по этой записе
+			//$sql = "SELECT * FROM `discount_users_events_visible` WHERE `event_id` = $id";
+			//$result = mysql_query($sql);
+			//$count = mysql_num_rows($result);
+			//$values = '';
+			//Ecли такие люди есть
+			//if(!$count){
+			
+			//Удалить все старые поля приватности этого эвента
+			$sql = "DELETE FROM `discount_users_events_visible` WHERE `event_id` = $id";
+			mysql_query($sql);
+
+			//Собираем запрос на вставку новых значений
+			$sql =  "INSERT INTO  `discount_users_events_visible` (`event_id` , `friend_wp`) VALUES ";
+			foreach  ($PrivFriends as $key=>$value){
+				if ($value['added'] == 'true')
+					$values.='(' . $id . ',' . $value['friend_wp'] . '),';
+			}
+			//Если есть кто-то в доступе на приватность добавляем
+			if($values != ''){
+				$sql .= substr($values, 0, strlen($values)-1);
+				mysql_query($sql);
+			}
+		}
 		break;
 	case 'source':
 		switch($type){
@@ -158,18 +185,27 @@ switch ($op) {
 			case 'user_events':
 				if(strlen($textsearch) >= 1) $searchtask = " AND `title` LIKE '%".$textsearch."%' ";
 					else $searchtask = "";
-				$sql = "SELECT *
-						FROM `discount_users_events`
+				$sql = "SELECT * FROM `discount_users_events`
 						WHERE `deleted` = 0 
 						AND `owner_wp` = ".$_SESSION['WP_USER']['user_wp']
 						.$searchtask;
 				$json = Array();
 				$result = mysql_query($sql);
-				
+						
 				$color = '#94d11f'; 
 				$textcolor = 'white';
 				$editable = true;
 				while ($row = mysql_fetch_assoc($result)) {
+					$visible_friends = Array();
+					//Если есть приватность
+					if($row['visible_all'] == 0){
+						//Смотрим id друзей которые могут видеть этот эвент
+						$sql = "SELECT * FROM `discount_users_events_visible` WHERE `event_id` = " . $row['id'];
+						$res = mysql_query($sql);
+						while ($r = mysql_fetch_assoc($res)) {
+							$visible_friends[] = $r['friend_wp'];
+						}
+					}
 					$data_after = date("Y-m-d", strtotime($row['data_after']));
 					if(isset($row['repeat']) && $row['repeat']!=0){ //Если повторять
 						switch ($row['finish']) //Завершение
@@ -197,6 +233,7 @@ switch ($op) {
 									'finish' => $row['finish'],
 									'remind' => $row['napominanie'],
 									'notes'  => $row['zametki'],
+									'friends' => $visible_friends
 								);
 							}
 						break;
@@ -222,6 +259,7 @@ switch ($op) {
 									'finish' => $row['finish'],
 									'remind' => $row['napominanie'],
 									'notes'  => $row['zametki'],
+									'friends' => $visible_friends
 								);
 								$i++;
 							}
@@ -242,6 +280,7 @@ switch ($op) {
 								'finish' => $row['finish'],
 								'remind' => $row['napominanie'],
 								'notes'  => $row['zametki'],
+								'friends' => $visible_friends
 							);
 						}
 					}
@@ -261,6 +300,7 @@ switch ($op) {
 							'finish' => $row['finish'],
 							'remind' => $row['napominanie'],
 							'notes'  => $row['zametki'],
+							'friends' => $visible_friends
 						);
 					}
 				}
