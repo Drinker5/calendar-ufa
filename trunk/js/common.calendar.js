@@ -87,7 +87,6 @@
 		event_repeat.selectBox("value", 0);
 		event_finish.selectBox("value", 0);
 		event_remind.selectBox("value", 0);
-		
 	};
 	
 	/* отображение формы После даты: */
@@ -280,17 +279,7 @@
 						break; 
 					}
 				}
-				var friend = name,
-						span = $("<span>").text(friend),
-						a = $("<a>").addClass("remove").attr({
-							href: "javascript:",
-							title: "Убрать " + friend
-						}).text("x").appendTo(span);
-				
-				span.attr("wp",event.friends[i]);
-				//Добавляем friend к div friend 
-				span.insertBefore("#to");
-
+				addtoprivacy(name,event.friends[i]);
 			}
 			
 			event_notes.val(event.notes);
@@ -442,8 +431,8 @@
 		width: 630,
 		height: 550,
 		modal: true,
-		
 		autoOpen: false,
+		close: function(){ privacy_friends.autocomplete("close"); },
 		buttons: [{
 			id: 'add',
 			text: 'Добавить',
@@ -550,28 +539,26 @@
 		}]
 	});
 	
+	function addtoprivacy(friendname,friendwp) {
+		span = $("<span>").text(friendname);
+		$("<a>").addClass("remove").attr({href: "javascript:"}).text("x").appendTo(span);
+		span.attr("wp",friendwp);
+		span.insertBefore("#to");
+	};
 	$(function(){
 		//Получаем список друзей
 		$.getJSON("/jquery-calendar?friendlist", function(data) { suggestions = data; });
 		//Присоединяем автозаполнение
-		$("#to").autocomplete({
+		privacy_friends.autocomplete({
 			minLength:0,
+			
 			source: function(req, add){	add(suggestions); },
 				
 			//Определяем обработчик селектора
 			select: function(e, ui) {
-				//Создаем форматированную переменную friend
-				var friend = ui.item.name,
-					span = $("<span>").text(friend),
-					a = $("<a>").addClass("remove").attr({
-						href: "javascript:",
-						title: "Убрать " + friend
-					}).text("x").appendTo(span);
-				
-				span.attr("wp",ui.item.friend_wp);
-				//Добавляем friend к div friend 
-				span.insertBefore("#to");
-				
+				//Добавляем в списсок
+				addtoprivacy(ui.item.name,ui.item.friend_wp);
+			
 				//Удаление из списка добавленного друга
 				for(var p in suggestions){
 					if(suggestions[p].friend_wp == ui.item.friend_wp){ suggestions[p].added = true; break; }
@@ -588,20 +575,41 @@
 			//Если друг не добавлен в список и фильтрация по введенному
 			if(item.added == false && item.name.toLowerCase().search($("#to").val().toLowerCase()) != -1 ){
 				return $( "<li>" ).data( "item.autocomplete", item )
-					.append( "<a>" + item.name + "<br>" + item.friend_wp + "</a>" )
+									/* "<img src='"+item.userpic+"'>" */
+					.append( "<a>" + "<img src='../pic/nofoto-big.jpg'>" + item.name + "<br>" + item.friend_wp + "</a>" )
 					.appendTo( ul );
 			}
         };
 		
-		//Добавляем обработчки события click для div privacy_friends
-		$("#privacy_friends").click(function(){
+		
+		privacy_friends.click(function(){
 			//Фокусируемся на поле 'Кому'
-			$("#to").focus().autocomplete( "search", "" );
+			$(this).autocomplete( "search", "" );
+			$("#to").focus();
 		});
 		
+
+		var layer = '<div id="privacy-layer" style="float:right;">'+
+						'<div title="Добавить" class="small-icon icon-green-plus" id="qwer" style=""> </div></div>';
+
+		privacy_friends.hover(
+			function(){
+				$(this).append(layer);
+				$("#qwer").hide();
+				$("#qwer").fadeIn(300);
+			},
+			function(){
+				$('#privacy-layer').remove();
+			}
+		);
+		
+		$("#to").keyup(function(){
+			privacy_friends.autocomplete( "search", "" );
+		});
 		//Добавляем обработчик для события click удаленным ссылкам
 		$(".remove", document.getElementById("privacy_friends")).live("click", function(){
-			
+			$('#privacy-layer').remove();
+			privacy_friends.autocomplete("close");
 			//Восстанавливаем в списке друзей для выбора
 			var wp = $(this).parent().attr("wp");
 			for(var p in suggestions){
@@ -613,7 +621,8 @@
 			//Корректируем положение поля 'Кому'
 			if($("#privacy_friends span").length === 0) {
 				$("#to").css("top", 0);
-			}				
+			}			
+			privacy_friends.data("autocomplete").close.apply(this);
 		});				
 	});	
 	
@@ -652,7 +661,7 @@
 		$.getJSON("/jquery-calendar?placelist", function(data) { placelist = data; });
 	});
 	place_form.dialog({
-		zIndex: 3000,
+		zIndex: 1010,
 		height: 600,
 		width: 800,
 		autoOpen: false,

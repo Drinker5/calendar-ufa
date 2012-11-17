@@ -27,8 +27,7 @@
 	<!-- Форма для эвентов  -->
 	<div id="dialog-form" title="Событие" >
 		<form>
-			<hr/> <!-- -------------------------------- -->
-		   
+				   
 			<input type="text" id="event_title" name="event_title" placeholder="Событие...">
 			<input type="text" id="event_place" name="event_place" placeholder="Место...">
 
@@ -76,7 +75,7 @@
 				Показать событие определенным друзьям: 
 				<br>
 				<div id="privacy_friends" class="ui-helper-clearfix">
-					<input placeholder="Работает!" id="to" type="text">
+					<input placeholder="Введите имя или mail друга..." id="to" type="text">
 				</div>
 			</div>
 			<textarea name="event_notes" id="event_notes" placeholder="Заметки..."></textarea>
