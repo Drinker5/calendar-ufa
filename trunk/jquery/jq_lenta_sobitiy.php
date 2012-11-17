@@ -236,13 +236,100 @@
                     </div>';
 					break;
 					case 3: // Подписка
-						$html.='';
+						$html.='<div class="timeline-elem toggle-stop group">
+                        <div class="p_r">
+                         
+                        <div class="right-menu fl_r">
+                            '.($_SESSION['WP_USER']['user_wp']==$user_wp?'':'
+                            <ul class="actions">
+                                <li>
+                                    <a href="#" class="opacity_link">
+                                            <i class="tipE small-icon active icon-watch" original-title="Посмотреть"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="opacity_link">
+                                            <i class="tipE small-icon active icon-to-me" original-title="Поместить себе"></i>
+                                    </a>
+                                </li>
+                            </ul>').'
+                        </div>
+                        <div class="wrapped">
+                            <i class="small-icon active icon-subscription active fl_l"></i>
+                            <a href="/'.$massFeed[$i]['user']['user_wp'].'" class="s-medium-avatar fl_l">
+                                <img src="'.$massFeed[$i]['user']['photo'].'" alt="">
+                            </a>
+                            '.OnlineStatus($massFeed[$i]['user']['status_chat'],'-small fl_l').'
+                            <div class="centered wrapped">
+                                <div class="group">
+                                    <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
+                                    <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
+                                </div>
+                                <p class="action">сделана подписка на <strong><a href="/shop-'.$massFeed[$i]['podpiska']['shop_id'].'">'.$massFeed[$i]['podpiska']['shop_name'].'</a></strong></p>
+                                <div class="content group">
+                                    <a href="/shop-'.$massFeed[$i]['podpiska']['shop_id'].'" class="bordered fl_l">
+                                        <img src="'.$massFeed[$i]['podpiska']['shop_logo'].'" alt="">
+                                    </a>
+                                    <div class="info wrapped">
+                                        <h3 class="name"><a href="/shop-'.$massFeed[$i]['podpiska']['shop_id'].'">'.$massFeed[$i]['podpiska']['shop_name'].'</a></h3>
+                                        <p class="description">
+        '.(strlen($massFeed[$i]['podpiska']['shop_desc'])<=250?$massFeed[$i]['podpiska']['shop_desc']:mb_substr($massFeed[$i]['podpiska']['shop_desc'],'0',250,'UTF-8').'...').'
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="sub-action">
+                            <li>
+                                <a href="#" class="opacity_link">
+                                    <i class="tipE small-icon active icon-like" original-title="Мне нравится"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="opacity_link toggle-control">
+                                    <i class="tipE small-icon active icon-comments" original-title="Комментировать"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        </div>
+                        <div class="wishlist-comments-container toggle-content no-margin-top">
+                            '.($_comCount>$maxCount?'
+                            <span class="toggle-comments tx_c pointer toggle-change" onclick="CommentsShow('.$massFeed[$i]['id'].','.$_numBegin.')">
+                                <span class="c-control-text">
+                                    Показать все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
+                                    <br>
+                                    <i class="small-icon icon-green-arrow"></i>
+                                </span>
+                                <span class="c-control-text imp-hide">
+                                    Скрыть все комментарии <span class="c-control-text-2">(<span id="comments-'.$massFeed[$i]['id'].'-count-other">'.$_numBegin.'</span>)</span>
+                                    <br>
+                                    <i class="small-icon icon-green-arrow-down"></i>
+                                </span>
+                            </span>':'').'
+                            <div id="comments-'.$massFeed[$i]['id'].'-full"></div>
+                            '.$_comments.'
+                            <div id="comments-'.$massFeed[$i]['id'].'"></div>
+                            <div class="feed-status-top group">
+                                <form action="" onsubmit="CommentsAction('.$massFeed[$i]['id'].',\'add\',\'\',0); return false;">
+                                    <div class="leave-comment">
+                                        <img src="'.$photo.'" alt="" class="commenter-avatar" width="50px" height="50px"><textarea id="comments-'.$massFeed[$i]['id'].'-add" placeholder="Комментировать..."></textarea> 
+                                    </div>
+
+                                    <div class="submit-and-info">
+                                        <button class="btn btn-green no-margin" type="submit">Отправить</button>
+                                        <span>Shift+Enter<br>
+                                        Перевод строки</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>';
 					break;
 					case 4: // Фотоальбом
 						$fotki='';
                         if(is_array($massFeed[$i]['photoalbum']['photos']))
                             foreach($massFeed[$i]['photoalbum']['photos'] as $k=>$v)
-						      $fotki.='<img src="'.$v['photo'].'" alt="" class="fl_l">';
+						      $fotki.='<a href="'.$v['photo_original'].'" rel="albumId'.$massFeed[$i]['id'].'"><img src="'.$v['photo'].'" alt="" class="fl_l"></a>';
 
 						$html.='
                     <div class="timeline-elem toggle-stop group">
@@ -275,7 +362,7 @@
                                 </div>
                                 <p class="action">Добавлен фотоальбом <strong><a href="#">"'.$massFeed[$i]['photoalbum']['header'].'" ('.$USER->CountPhotosIsAlbum($massFeed[$i]['photoalbum']['id']).')</a></strong></p>
                                 <div class="content group">
-                                    '.$fotki.'
+                                    <script>$("a[rel=albumId'.$massFeed[$i]['id'].']").fancybox({\'transitionIn\':\'none\',\'transitionOut\':\'none\',});</script>'.$fotki.'
                                 </div>
                             </div>
                         </div>

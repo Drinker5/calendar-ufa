@@ -8,9 +8,12 @@ if($varr['sname'] != '' && $varr['fname'] != '' && $varr['town_id'] > 0){
   	switch($USER->UpdateProfile($varr)){
 		case  1: 
             echo "<font style=\"color:green\">Ваш профиль успешно изменен</font>";
-            foreach ($_POST['circles'] as $key => $value) {
-                $pravo[] = array('krug_id'=>varr_int($value));
-            }
+            $pravo = array();
+            if (!isset($_POST['circles']) || !is_array($_POST['circles']))
+              $pravo[] = array('krug_id' => 0);
+            else
+              foreach ($_POST['circles'] as $key => $value)
+                  $pravo[] = array('krug_id'=>varr_int($value));
             $pravo = serialize($pravo);
             $MYSQL->query("UPDATE pfx_users SET pravo='$pravo' WHERE user_wp=".varr_int($_SESSION['WP_USER']['user_wp']));
             break;

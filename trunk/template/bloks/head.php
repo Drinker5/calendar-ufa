@@ -32,7 +32,7 @@
 		<script type="text/javascript" src="/js/plugins/ui/jquery.tipsy.js"></script>
 		<script type="text/javascript" src="/js/jkerny.min.js"></script>
 
-		<script type="text/javascript" src="/js/jquery.jnotify.js"></script>
+		<script type="text/javascript" src="/js/jnotifier.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.titlealert.min.js"></script>
 		<script type="text/javascript" src="/js/jquery.uniform.js"></script>
 

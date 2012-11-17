@@ -17,50 +17,6 @@ function getCountryList()
     return $output;  
 }
 
-
-function getRecommendUsers($offset,$count)
-{
-    global $MYSQL,$USER;
-    $count = (int)$count;
-    $offset = (int)$offset;
-    $output = '';
-    $curr_user_id = $_SESSION['WP_USER']['user_wp'];
-    $curr_town_id = $_SESSION['WP_USER']['town_id'];
-    $users = $MYSQL -> query("SELECT user_wp FROM pfx_users AS u WHERE u.user_wp <> $curr_user_id AND u.user_wp NOT IN (SELECT friend_wp FROM pfx_users_friends AS f WHERE f.user_wp = $curr_user_id) LIMIT $offset,$count");
-    if (is_array($users))
-    {
-        foreach ($users as $key => $user) {
-            $output .= userInfoHtml($user['user_wp']); 
-        }
-    }
-    return $output;
-} 
-function userInfoHtml($user_id)
-{
-    global $USER;
-    $new_usr = $USER->Info_min($user_id,70,70);
-    $output ='';
-    $output .= '<div class="friend-item fl_l">';
-    $output .= '<div class="bordered medium-avatar fl_l">';
-    $output .= '<a href="/'.$user_id.'"><img src="'.$new_usr['photo'].'" alt=""></a>';
-    $output .= '</div>';
-    $output .= '<div class="content wrapped">';
-    $output .= OnlineStatus($new_usr['status_chat']);
-    $output .= '<span class="name"><a href="/'.$user_id.'">'.$new_usr['firstname'].' '.$new_usr['lastname'].'</a></span>';
-    $output .= '<br>';
-    $output .= '<span class="place">'.$new_usr['country_name'].', '.$new_usr['town_name'].'</span>';
-    $output .= '</div>';
-    $output .= '<div class="tools_block hide absolute tx_r">
-                            <span class="fl_l">
-                               <a href="#" class="add_new_friend opacity_link" data-user="'.$user_id.'" data-name="'.$new_usr['firstname'].' '.$new_usr['lastname'].'"><i original-title="Добавить в друзья" class="tipN active small-icon icon-add-friend"></i></a>
-                                <a href="#" class="opacity_link"><i original-title="Сделать подарок" class="tipN active small-icon icon-gift"></i></a>
-                                <a href="#" class="opacity_link"><i original-title="Написать сообщение" class="tipN active small-icon icon-chat"></i></a>
-                                <a href="#" class="opacity_link"><i original-title="Пригласить" class="tipN active small-icon icon-invite"></i></a>
-                            </span>
-                        </div>';
-    $output .= '</div>';
-    return $output;
-}                                                             
 ?>
 <script id="find-friend-action-template" type="text/template">
             <ul class="friend-actions">
@@ -129,7 +85,6 @@ function userInfoHtml($user_id)
                     </table>
                 </div>
                 <div class="friend-container group">
-                    <?=getRecommendUsers(0,30) ?>
                 </div>
                 <div id="loading" style="padding-top:5px; text-align: center; display:none;"><img src="/pic/loader_clock.gif"></div>
                 <input type='hidden' value='0' id='stop_rec' name='stop_rec'/>
@@ -154,6 +109,7 @@ $(document).ready(function()
     var search_offset = 0;
     stop_rec = $('#stop_rec').val();
     stop_search = $('#stop_search').val();
+    getRecommendUsers(offset,count);
     $(window).scroll(function()
     {
         if ( ($(document).height() - $(window).height() <= $(window).scrollTop() + 300 ) && +stop_rec == 0 )
@@ -196,6 +152,112 @@ $(document).ready(function()
     });
 
 });
+search = {params:{'search_offset':'0','count':'0','sex':'0','name':'','region':'-1','marital_status':'-1','age-from':'1','age-to':'999','online':'0'}};
+search.getSex = function()
+{
+    var sex = 0;
+    if ( (isChecked('input[name=sex_m]') && isChecked('input[name=sex_f]')) || (!isChecked('input[name=sex_m]') && !isChecked('input[name=sex_f]')) )
+        sex = 0;
+    else if (isChecked('input[name=sex_m]'))
+        sex = 1;
+    else
+        sex = 2;
+    return sex;
+}
+search.init = function(search_offset,count)
+{
+    this.params['search_offset'] = search_offset;
+    this.params['count'] = count;
+    this.params['sex'] = this.getSex();
+    this.params['name'] = $('input[name=name]').val();
+    this.params['marital_status'] = $('select[name=marital-status]').val();
+    this.params['age-from'] = $('select[name=age-from]').val();
+    this.params['age-to'] = $('select[name=age-to]').val();
+    this.params['online'] =  (isChecked('input[name=online]'))?'1':'0';
+    this.params['region'] = $('select[name=region]').val();
+} 
+var template =  
+    '<div class="friend-item fl_l">'+
+    '<div class="bordered medium-avatar fl_l">'+
+    '<a href="/{{user_wp}}"><img src="{{photo}}" alt=""></a>'+
+    '</div>'+
+    '<div class="content wrapped">'+
+    '{{&online_status}}'+
+    '<span class="name"><a href="/{{user_wp}}">{{firstname}} {{lastname}}</a></span>'+
+    '<br>'+
+    '<span class="place">{{country_name}} {{town_name}}</span>'+
+    '</div>'+
+    '<div class="tools_block hide absolute tx_r">'+
+        '<span class="fl_l">'+
+            '<a href="#" class="add_new_friend opacity_link" data-user="{{user_wp}}" data-name="{{firstname}} {{lastname}}"><i original-title="Добавить в друзья" class="tipN active small-icon icon-add-friend"></i></a>'+
+            '<a href="#" class="opacity_link"><i original-title="Сделать подарок" class="tipN active small-icon icon-gift"></i></a>'+
+            '<a href="#" class="opacity_link"><i original-title="Написать сообщение" class="tipN active small-icon icon-chat"></i></a>'+
+            '<a href="#" class="opacity_link"><i original-title="Пригласить" class="tipN active small-icon icon-invite"></i></a>'+
+        '</span>'+
+    '</div>'+
+    '</div>';
+users = [];
+user = function()
+{
+    this.model = {};
+    this.template = template;
+    this.init = function(data)
+    {
+        this.model['user_wp'] = data['user_wp'];
+        this.model['photo'] = data['photo'];
+        this.model['online_status'] = data['online_status'];
+        this.model['firstname'] = data['firstname'];
+        this.model['lastname'] = data['lastname'];
+        this.model['country_name'] = data['country_name'];
+        this.model['town_name'] = data['town_name'];
+    }
+    this.render = function()
+    {
+        this.html = Mustache.to_html(this.template, this.model);
+        return this.html;
+    }
+}
+
+
+function searchUser(search_offset,count)
+{
+    search.init(search_offset,count);
+    $.ajax({url:'/jquery-invitefriends',
+            type:'POST',
+            dataType:'json',
+            data:search.params,
+            success: function(data)
+            {
+                var container = $('.friend-container');
+                $('#loading').hide();
+                var html ='';
+                if (data.found =='0'){
+                    $(container).html('<p id="msg" style="color:red;">К сожалению, по вашему запросу ничего не найдено. Попробуйте изменить условия поиска и попробуйте снова</p>');
+                    return 0;
+                }
+                var n = data.html.length;
+                for (var i = 0; i < n; i++)
+                {
+                    tmp_user = new user();
+                    tmp_user.init(data.html[i]);
+                    html += tmp_user.render();
+                }
+                $(container).append(html);
+                $('#stop_search').val(data.stop);
+                $('.popover-btn').popover({
+                    trigger: 'none',
+                    autoReposition: false
+                });
+                $(".friend-item .find-friend-actions")
+                .popover('content', $('#find-friend-action-template').html())
+                .popover('setOption', 'position', 'bottom')
+                .popover('setOption', 'horizontalOffset', -31)
+                .popover('setClasses', 'friend-action-popover');
+
+            }
+       });
+
+}
 function getRecommendUsers(offset,count)
 {
     $.ajax({url:'/jquery-recommendfriends',
@@ -208,8 +270,17 @@ function getRecommendUsers(offset,count)
             success: function(data)
             {
                 var container = $('.friend-container');
+                var html = '';
                 $('#loading').hide();
-                $(container).append(data.html);
+                var n = data.html.length;
+                for (var i = 0; i < n; i++)
+                {
+                    tmp_user = new user();
+                    tmp_user.init(data.html[i]);
+                    html += tmp_user.render();
+                    
+                }
+                $(container).append(html);
                 $('#stop_rec').val(data.stop);
                 $('.popover-btn').popover({
                     trigger: 'none',
@@ -224,6 +295,7 @@ function getRecommendUsers(offset,count)
             }
        });
 }
+
 function getAgeList(default_val)
 {
     var age_list = [];
@@ -266,55 +338,5 @@ function isChecked(selector)
     return $(selector).prop("checked"); 
 }
 
-function searchUser(search_offset,count)
-{
-    var sex = '';
-    if ( (isChecked('input[name=sex_m]') && isChecked('input[name=sex_f]')) || (!isChecked('input[name=sex_m]') && !isChecked('input[name=sex_f]')) )
-        sex = '';
-    else if (isChecked('input[name=sex_m]'))
-        sex = 1;
-    else
-        sex = 2;
-    var name = $('input[name=name]').val();
-    var region = $('select[name=region]').val();
-    var marital_status = $('select[name=marital-status]').val();
-    var age_from = $('select[name=age-from]').val();
-    var age_to = $('select[name=age-to]').val();
-    var online = (isChecked('input[name=online]'))?'1':'';
-    $.ajax({url:'/jquery-invitefriends',
-            type:'POST',
-            dataType:'json',
-            data:{
-                   search_offset  : search_offset,
-                   count          : count,
-                   sex            : sex,
-                   name           : name,
-                   region         : region,
-                   marital_status : marital_status,
-                   age_from       : age_from,
-                   age_to         : age_to,
-                   online         : online
-               },
-            success: function(data)
-            {
-                var container = $('.friend-container');
-                $('#loading').hide();
-                $(container).append(data.html);
-                if ($(container).html() == '')
-                    $(container).html('<p id="msg" style="color:red;">К сожалению, по вашему запросу ничего не найдено. Попробуйте изменить условия поиска и попробуйте снова</p>');
-                $('#stop_search').val(data.stop);
-                $('.popover-btn').popover({
-                    trigger: 'none',
-                    autoReposition: false
-                });
-                $(".friend-item .find-friend-actions")
-                .popover('content', $('#find-friend-action-template').html())
-                .popover('setOption', 'position', 'bottom')
-                .popover('setOption', 'horizontalOffset', -31)
-                .popover('setClasses', 'friend-action-popover');
 
-            }
-       });
-
-}
 </script>

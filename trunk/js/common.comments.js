@@ -11,7 +11,6 @@
        var html,
            nCount         = count.innerHTML,
            idComments     = $('#comments-' + id);
-       alert(nCount);
        if(data){
          if(type=='add'){
            nCount++;

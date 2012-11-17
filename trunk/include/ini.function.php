@@ -33,6 +33,10 @@
 	function ToText($text){
 		return htmlspecialchars($text,ENT_QUOTES,'UTF-8');
 	}
+    function varr_to_html_text($val)
+    {
+        return htmlspecialchars(stripslashes(trim($val)));
+    }
 
 //!Смайлики
 	function ShowSmile($text){
@@ -633,6 +637,74 @@ function ShowAvatar($user_wp=array(),$w=70,$h=70,$center=false){
 	     }
 	}
 	return @$array;
+}
+//Неcколько пользователей
+function ShowAvatars($user_wp_list=array(),$w=70,$h=70,$center=false){
+    global $MYSQL;
+
+    $GLOBALS['PHP_FILE'] = __FILE__;
+    $GLOBALS['FUNCTION'] = __FUNCTION__;
+    if($w == 0 or $h == 0) return '';
+
+
+    if(is_array($user_wp_list)){
+        foreach($user_wp_list as $key=>$value){
+           $domen = upload_url;
+            if(strlen($value['photo']) > 0)
+                $arrAvatars[] = array(
+                     'user_wp'  => $value['user_wp'],
+                     'avatar'   => $value['photo'],
+                     'w'        => $w,
+                     'h'        => $h,
+                     'center'   => $center,
+                );
+                 else
+                $arrAvatars[] = array(
+                     'user_wp'  => $value['user_wp'],
+                     'avatar'   => no_foto,
+                     'w'        => $w,
+                     'h'        => $h,
+                     'center'   => $center,
+                );
+           
+           
+         }
+
+         if(isset($arrAvatars) && is_array($arrAvatars)){
+            $ch = curl_init();
+              curl_setopt($ch, CURLOPT_URL, $domen);
+              curl_setopt($ch, CURLOPT_HEADER, 0);
+              curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+              curl_setopt($ch, CURLOPT_POST, 1);
+              curl_setopt($ch, CURLOPT_POSTFIELDS, 'avatar='.urlencode(serialize($arrAvatars)));
+              curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+              curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $result = objectToArray(json_decode(curl_exec($ch)));
+
+              if(curl_errno($ch) != 0){
+                 $result  = "errno: ".curl_errno($ch)."\n";
+                 $result .= "error: ".curl_error($ch)."\n";
+                 curl_close($ch);
+              } else {
+                curl_close($ch);
+
+                if(is_array($result))
+                foreach($result as $key=>$value)
+                  $array[] = array(
+                    'user_wp'  => $value['user_wp'],
+                    'avatar'   => $value['avatar'],
+                    'file'     => $value['file'],
+                  );
+              }
+         } else {
+            $array[] = array(
+                 'user_wp'  => 0,
+                 'avatar'   => no_foto,
+                 'file'     => no_foto,
+            );
+         }
+    }
+    return @$array;
 }
 
 

@@ -855,6 +855,38 @@ class T_USERS {
 			);
 		}
 	}
+	function Info_min_group($user_wp_list,$w=190,$h=190,$center=false){
+        global $MYSQL, $COUNTRY;
+        $user_wp = implode(',', $user_wp_list);
+        $GLOBALS['PHP_FILE']=__FILE__;
+        $GLOBALS['FUNCTION']=__FUNCTION__;
+        $tbusers            ="pfx_users";
+        
+        $users=$MYSQL->query("
+            SELECT `user_wp`, (YEAR(CURRENT_DATE) - YEAR(`birthday`)) - (RIGHT(CURRENT_DATE,5) < RIGHT(`birthday`,5))  AS 'year', `birthday`, IFNULL(`photo`, '') AS `photo`, `birthdayview`, `email`, `url`, `status`, `marital_status`, `mobile`, `lastname`, `firstname`, `otchestvo`, IFNULL(`zvezda`, 0) AS `zvezda`, IFNULL(`sex`, 0) AS `sex`, IFNULL(`pravo`, '') AS `pravo`, `town_id`, `pfx_country`.`parent` AS `country_id`, `pfx_country`.`name` AS `town_name`, 
+            (
+SELECT  `name` 
+FROM  `pfx_country` 
+WHERE  `id` =  `country_id`
+) AS  `country_name`,
+  `status_chat`, UNIX_TIMESTAMP(`online`) AS `online`
+            FROM `{$tbusers}` LEFT JOIN `pfx_country` ON `pfx_country`.`id`=`{$tbusers}`.`town_id` WHERE `user_wp` IN ({$user_wp})"
+            );
+        $photos = ShowAvatars($users,$w,$h,$center);
+        $n = count($users);
+        for ($i=0; $i < $n ; $i++) { 
+            $users[$i]['photo'] = $photos[$i]['avatar'];
+            if($users[$i]['online'] < time() - (60 * 10) && $users[$i]['user_wp'] != $_SESSION['WP_USER']['user_wp'])
+                $users[$i]['status_chat'] = 0;
+            $users[$i]['online_status'] = OnlineStatus($users[$i]['status_chat']);
+            $users[$i]['lastname'] = varr_to_html_text($users[$i]['lastname']);
+            $users[$i]['firstname'] = varr_to_html_text($users[$i]['firstname']);
+            $users[$i]['otchestvo'] = varr_to_html_text($users[$i]['otchestvo']);
+            $users[$i]['security'] = Security($users[$i]['user_wp'],$users[$i]['pravo']);
+        }
+        return $users;
+        
+    }
 
 //!Уведомления — количество
 	function CountUvedom(){
@@ -2186,26 +2218,30 @@ class T_USERS {
 	    			break;
 
 
-	    			/*case 3: // Подписка
+	    			case 3: // Подписка
 
-	    			  $result = $MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.zvezda, $tbusers.sex
-	    			                      FROM $tbshops
-	    			                     INNER JOIN $tbpodpiska ON $tbpodpiska.shop_id = $tbshops.id
-	    			                     INNER JOIN $tbusers ON $tbusers.user_wp = $tbpodpiska.user_wp
-	    			                    WHERE  $tbpodpiska.id = ".varr_int($value['id_deystvie']));
+	    			  	$result = $MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbshops.DescBig shop_desc/*, $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.zvezda, $tbusers.sex */
+	    			                    	   FROM $tbshops
+	    			                     	   INNER JOIN $tbpodpiska ON $tbpodpiska.shop_id = $tbshops.id
+	    			                     	   /*INNER JOIN $tbusers ON $tbusers.user_wp = $tbpodpiska.user_wp*/
+	    			                    	   WHERE  $tbpodpiska.id = ".varr_int($value['id_deystvie']));
 
-	    			  if(is_array($result)){
-	    			  $array[] = array(
-	    			    'id'       => $value['id'],
-	    			    'deystvie' => 3,
-	    			    'data'     => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			    'podpiska' => $result[0],
-	    			  );
-	    			  } else {
+	    			 	$logo = ShowLogo(array($result[0]['shop_id']),146,101,true);
+	    			 	if(is_array($logo)) $result[0]['shop_logo'] = $logo[0]['logo'];
+
+	    			  	if(is_array($result)){
+	    			  		$array[] = array(
+	    			    		'id'       => $value['id'],
+	    			    		'deystvie' => 3,
+	    			    		'data'     => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+	    			    		'podpiska' => $result[0],
+	    			    		'user'       => $this->Info_min($value['user_wp'],40,40),
+	    			  		);
+	    			  	} else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
 	    			  	    return $this->ShowHistoryLenta($user_wp,$circle,$rows,$begin+$rows);
 	    				}
-	    			break;*/
+	    			break;
 
 	    			case 4: // Фотоальбом
 	    			  $result = $MYSQL->query("SELECT id, user_wp, header, opis FROM $tbphotoalbum WHERE id = ".varr_int($value['id_deystvie']));
@@ -2565,26 +2601,30 @@ class T_USERS {
 	    			break;
 
 
-	    			/*case 3: // Подписка
+	    			case 3: // Подписка
 
-	    			  $result = $MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.zvezda, $tbusers.sex
-	    			                      FROM $tbshops
-	    			                     INNER JOIN $tbpodpiska ON $tbpodpiska.shop_id = $tbshops.id
-	    			                     INNER JOIN $tbusers ON $tbusers.user_wp = $tbpodpiska.user_wp
-	    			                    WHERE  $tbpodpiska.id = ".varr_int($value['id_deystvie']));
+	    			  	$result = $MYSQL->query("SELECT $tbshops.id shop_id, $tbshops.name shop_name, $tbshops.DescBig shop_desc/*, $tbusers.user_wp, $tbusers.email, $tbusers.lastname, $tbusers.firstname, $tbusers.zvezda, $tbusers.sex */
+	    			                    	   FROM $tbshops
+	    			                     	   INNER JOIN $tbpodpiska ON $tbpodpiska.shop_id = $tbshops.id
+	    			                     	   /*INNER JOIN $tbusers ON $tbusers.user_wp = $tbpodpiska.user_wp*/
+	    			                    	   WHERE  $tbpodpiska.id = ".varr_int($value['id_deystvie']));
 
-	    			  if(is_array($result)){
-	    			  $array[] = array(
-	    			    'id'       => $value['id'],
-	    			    'deystvie' => 3,
-	    			    'data'     => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			    'podpiska' => $result[0],
-	    			  );
-	    			  } else {
+	    			 	$logo = ShowLogo(array($result[0]['shop_id']),146,101,true);
+	    			 	if(is_array($logo)) $result[0]['shop_logo'] = $logo[0]['logo'];
+
+	    			  	if(is_array($result)){
+	    			  		$array[] = array(
+	    			    		'id'       => $value['id'],
+	    			    		'deystvie' => 3,
+	    			    		'data'     => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+	    			    		'podpiska' => $result[0],
+	    			    		'user'       => $this->Info_min($value['user_wp'],40,40),
+	    			  		);
+	    			  	} else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
-	    			  	    return $this->ShowHistoryLenta($user_wp,$online,$rows,$begin+$rows);
+	    			  	    return $this->ShowMassHistoryLenta($user_wp,$online,$rows,$begin+$rows);
 	    				}
-	    			break;*/
+	    			break;
 
 	    			case 4: // Фотоальбом
 	    			  $result = $MYSQL->query("SELECT id, user_wp, header, opis FROM $tbphotoalbum WHERE id = ".varr_int($value['id_deystvie']));
@@ -2793,16 +2833,17 @@ class T_USERS {
 		$result = $MYSQL->query("SELECT id, user_wp, data_add, header, IFNULL(pravo,'') pravo, IFNULL(`updated`,'') `updated`, type FROM $tbphotoalbum WHERE user_wp = $user_wp AND type = '0' ORDER BY data_add DESC LIMIT $begin,$rows");
 		if(is_array($result)){
 			foreach($result as $key=>$value){
+				//Вывод миниатюр
 				$albums[] = array(
 				    'id'     => $value['id'],
 				    'center' => true,
-				    'w_logo' => 70,
-				    'h_logo' => 70,
+				    'w_logo' => 113,
+				    'h_logo' => 98,
 				    'count'  => 1,
 				);
 			}
 			$photos = ShowPhotoAlbums($user_wp,$albums);
-
+			
 			for($i=0; $i < count($result); $i++){
 				if($result[$i]['updated']=='')$updated='';
 				else                          $updated=MyDataTime($result[$i]['updated'],'date');
