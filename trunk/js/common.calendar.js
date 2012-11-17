@@ -4,6 +4,9 @@
 	var event_end = $('#event_end');
 	var event_after = $('#event_after');
 	var event_title = $('#event_title');
+	var event_place = $('#event_place');
+	
+	var place_form = $("#event_place-form");
 	var event_repeat = $("#event_repeat");
 	var event_finish = $("#event_finish");
 	var event_remind = $("#event_remind");
@@ -22,6 +25,8 @@
 	var Months = ['','января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 	var lastView; 
 	var suggestions = [];
+	var placelist = [];
+	
 	var privacy = 0;
 	/* Источники данных */
 	var fcSources = { 
@@ -75,7 +80,7 @@
 		event_title.val("");
 		event_id.val("");
 		event_notes.val("");
-		
+		event_place.val(""); event_place.removeAttr("place_id");
 		for(var p in suggestions){	suggestions[p].added = false; }
 		privacy_friends.children('span').remove();
 		
@@ -117,8 +122,21 @@
 			$('#add').hide();
 			$("#delete").button("option", "disabled", false);
 		}
-		
 		form.dialog('open');
+		
+		$('.place.group').click(function(){ //клик на место из списка
+			//получаем id места
+			var place_id = $(this).children().children('a').attr('href').split("-")[1];
+			//получаем название места
+			var place_name = $(this).children().children('a:eq(1)').text()
+			event_place.attr("place_id",place_id);
+			event_place.val(place_name);
+			place_form.dialog("close");
+		});
+		event_place.click(function(){
+			place_form.dialog('open');
+		});
+		
 	};
 	/* инициализируем Datetimepicker */
 	$.datepicker.regional['ru'] = {
@@ -238,6 +256,10 @@
 			
 			event_id.val(event.id);
 			event_title.val(event.title);
+			event_place.attr("place_id",event.place);
+			for(var i in placelist){
+				if(placelist[i].id == event.place) event_place.val(placelist[i].name);
+			}
 			event_start.val(DateStart);
 			event_end.val(DateEnd);
 			event_after.val($.datepicker.formatDate(format_for_after, new Date(event.after)));
@@ -270,6 +292,7 @@
 				span.insertBefore("#to");
 
 			}
+			
 			event_notes.val(event.notes);
 			
 			var Day = parseInt($.fullCalendar.formatDate(event.start, format_day),10);
@@ -438,6 +461,7 @@
 						end: event_end.val(),
 						after: event_after.val(),
 						title: event_title.val(),
+						place: event_place.attr("place_id"),
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
 						remind: $("#event_remind :selected").val(),
@@ -479,6 +503,7 @@
 						end: event_end.val(),
 						after: event_after.val(),
 						title: event_title.val(),
+						place: event_place.attr("place_id"),
 						repeat:	$("#event_repeat :selected").val(),
 						finish: $("#event_finish :selected").val(),
 						remind: $("#event_remind :selected").val(),
@@ -619,6 +644,28 @@
 			fcSources.birthdays.data['textsearch'] = "";
 			calendar.fullCalendar('refetchEvents');
 		}*/
+		
+	});
+	
+	//Получаем список мест
+	$(function(){
+		$.getJSON("/jquery-calendar?placelist", function(data) { placelist = data; });
+	});
+	place_form.dialog({
+		zIndex: 3000,
+		height: 600,
+		width: 800,
+		autoOpen: false,
+		buttons: {
+			"Убрать": function() {
+				event_place.removeAttr("place_id");
+				event_place.val("");
+				$( this ).dialog( "close" );
+			},
+			"Отмена": function() {
+				$( this ).dialog( "close" );
+			}
+		}
 		
 	});
 

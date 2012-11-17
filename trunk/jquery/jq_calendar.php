@@ -1,5 +1,4 @@
-﻿
-<?php
+﻿<?php
 //$db = mysql_pconnect('localhost', 'root', '');
 //mysql_select_db('discount',$db);
 //mysql_query("SET NAMES 'utf8'");
@@ -20,6 +19,7 @@ $notes = @$_POST['notes'];
 $repeat = @$_POST['repeat']; 
 $finish = @$_POST['finish'];
 $remind = @$_POST['remind'];
+$place = @$_POST['place'];
 $textsearch = @$_POST['textsearch'];
 $PrivFriends = @$_POST['PrivFriends'];
 $privacy = @$_POST['privacy'];
@@ -57,7 +57,8 @@ switch ($op) {
 			`title`,
 			`repeat`,
 			`finish`,
-			`visible_all`) 
+			`visible_all`,
+			`place_id`) 
 			VALUES 
 			("' . $_SESSION['WP_USER']['user_wp'] . '",
 			 "' . date("Y-m-d H:i:s", strtotime($start)) . '",
@@ -67,8 +68,8 @@ switch ($op) {
 			 "' . $title . '",
 			 "' . $repeat . '",
 			 "' . $finish . '",
-			 "' . $privacy . '")';
-			 
+			 "' . $privacy . '",
+			 "' . $place . '")';
 	
 		if (mysql_query($sql)) {
 			$event_id = mysql_insert_id();
@@ -107,25 +108,13 @@ switch ($op) {
 				`finish`  	  = "' . $finish .'",
 				`napominanie` = "' . $remind . '",
 				`visible_all` = "' . $privacy . '",
+				`place_id` 	  = "' . $place . '",
 				`zametki`	  = "' . $notes . '"
 				WHERE `id` 	  = "' . $id . '"';
 		if (mysql_query($sql)) { echo $id; }
 		
-		//Показать всем 
-/*		if($privacy == 1){ //Удаляем тех кто был в просмотрах
-			$sql = "DELETE FROM `discount_users_events_visible` WHERE `event_id` = $id";
-			mysql_query($sql);
-		}
-*/		//Не показывать никому либо Список друзей на просмотр
-		if($privacy == 0){
-			//Количество людей которые в приватности по этой записе
-			//$sql = "SELECT * FROM `discount_users_events_visible` WHERE `event_id` = $id";
-			//$result = mysql_query($sql);
-			//$count = mysql_num_rows($result);
-			//$values = '';
-			//Ecли такие люди есть
-			//if(!$count){
-			
+		//Не показывать никому либо Список друзей на просмотр
+		if($privacy == 0){		
 			//Удалить все старые поля приватности этого эвента
 			$sql = "DELETE FROM `discount_users_events_visible` WHERE `event_id` = $id";
 			mysql_query($sql);
@@ -239,7 +228,8 @@ switch ($op) {
 									'finish' => $row['finish'],
 									'remind' => $row['napominanie'],
 									'notes'  => $row['zametki'],
-									'friends' => $visible_friends
+									'friends' => $visible_friends,
+									'place' => $row['place_id']
 								);
 							}
 						break;
@@ -265,7 +255,8 @@ switch ($op) {
 									'finish' => $row['finish'],
 									'remind' => $row['napominanie'],
 									'notes'  => $row['zametki'],
-									'friends' => $visible_friends
+									'friends' => $visible_friends,
+									'place' => $row['place_id']
 								);
 								$i++;
 							}
@@ -286,7 +277,8 @@ switch ($op) {
 								'finish' => $row['finish'],
 								'remind' => $row['napominanie'],
 								'notes'  => $row['zametki'],
-								'friends' => $visible_friends
+								'friends' => $visible_friends,
+								'place' => $row['place_id']
 							);
 						}
 					}
@@ -306,7 +298,8 @@ switch ($op) {
 							'finish' => $row['finish'],
 							'remind' => $row['napominanie'],
 							'notes'  => $row['zametki'],
-							'friends' => $visible_friends
+							'friends' => $visible_friends,
+							'place' => $row['place_id']
 						);
 					}
 				}
@@ -350,6 +343,8 @@ switch ($op) {
 									'textColor' => $textcolor,
 									'editable' => $editable,
 									'allDay' => false,
+									
+									'place' => $row['place_id']
 								);
 							}
 						break;
@@ -369,6 +364,8 @@ switch ($op) {
 									'textColor' => $textcolor,
 									'editable' => $editable,
 									'allDay' => false,
+									
+									'place' => $row['place_id']
 								);
 								$i++;
 							}
@@ -382,6 +379,8 @@ switch ($op) {
 								'textColor' => $textcolor,
 								'editable' => $editable,
 								'allDay' => false,
+								
+								'place' => $row['place_id']
 							);
 						}
 					}
@@ -395,6 +394,8 @@ switch ($op) {
 							'textColor' => $textcolor,
 							'editable' => $editable,
 							'allDay' => false,
+							
+							'place' => $row['place_id']
 						);
 					}	
 				}
@@ -450,10 +451,11 @@ switch ($op) {
 
 if(isset($_GET["friendlist"])){
 
-	$result = mysql_query("SELECT DISTINCT `discount_users`.* 
-						FROM `discount_users_friends` 
-						INNER JOIN `discount_users` ON `discount_users`.`user_wp` = `discount_users_friends`.`friend_wp` 
-						WHERE `discount_users_friends`.`user_wp` = ".$_SESSION['WP_USER']['user_wp']);
+	$sql = "SELECT DISTINCT `discount_users`.* 
+			FROM `discount_users_friends` 
+			INNER JOIN `discount_users` ON `discount_users`.`user_wp` = `discount_users_friends`.`friend_wp` 
+			WHERE `discount_users_friends`.`user_wp` = " . $_SESSION['WP_USER']['user_wp'];
+	$result = mysql_query($sql);
 	$json = Array();
 	while ($row = mysql_fetch_assoc($result)) {
 		$json[] = array( 
@@ -466,6 +468,25 @@ if(isset($_GET["friendlist"])){
 
 	$response = json_encode($json);
 	echo $response;
+}
+//Места
+if(isset($_GET["placelist"])){
+	$sql = "SELECT  `discount_shops`.`name` ,  `discount_shops`.`id`  `shop_id` 
+			FROM  `discount_users_places` 
+			INNER JOIN  `discount_shops_adress` ON  `discount_shops_adress`.`id` =  `discount_users_places`.`address` 
+			INNER JOIN  `discount_shops` ON  `discount_shops_adress`.`shop_id` =  `discount_shops`.`id` 
+			WHERE  `discount_users_places`.`user_wp` =" . $_SESSION['WP_USER']['user_wp'];
+	$result = mysql_query($sql);
+	$json = Array();
+	while ($row = mysql_fetch_assoc($result)) {
+		$json[] = array( 
+			"name" => $row["name"],
+			"id" => $row["shop_id"]
+		);		
+	}
+
+	$response = json_encode($json);
+	echo $response;	
 }
 
 ?>

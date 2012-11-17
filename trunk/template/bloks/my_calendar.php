@@ -83,4 +83,7 @@
 			<input type="hidden" name="event_id" id="event_id" value="">
 		</form>
 	</div>
+	<div id="event_place-form" title="Места">
+		<?php require_once("my_places.php"); ?>
+	</div>
 </div>
