@@ -36,6 +36,8 @@
 									<script type=\"text/javascript\" src=\"js/common.calendar.js\"></script>
 									<script type=\"text/javascript\" src=\"js/plugins/others/jquery.fullcalendar.js\"></script>
 									<script type=\"text/javascript\" src=\"js/plugins/others/jquery-ui-timepicker-addon.js\"></script>
+									<script src=\"http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.js\"></script>
+									<link href=\"http://api.tiles.mapbox.com/mapbox.js/v0.6.5/mapbox.css\" rel=\"stylesheet\" />
 								   ";
 					break;
 
