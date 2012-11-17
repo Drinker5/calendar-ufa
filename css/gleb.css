@@ -3,7 +3,12 @@
 	float:right;
 	color: #8CB7E3;
 }
-
+.ui-dialog{
+	background: whiteSmoke;
+}
+.ui-dialog .ui-dialog-titlebar{
+	background: whiteSmoke;
+}
 .search-events {
     margin-bottom: 20px;
 }
@@ -21,21 +26,23 @@
 
 #dialog-form {
 	padding: 10px; 
+	color: grey;
+	overflow-x: hidden;
 }
 
 #event_title{
-	margin-top:10px;
+	width: 100%; 	height: 25px;
+	margin-top: 10px;
+	margin-bottom: 15px;
 	padding-left:10px;
-	
-	height: 20px;
+
 }
 
 #event_place {
+	width: 100%; 	height: 25px;
 	padding-left:10px;
-	margin-top:15px;
 	margin-bottom:10px;
 	color:grey;
-	height: 20px;
 	background-image: url("../pic/info.png"); 
 	background-position: right 2px;
  	background-repeat: no-repeat;
@@ -46,21 +53,24 @@
 	margin-left:30px;
 	margin-right:10px;
 	border: none;
+	background-color: inherit;
 }
 #event_end  {
 	font-weight: bold;
 	color:#888888;
 	margin-left:30px;
 	border: none;
+	background-color: inherit;
 }
 
-hr{ /* √оризонтальна€ лини€ */
-	margin-left: -10px; 
-	margin-right: -10px;
-    color: #a0afaf; /*дл€ IE */
-    background-color: #a0afaf; /*дл€ Firefox, Opera, Safari*/
+hr{ margin-left: -1px; }
+
+#dialog-form hr{ 
+	margin-left: -20px; 
+	margin-right: -20px;
+    background-color: #a0afaf; 
     border:0px none;
-    height:1px; /* высота 1px IE, Firefox, Opera, Safari */
+    height:1px;
    
 }
 
@@ -78,7 +88,7 @@ margin-right:85.5px;
 }
 
 #event_finish{
-padding-left:10px;
+	padding-left:10px;
 	color:grey;
 	margin-left:0px;
 	margin-right:15px;
@@ -86,7 +96,7 @@ padding-left:10px;
 	height:30px;
 }
 #event_remind{
-padding-left:10px;
+	padding-left:10px;
 	color:grey;
 	margin-left:0px;
 	width: 190px;
@@ -107,33 +117,39 @@ padding-left:10px;
 }
 
 #privacy_nobody{
-	margin-top:5px;/
+	margin-top:5px;
 	margin-bottom:10px;
 	margin-left:20px;
 }
 
 #privacy_friends { 
-	width:590px; height: 18px; 
-	padding:3px 3px; 
-	margin-left: 5px;
-	margin-bottom:15px; 
+	width: 100%;
+	float: left;
+	padding:3px 3px 1px 3px; 
+	margin-bottom: 10px;
 	border:1px solid #DDD; 
 	background-color:#fff;
 }
 
-#privacy_friends #to { width:80px; margin:0 0 2px 0; padding:0 0 3px; position:relative; top:0; float:left; border:none; z-index:0;}
-#privacy_friends input { display:block; }
-#privacy_friends span { display:block; width:auto; margin:0 3px 3px 0; padding:3px 20px 4px 8px; position:relative; float:left; text-indent:0; background-color:#eee; border:1px solid #333; -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px; color:#333; font:normal 11px Verdana, Sans-serif; }
-#privacy_friends span a { position:absolute; right:8px; top:2px; color:#666; font:bold 12px Verdana, Sans-serif; text-decoration:none; }
+#privacy_friends #to { width: 150px; margin: 1px 0 2px 0; padding: 1px 0 3px 3px;  position:relative; top:0; float:left; border:none; z-index:0; box-shadow: none;}
+#privacy_friends input {  }
+#privacy_friends span { display:block; width:auto; margin:0 3px 3px 0; padding:3px 20px 4px 8px; position:relative; float:left; text-indent:0; background-color:#5FACFF; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; color:#fff; font:normal 11px Verdana, Sans-serif; }
+#privacy_friends span a { position:absolute; right:8px; top:2px; color:#fff; font:bold 12px Verdana, Sans-serif; text-decoration:none; }
 #privacy_friends span a:hover { color:#ff0000; }
-.ui-menu .ui-menu-item { white-space:nowrap; padding:0 10px 0 0; }
 
-/* ¬ыпадающий список в css/ui_custom.css 294 строка */
-/* строка 296: z-index там был 1000 и рисовалось за окошком */
+.ui-menu .ui-menu-item { white-space:nowrap; padding:0 10px 0 0; }
+.ui-menu .ui-menu-item a { padding:5px 10px 5px 10px; }
+.ui-menu .ui-menu-item img { width: 30px; height: 30px; float: left; margin-right: 10px;} 
+
 .ui-autocomplete {
-	z-index:1500 !important;
+	z-index:1100 !important;
 	width: 600px;
+	max-height: 180px;
+    overflow-y: auto;
+	overflow-x: hidden;
+	
 }
+
 #event_notes{
 	padding-left:10px;
 	outline: none; 
