@@ -102,7 +102,7 @@
                 </div>
                 <div class="nav-panel group">
                     <ul class="fl_r right">
-                        <li class="opacity_link active"><a href="/my-profile">Мой профиль</a></li>
+                        <li class="opacity_link"><a class="active" href="/my-profile">Мой профиль</a></li>
                         <li class="opacity_link"><a href="/my-phones">Телефон</a></li>
                         <!--<li class="opacity_link"><a href="/my-wallets">Счет</a></li>-->
                         <li class="opacity_link"><a href="/my-alerts">Оповещения</a></li>
@@ -453,17 +453,19 @@ function GetMaritalStatus(sex,defaults)
 function SecurityCheckboxs(element)
 {
     var names = {'circles_all':0,'circles_nothing':1};
-    var current_name = $(element).attr('name');
+    var current_name = $(element).prop('name');
     if (current_name in names)
     {
-        $('input[name^=circles]').attr('checked',false);
-        $(this).attr('checked',true);
+        $('input[name^=circles]').prop('checked','');
+        $(element).prop('checked','checked');
+        $.uniform.update();
     }
     else
     {
         for (var name in names)
         {
-            $('input[name='+name+']').attr('checked',false);
+            $('input[name='+name+']').prop('checked','');
+            $.uniform.update();
         }
     }
     return true;
@@ -486,7 +488,8 @@ function SelTowns(country_id){
             $('#user_townid').combobox();
             $('input[name^=circles]').click(function()
             {
-                SecurityCheckboxs(this);
+                return SecurityCheckboxs(this);
+                
             });
         }
     });
@@ -522,6 +525,8 @@ function GetSecurity()
     {
         if ( isChecked("input=[name=circles_"+circle+"]") ) security.push(circles[circle]);
     }
+    if (security.length == 0)
+        security.push(0);
     return security;
 
 }

@@ -206,7 +206,7 @@
 
 
 	//!Приглашаем пользователя дружить
-	elseif(isset($_POST['friend_add']) && $_POST['friend_add']>=10000){
+	elseif(isset($_POST['friend_add']) && $_POST['friend_add']>=10000 && $_POST['friend_add']!=$_SESSION['WP_USER']['user_wp']){
 		if($USER->AddFriend($_POST['friend_add'])){
 			echo 'ok';
 		}

@@ -1,50 +1,17 @@
 <?php
-if(isset($_POST['name']))         $name=strtolower(addslashes(trim($_POST['name'])));else $name='';
-if(isset($_POST['online']) && strlen($_POST['online'])>0)        $online=true;else $online=false;
-if(isset($_POST['age_from']))      $age_from=(int)$_POST['age_from'];else $age_from=0;
-if(isset($_POST['age_to']))        $age_to=(int)$_POST['age_to'];else $age_to=999;
+global $MYSQL;
+global $USER;
+$GLOBALS['PHP_FILE'] = __FILE__;
+$GLOBALS['FUNCTION'] = __FUNCTION__;
+
+if(isset($_POST['name']) && strlen($_POST['name']) > 0)         $name=strtolower(addslashes(trim($_POST['name'])));else $name='';
+if(isset($_POST['online']) && (int)$_POST['online']>0)        $online=true;else $online=false;
+if(isset($_POST['age_from']) && (int)$_POST['age_from'] > 0)      $age_from=(int)$_POST['age_from'];else $age_from=0;
+if(isset($_POST['age_to']) && (int)$_POST['age_to'] > 0)        $age_to=(int)$_POST['age_to'];else $age_to=999;
 if(isset($_POST['region']))        $region=(int)$_POST['region'];else $region=-1;
 if(isset($_POST['marital_status'])) $marital_status=(int)$_POST['marital_status'];else $marital_status=-1;
 if(isset($_POST['search_offset'])) $offset = (int)$_POST['search_offset']; else $offset = 0;
-if(isset($_POST['sex']) && strlen($_POST['sex'])>0 ) $sex = (int)$_POST['sex']; else $sex='';
-global $MYSQL;
-global $USER;
-global $COUNTRY;
-$GLOBALS['PHP_FILE'] = __FILE__;
-$GLOBALS['FUNCTION'] = __FUNCTION__;
-function CheckBox($val)
-{
-    if (isset($val) && strlen($val)>0)
-        return true;
-    return false;
-}
-function userInfoHtml($user_id)
-{
-    global $USER;
-    $new_usr = $USER->Info_min($user_id,70,70);
-    $output ='';
-    $output .= '<div class="friend-item fl_l">';
-    $output .= '<div class="bordered medium-avatar fl_l">';
-    $output .= '<a href="/'.$user_id.'"><img src="'.$new_usr['photo'].'" alt=""></a>';
-    $output .= '</div>';
-    $output .= '<div class="content wrapped">';
-    $output .= OnlineStatus($new_usr['status_chat']);
-    $output .= '<span class="name"><a href="/'.$user_id.'">'.$new_usr['firstname'].' '.$new_usr['lastname'].'</a></span>';
-    $output .= '<br>';
-    $output .= '<span class="place">'.$new_usr['country_name'].', '.$new_usr['town_name'].'</span>';
-    $output .= '</div>';
-    $output .= '<div class="tools_block hide absolute tx_r">
-                            <span class="fl_l">
-                               <a href="#" class="add_new_friend opacity_link" data-user="'.$user_id.'" data-name="'.$new_usr['firstname'].' '.$new_usr['lastname'].'"><i original-title="Добавить в друзья" class="tipN active small-icon icon-add-friend"></i></a>
-                                <a href="#" class="opacity_link"><i original-title="Сделать подарок" class="tipN active small-icon icon-gift"></i></a>
-                                <a href="#" class="opacity_link"><i original-title="Написать сообщение" class="tipN active small-icon icon-chat"></i></a>
-                                <a href="#" class="opacity_link"><i original-title="Пригласить" class="tipN active small-icon icon-invite"></i></a>
-                            </span>
-                        </div>';
-    $output .= '</div>';
-    return $output;
-}
-
+if(isset($_POST['sex']) && (int)$_POST['sex']>0 ) $sex = (int)$_POST['sex']; else $sex=0;
 
 $count = (int)$_POST['count'];
 $query = array();
@@ -58,28 +25,45 @@ if ($age_to > 0)
     $query[] = " ( (YEAR(CURRENT_DATE) - YEAR(`birthday`)) - (RIGHT(CURRENT_DATE,5) < RIGHT(`birthday`,5))  >= $age_from AND (YEAR(CURRENT_DATE) - YEAR(`birthday`)) - (RIGHT(CURRENT_DATE,5) < RIGHT(`birthday`,5)) <= $age_to) ";
 if ($marital_status != -1)
     $query[] = " (u.marital_status = $marital_status) ";
-if (CheckBox($sex))
+if ($sex>0)
 {
     $query[] = " (u.sex = $sex) ";
 }
-$query_string = " AND ".implode(" AND ", $query);
+if (count($query) > 0)
+    $query_string = " AND ".implode(" AND ", $query);
+else
+    $query_string = '';
+$query_string = (count($query) > 0)?" AND ".implode(" AND ", $query):'';
 $curr_user_id = $_SESSION['WP_USER']['user_wp'];
-$qs = "SELECT user_wp,birthday  FROM pfx_users AS u WHERE u.user_wp <> $curr_user_id AND u.user_wp NOT IN (SELECT friend_wp FROM pfx_users_friends AS f WHERE f.user_wp = $curr_user_id)  $query_string LIMIT $offset,$count";
-$users = $MYSQL -> query("SELECT user_wp,birthday  FROM pfx_users AS u WHERE u.user_wp <> $curr_user_id AND u.user_wp NOT IN (SELECT friend_wp FROM pfx_users_friends AS f WHERE f.user_wp = $curr_user_id)  $query_string LIMIT $offset,$count");
-$html ='';
-if (is_array($users))
+$user_wp = $curr_user_id;
+
+$qs = "SELECT user_wp,birthday  FROM pfx_users AS u WHERE u.user_wp <> $curr_user_id AND u.user_wp NOT IN (SELECT CASE WHEN  `pfx_users_friends`.`user_wp`= $user_wp
+        THEN  `pfx_users_friends`.`friend_wp` 
+        ELSE  `pfx_users_friends`.`user_wp` 
+        END AS `wp`
+        FROM  `pfx_users_friends` 
+        WHERE  (`pfx_users_friends`.`user_wp`=$user_wp
+        OR  `pfx_users_friends`.`friend_wp` =$user_wp) GROUP BY `wp`)  $query_string LIMIT $offset,$count";
+$result = $MYSQL -> query($qs);
+$users_wp_list = array();
+$users = array();
+if (count($result) > 0  )
 {
-    foreach ($users as $key => $user) {
-    $html .= userInfoHtml($user['user_wp']);
-    }
+    foreach ($result as $value)
+        $users_wp_list[] = $value['user_wp'];
+    $users = $USER-> Info_min_group($users_wp_list,70,70);
 }
 
-$stop = 0;
-if (strlen($html)<10)
-    $stop = 1;
+$html ='';
 $response = array();
-$response['stop'] = $stop;
-$response['html'] = $html;
+//Первый запрос (без скролла) и ничего не нашлось
+if (count($users) == 0 && $offset == 0)
+    $response['found'] = '0';
+else
+    $response['found'] = '1';
+
+$response['stop'] = (count($users)<$count)?1:0;
+$response['html'] = $users;
 echo json_encode($response);
 
 

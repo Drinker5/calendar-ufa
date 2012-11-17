@@ -1,4 +1,4 @@
-.wish_add, .wish_make, .scrollup {
+.wish_add, .wish_make, .scrollup, #notifier-box {
  -webkit-transition: all 0.2s ease;
  -moz-transition: all 0.2s ease;
  -o-transition: all 0.2s ease;
@@ -1684,7 +1684,7 @@ input[type="search"]::-webkit-search-results-decoration {
  height: 55px;
  opacity: 0.5;
  position: fixed;
- bottom: 20px;
+ bottom: 0px;
  margin-left: 72px;
  display: none;
  background: url('../pic/top.png') no-repeat;
@@ -1706,18 +1706,33 @@ input[type="search"]::-webkit-search-results-decoration {
  margin-top: 12px;
 }
 
-#popup-bottom {
- background: rgba(149,193,31,.7);
- width: 180px;
- padding: 10px;
- height: 50px;
- border-radius: 5px;
+#notifier-box {
  position: fixed;
- bottom: 10px;
+ bottom: 50px;
  left: 10px;
+ z-index: 99;
 }
 
-#popup-bottom img {
+.message-box {
+ background: rgba(149,193,31,.7);
+ padding: 5px 0 10px 10px;
+ border-radius: 5px;
+ clear: both;
+ width: 190px;
+ margin-bottom: 5px;
+}
+
+div.message-box div.message-body {
+ overflow: hidden;
+}
+
+#notifier-box .message-header {
+ font: bold 13px Helvetica, Arial, sans-serif;
+ color: #fff;
+ margin-bottom: 5px;
+}
+
+#notifier-box img {
  width: 50px;
  height: 50px;
  display: block;
@@ -1726,20 +1741,32 @@ input[type="search"]::-webkit-search-results-decoration {
  border-radius: 3px;
 }
 
-#popup-bottom .p-name {
- color: #fff;
- font: 600 13px Helvetica, Arial, sans-serif;
+#notifier-box span {
+ color: #2a5f00;
+ font: normal 11px Helvetica, Arial, sans-serif;
  line-height: 12px;
  -webkit-font-smoothing: antialiased;
  display: block;
- width: 80px;
- margin-bottom: 3px;
+ width: 120px;
+ float: left;
 }
 
-#popup-bottom .p-purpose {
+#notifier-box .p-purpose {
+ font-weight: bold;
+}
+
+#notifier-box .message-close {
+ background: url('../pic/icons/popup-close.png') no-repeat 0 0;
+ width: 9px;
+ height: 9px;
  display: block;
- font: 400 11px Helvetica, Arial, sans-serif;
- color: #476500;
+ position: relative;
+ float: right;
+ right: 5px;
+}
+
+#notifier-box .message-close:hover {
+ background: url('../pic/icons/popup-close.png') no-repeat 0 -12px;
 }
 
 .pin {

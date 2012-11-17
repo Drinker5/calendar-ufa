@@ -271,10 +271,10 @@ var template =  '<input type="hidden" name="shop_id" value="{{shop_id}}" />'+
                 '<input type="hidden" name="lat" value="{{lat}}" />'+
                 '<input type="hidden" name="lon" value="{{lon}}" />'+
                 '<div class="preview fl_l">'+
-                    '<a href="#"><img src="{{logo}}" alt=""></a>'+
+                    '<a href="/shop-{{shop_id}}"><img src="{{logo}}" alt=""></a>'+
                 '</div>'+
                 '<div class="info fl_l">'+
-                    '<a class="name" href="#">{{name}}</a>'+
+                    '<a class="name" href="/shop-{{shop_id}}">{{name}}</a>'+
                     '<p>{{info}}'+
                     '</p>'+
                     '{{#fav}}'+

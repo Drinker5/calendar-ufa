@@ -38,7 +38,6 @@
 
 			<!--!Левое меню-->
 			<?php require_once('bloks/left_menu.php') ?>
-			<div id="notify"></div>
 
 			<!--Контент-->
 			<div id="content" class="fl_r<?php
@@ -76,19 +75,13 @@
 							var html;
 
 							if(data){
-								html=jQuery.parseJSON(data);console.log(html);
-								if(html.fCount>fLast || html.cCount>cLast)
-									$.titleAlert('Новые уведомления',{stopOnMouseMove:true,interval:600});
+								html=jQuery.parseJSON(data);
+								if(html.fCount>fLast)
+									$.titleAlert('************************',{stopOnMouseMove:true,interval:600});
 								if(html.fCount>fLast){
-									for(var n = fLast; n < html.fCount; ++ n) //alert(html.friends[n].fname);
-										$.jnotify(html.friends[n].fname + ' ' + html.friends[n].lname,'хочет дружить',html.friends[n].photo,{lifeTime:8000,click:function(){ window.location.href = '/my-friends?t=request'; }});
-										//$('#notify').delay(1000).append('<a href="#"><div id="popup-bottom"><img src="' + html.friends[n].photo + '" /><div class="fl_l"><span class="p-name">' + html.friends[n].fname + ' ' + html.friends[n].lname + '</span><span class="p-purpose">хочет дружить</span></div></div></a>').hide().fadeIn('slow').delay(8000).fadeOut('slow');
+									for(var n = fLast; n < html.fCount; ++ n)
+										$.jnotify(html.friends[n].fname + ' ' + html.friends[n].lname,'хочет дружить',html.friends[n].photo,{lifeTime:15000,click:function(){ window.location.href = '/my-friends?t=request'; }});
 									fLast=html.fCount;
-								}
-								if(html.cCount>cLast){
-									for(var n = cLast; n < html.cCount; ++ n)
-										$('#notify').delay(1000).append('<a href="#"><div id="popup-bottom"><img src="' + html.friends[n].photo + '" /><div class="fl_l"><span class="p-name">' + html.friends[n].fname + ' ' + html.friends[n].lname + '</span><span class="p-purpose">оставил комментарий</span></div></div></a>').hide().fadeIn('slow').delay(8000).fadeOut('slow');
-									cLast=html.cCount;
 								}
 							}
 						}

@@ -1,9 +1,13 @@
 <?php
 //Вывод блока с фотоальбомом
 function ShowAlbumsBlock($user_wp,$album,$stamp,$cart){
+    if($user_wp==$_SESSION['WP_USER']['user_wp'])
+        $link = '<a href="my-photoalbums?album_id='.$cart['album-id'].'" class="fl_l cover-photoalbum stack rotated"><img src="'.$album['logo'].'" alt="" /></a>';
+    else
+        $link = '<a href="'.$user_wp.'-photoalbums?album_id='.$cart['album-id'].'" class="fl_l cover-photoalbum stack rotated"><img src="'.$album['logo'].'" alt="" /></a>';
 	$html='
 	<div class="album fl_l" id="div'.$cart['album-id'].'">
-		<a href="'.$user_wp.'-photoalbums?album_id='.$cart['album-id'].'" class="fl_l cover-photoalbum stack rotated"><img src="'.$album['logo'].'" alt="" /></a>
+		'.$link.'
 		<div class="content fl_l album-descriptions">
 			<div class="text">
 				<div class="name">'.$album['header'].'</div>';
