@@ -133,6 +133,7 @@
 			place_form.dialog("close");
 		});
 		event_place.click(function(){
+			privacy_friends.autocomplete("close");
 			place_form.dialog('open');
 		});
 		

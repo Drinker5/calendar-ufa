@@ -71,12 +71,11 @@
 				<input id="privacy_all" type="radio" name="privacy" value="privacy_all" checked>Показать в ленте новостей друзей
 				<input id="privacy_nobody" type="radio" name="privacy" value="privacy_nobody">Не показывать никому
 			</div>
-			<div id="privacy_friends_div" >
-				Показать событие определенным друзьям: 
-				<br>
-				<div id="privacy_friends" class="ui-helper-clearfix">
-					<input placeholder="Введите имя или mail друга..." id="to" type="text">
-				</div>
+			Показать событие определенным друзьям: 
+			<br>
+		
+			<div id="privacy_friends">
+				<input placeholder="Введите имя или mail друга..." id="to" type="text">
 			</div>
 			<textarea name="event_notes" id="event_notes" placeholder="Заметки..."></textarea>
 			<input type="hidden" name="event_id" id="event_id" value="">
