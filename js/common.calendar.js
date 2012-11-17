@@ -247,8 +247,18 @@
 			event_finish.selectBox("value", event.finish);
 			event_remind.selectBox("value", event.remind);
 			
-			for(var i in event.friends){
-				var friend = event.friends[i], //TODO: тут Номер друга, а нужно имя
+			for(var i in event.friends){ //массив id друзей в списке приватности
+				var name = 'err';
+				for(var p in suggestions){ //Поиск имени друза по id 
+					if(suggestions[p].friend_wp == event.friends[i]){ 
+					
+						name = suggestions[p].name;
+						//Удаление из списка добавленного друга
+						suggestions[p].added = true; 
+						break; 
+					}
+				}
+				var friend = name,
 						span = $("<span>").text(friend),
 						a = $("<a>").addClass("remove").attr({
 							href: "javascript:",
@@ -258,11 +268,7 @@
 				span.attr("wp",event.friends[i]);
 				//Добавляем friend к div friend 
 				span.insertBefore("#to");
-					
-				//Удаление из списка добавленного друга
-				for(var p in suggestions){
-					if(suggestions[p].friend_wp == event.friends[i]){ suggestions[p].added = true; break; }
-				}
+
 			}
 			event_notes.val(event.notes);
 			
@@ -459,6 +465,7 @@
 			text: 'Изменить',
 			click: function() {
 				
+				privacy = 1;
 				for(var i in suggestions){
 					if(suggestions[i].added == true){ privacy = 0; break; }
 				}
@@ -519,6 +526,7 @@
 	});
 	
 	$(function(){
+		//Получаем список друзей
 		$.getJSON("/jquery-calendar?friendlist", function(data) { suggestions = data; });
 		//Присоединяем автозаполнение
 		$("#to").autocomplete({
@@ -552,7 +560,8 @@
 				$("#to").val("").css("top", 2);
 			}
 		}).data( "autocomplete" )._renderItem = function( ul, item ) {
-			if(item.added == false){
+			//Если друг не добавлен в список и фильтрация по введенному
+			if(item.added == false && item.name.toLowerCase().search($("#to").val().toLowerCase()) != -1 ){
 				return $( "<li>" ).data( "item.autocomplete", item )
 					.append( "<a>" + item.name + "<br>" + item.friend_wp + "</a>" )
 					.appendTo( ul );

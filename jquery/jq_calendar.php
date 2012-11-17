@@ -106,11 +106,17 @@ switch ($op) {
 				`repeat`  	  = "' . $repeat .'",
 				`finish`  	  = "' . $finish .'",
 				`napominanie` = "' . $remind . '",
+				`visible_all` = "' . $privacy . '",
 				`zametki`	  = "' . $notes . '"
 				WHERE `id` 	  = "' . $id . '"';
 		if (mysql_query($sql)) { echo $id; }
 		
-		//Не показывать никому либо Список на просмотр
+		//Показать всем 
+/*		if($privacy == 1){ //Удаляем тех кто был в просмотрах
+			$sql = "DELETE FROM `discount_users_events_visible` WHERE `event_id` = $id";
+			mysql_query($sql);
+		}
+*/		//Не показывать никому либо Список друзей на просмотр
 		if($privacy == 0){
 			//Количество людей которые в приватности по этой записе
 			//$sql = "SELECT * FROM `discount_users_events_visible` WHERE `event_id` = $id";
