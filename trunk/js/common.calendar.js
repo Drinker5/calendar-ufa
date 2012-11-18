@@ -628,12 +628,17 @@
 	});	
 	
 	$("#privacy_nobody").click(function(){
-		$("#privacy_friends_div").hide();
+		//$("#privacy_friends_div").hide();
+		privacy_friends.autocomplete( "option", "disabled", true );
+		privacy_friends.css("opacity",0.5);
+
 		privacy = 0;
 	});
 
 	$("#privacy_all").click(function(){
-		$("#privacy_friends_div").show();
+		//$("#privacy_friends_div").show();
+		privacy_friends.autocomplete( "option", "disabled", false );
+		privacy_friends.css("opacity",1);
 		privacy = 1;
 	});
 	
