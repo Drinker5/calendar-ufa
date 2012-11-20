@@ -486,7 +486,7 @@
                                     <h3 class="name fl_l"><a href="/'.$massFeed[$i]['user']['user_wp'].'">'.$massFeed[$i]['user']['firstname'].' '.$massFeed[$i]['user']['lastname'].'</a></h3>
                                     <em class="date fl_r">'.ShowDateRus($massFeed[$i]['data']).'</em>
                                 </div>
-                                <p class="action">Создано желание <strong><a href="/gift-'.$massFeed[$i]['akcia_id'].'">"'.$massFeed[$i]['header'].'"</a></strong></p>
+                                <p class="action">Создано желание <strong><a href="/gift-'.$massFeed[$i]['akcia_id'].'">'.$massFeed[$i]['header'].'</a></strong></p>
                                 <div class="content group">
                                     <a href="/gift-'.$massFeed[$i]['akcia_id'].'" class="bordered fl_l">
                                         <img src="'.$massFeed[$i]['akcia_photo'].'" alt="">
@@ -494,16 +494,19 @@
                                     <div class="info wrapped">
                                         <h3 class="name">
                                             <strong class="other">Желание: </strong>
-                                            <a href="/gift-'.$massFeed[$i]['akcia_id'].'">"'.$massFeed[$i]['header'].'"</a>
+                                            <a href="/gift-'.$massFeed[$i]['akcia_id'].'">'.$massFeed[$i]['header'].'</a>
                                         </h3>
                                         <span>
+                                            <!--
                                             Подарок к: <strong>13.08.2012</strong>
                                             <br>
-                                            Место получения: <strong><a href="#">Apple Store Moscow на Новослободской</a></strong>
-                                        </span> 
+                                            -->
+                                            Место получения: <strong><a href="/shop-'.$massFeed[$i]['shop_id'].'">'.$massFeed[$i]['shop_name'].' на '.$massFeed[$i]['shop_address'].'</a></strong>
+                                        </span>
+                                        '.(empty($massFeed[$i]['reason'])?'':'
                                         <p class="description">
-                                            Повод: Давно хотел себе такой чехол. Классный и все такое... и бла-бла-бла
-                                        </p>
+                                            Повод: '.ToText($massFeed[$i]['reason']).'
+                                        </p>').'
                                     </div>
                                 </div>
                             </div>

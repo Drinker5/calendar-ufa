@@ -18,7 +18,7 @@
             <td class="col2">
                 
                 <form class="recipient">
-                  <input type="text" name='search_query' placeholder="Введите адрес или название заведения">
+                  <input type="text" name='search_query' placeholder="Введите адрес или название заведения" value="<?=$_SESSION['WP_USER']['town_name']?>" >
                   <input type="submit" name='search_submit' value="">
                </form>
             </td>

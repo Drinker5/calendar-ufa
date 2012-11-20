@@ -272,8 +272,8 @@ jQuery(document).ready(function($) {
             $('#status-change-window').hide();
         }
     });
-
-    $("input:checkbox").uniform();
+    
+    $("input:checkbox, input:radio").uniform();
     
     var rAmount = $("#rangeAmount");
     
@@ -310,32 +310,29 @@ jQuery(document).ready(function($) {
 		$("html, body").animate({ scrollTop: 0 }, 400);
 		return false;
 	});
-
-
-
 });
 
-//Смещение по клику на маркере
+
 function moveMarker(zoom){
-	if(zoom==20)     return 0.0002;
-	else if(zoom==19)return 0.0002;
-	else if(zoom==18)return 0.0002;
-	else if(zoom==17)return 0.0005;
-	else if(zoom==16)return 0.001;
-	else if(zoom==15)return 0.0019;
-	else if(zoom==14)return 0.00394;
-	else if(zoom==13)return 0.0075;
-	else if(zoom==12)return 0.015;
-	else if(zoom==11)return 0.03;
-	else if(zoom==10)return 0.063;
-	else if(zoom==9) return 0.12;
-	else if(zoom==8) return 0.24;
-	else if(zoom==7) return 0.48;
-	else if(zoom==6) return 0.94;
-	else if(zoom==5) return 1.9;
-	else if(zoom==4) return 3.65;
-	else if(zoom==3) return 7;
-	else if(zoom==2) return 12.5;
-	else if(zoom==1) return 22;
-	else             return 30;
+    if(zoom==20)     return 0.0002;
+    else if(zoom==19)return 0.0002;
+    else if(zoom==18)return 0.0002;
+    else if(zoom==17)return 0.0005;
+    else if(zoom==16)return 0.001;
+    else if(zoom==15)return 0.0019;
+    else if(zoom==14)return 0.00394;
+    else if(zoom==13)return 0.0075;
+    else if(zoom==12)return 0.015;
+    else if(zoom==11)return 0.03;
+    else if(zoom==10)return 0.063;
+    else if(zoom==9) return 0.12;
+    else if(zoom==8) return 0.24;
+    else if(zoom==7) return 0.48;
+    else if(zoom==6) return 0.94;
+    else if(zoom==5) return 1.9;
+    else if(zoom==4) return 3.65;
+    else if(zoom==3) return 7;
+    else if(zoom==2) return 12.5;
+    else if(zoom==1) return 22;
+    else             return 30;
 }

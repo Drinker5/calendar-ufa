@@ -372,31 +372,14 @@
 									}
 								});
 								markerLayer.factory(function(f){
-									var img = document.createElement('img');
-									img.className = 'marker-image';
-									img.setAttribute('src', f.properties.image);
-
-								//Смещение к координатам маркера
-								MM.addEvent(img, 'click', function(e){
-									map.ease.location({
-										lat:position.coords.latitude,
-										lon:position.coords.longitude
-									}).zoom(map.zoom()).optimal();
-									$('.marker-image').attr({src:f.properties.image});
-									img.setAttribute('src', 'https://dl.dropbox.com/u/23467346/pic/male-2.png'); //https://dl.dropbox.com/u/23467346/pic/alien.png
-									$('.place').removeClass('active');
-									$('.place[rel='+f.properties.id+']').fadeOut(function(){
-										setTimeout(function(){
-											$('.place[rel='+f.properties.id+']').prependTo('.places-list').fadeIn(function(){
-												setTimeout(function(){
-													$('.place[rel='+f.properties.id+']').addClass('active');
-												},
-												1);
-											});
-										},
-										300);
-									});
-								});
+									var img=document.createElement('div');
+									img.setAttribute('data', f.properties.image);
+									img.setAttribute('class', 'marker-image pin blue');
+									img.setAttribute('id', f.properties.id);
+									img.innerHTML='<img src="<?php
+										$avka=ShowAvatar(array($USER_INFO['user_wp']),25,25,false);
+										echo $avka[0]['avatar'];
+									?>" />';
 								return img;
 							});
 							//interaction.formatter(function(feature){
@@ -432,10 +415,11 @@
 					mrk=new Object();
 
 					var markerLayer=mapbox.markers.layer().features([<?=$markers?>]).factory(function(f){
-						var img=document.createElement('img');
-						img.className='marker-image';
-						img.setAttribute('src', f.properties.image);
+						var img=document.createElement('div');
+						img.setAttribute('data', f.properties.image);
+						img.setAttribute('class', 'marker-image pin blue');
 						img.setAttribute('id', f.properties.id);
+						img.innerHTML='<img src="/pic/icon_25x25.png" />';
 
 						mrk[f.properties.id]=new Object();
 						mrk[f.properties.id]['lat']=f.geometry.coordinates[1];
@@ -443,14 +427,14 @@
 						mrk[f.properties.id]['img']=f.properties.image;
 
 						//Смещение к координатам маркера
-						MM.addEvent(img, 'click', function(e){
-							console.log('Zoom: '+map.zoom()+'. Move: '+moveMarker(map.zoom())+'.');
+						//ezoom=moveMarker(map.zoom().toFixed());
+						MM.addEvent(img, 'mouseover', function(e){
+							ezoom=moveMarker(map.zoom().toFixed());
+							console.log('Zoom: '+map.zoom().toFixed()+'. Move: '+ezoom+'.');
 							map.ease.location({
-								lat:(f.geometry.coordinates[1]+moveMarker(map.zoom())),
+								lat:(f.geometry.coordinates[1]+ezoom),
 								lon:f.geometry.coordinates[0]
 							}).zoom(map.zoom()).optimal();
-							//$('.marker-image').attr({src:f.properties.image});
-							//img.setAttribute('src', 'https://dl.dropbox.com/u/23467346/pic/alien.png');
 						});
 						return img;
 					});
@@ -522,9 +506,12 @@
 						max    = <?=ceil($subs_count/$rows)?>,
 						rows   = <?=$rows?>,
 						begin  = rows,
-						cToggle= 1;
+						cToggle= 1,
+						wait   = 0;
 
 					function myLenta(){
+						if(wait==1)return;
+						wait=1;
 						if(max>page)$('div#loadmoreajaxloader').show();
 						$.ajax({
 							url:'/jquery-lenta',
@@ -549,6 +536,7 @@
 											.popover('setOption', 'position', 'bottom')
 										page =page+1;
 										begin=begin+rows;
+										wait =0;
 										//alert(page+' '+begin);
 									}
 									else{
@@ -678,7 +666,7 @@
 							myLenta();
 						}
 					});
-
+/*
 					setInterval(function(){
 						$.ajax({
 							url:'/jquery-comments',
@@ -696,7 +684,6 @@
 						});
 					},60000);
 
-/*
 					jQuery(function($){
 						$("#status-input").keypress(function(event){
 							if(event.which == '13'){

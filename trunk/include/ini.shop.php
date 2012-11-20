@@ -221,7 +221,7 @@
 		}
 		//Сокращенная информация о группе заведений.
 		//$id_list - список $id в виде строки. (разделитель - запятая)
-		function ShopsInfoMin($id_list, $sort_param='name', $category=1, $sort_type='ASC', $w = 50, $h = 50)
+		function ShopsInfoMin($id_list, $sort_param='name', $category=1, $sort_type='ASC', $w = 50, $h = 50,$center=true)
 		{
 			global $MYSQL;
 
@@ -256,7 +256,7 @@ GROUP BY  `shop`.`id` ".$sort_query);
 
 			$shops = array();
 			$i = 0;
-			$logos = ShowLogoFast($result,$w,$h);
+			$logos = ShowLogoFast($result,$w,$h,$center);
 			foreach ($result as $val) {
 				$shops[] = array(
 					'id' => $val['shop_id'],

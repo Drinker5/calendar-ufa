@@ -1,38 +1,111 @@
 .checker {
-	width: 13px;
-	height: 13px;
-	position: relative;
-	display: -moz-inline-stack;
-	display: inline-block;
-	vertical-align: text-top;
-	*display: inline;
-	zoom: 1;
-	margin-right: 5px;
-	box-shadow: 0 1px 0 white;
-	-webkit-box-shadow: 0 1px 0 white;
-	-moz-box-shadow: 0 1px 0 #fff;
+ width: 13px;
+ height: 13px;
+ position: relative;
+ display: -moz-inline-stack;
+ display: inline-block;
+ vertical-align: text-top;
+ *display: inline;
+ zoom: 1;
+ margin-right: 5px;
+ box-shadow: 0 1px 0 white;
+ -webkit-box-shadow: 0 1px 0 white;
+ -moz-box-shadow: 0 1px 0 #fff;
 }
 
 
 .checker span {
-	background: url(../pic/checkboxes.png) no-repeat 0 0;
-	height: 13px;
-	width: 13px;
-	display: -moz-inline-box;
-	display: inline-block;
-	text-align: center;
+ background: url(../pic/checkboxes.png) no-repeat 0 0;
+ height: 13px;
+ width: 13px;
+ display: -moz-inline-box;
+ display: inline-block;
+ text-align: center;
 }
 
 .checker span.checked {
-	background-position: 0 -14px;
+ background-position: 0 -14px;
 }
 
 .checker input {
-	width: 13px;
-	height: 13px;
-	opacity: 0;
-	filter: alpha(opacity:0);
-	display: inline-block;
-	background: none;
-	cursor: pointer;
+ width: 13px;
+ height: 13px;
+ opacity: 0;
+ filter: alpha(opacity:0);
+ display: inline-block;
+ background: none;
+ cursor: pointer;
+}
+
+/* Radio */
+
+div.radio {
+ width: 16px;
+ height: 17px;
+ float: left;
+ padding-left: 4px;
+}
+
+div.radio input {
+ width: 16px;
+ height: 17px;
+ cursor: pointer;
+}
+
+div.radio span {
+ height: 17px;
+ width: 16px;
+ background: url(../pic/radios.png) no-repeat 0 0;
+ float: left;
+ position: relative;
+ right: 4px;
+}
+
+div.radio:active span, 
+div.radio.active span {
+ background-position: 0 -18px;
+}
+
+div.radio.focus span, 
+div.radio:hover span {
+ background-position: 0 -18px;
+}
+
+div.radio.focus:active span,
+div.radio:active:hover span,
+div.radio.active:hover span,
+div.radio.active.focus span {
+ background-position: 0 -18px;
+}
+
+div.radio span.checked {
+ background-position: 0 -18px;
+}
+
+div.radio:active span.checked,
+div.radio.active span.checked {
+ background-position: 0 -18px;
+}
+
+div.radio.focus span.checked, div.radio:hover span.checked {
+ background-position: 0 -18px;
+}
+
+div.radio.focus:active span.checked, 
+div.radio:hover:active span.checked,
+div.radio.focus.active span.checked,
+div.radio.active:hover span.checked {
+ background-position: 0 -18px;
+}
+
+div.radio.disabled span,
+div.radio.disabled:active span,
+div.radio.disabled.active span {
+ background-position: 0 -18px;
+}
+
+div.radio.disabled span.checked,
+div.radio.disabled:active span.checked,
+div.radio.disabled.active span.checked {
+ background-position: 0 -18px;
 }

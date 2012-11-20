@@ -35,7 +35,16 @@ switch(@$_POST['type']){
 				$markers_lat=array();
 				$markers_lon=array();
 
-				for($i=0; $i<$count; $i++){
+				//Аватар
+				$avka=ShowAvatar(array($_SESSION['WP_USER']['user_wp']),25,25,false);
+
+				//Мои данные
+				$markers_lat[0]=$lat;
+				$markers_lon[0]=$lon;
+				$map[0]['geometry']=array('type'=>'Point','coordinates'=>array($lon,$lat));
+				$map[0]['properties']=array('image'=>$avka[0]['avatar'],'name'=>'Это я!','address'=>'Снова я!','id'=>'pin0');
+
+				for($i=1; $i<$count; $i++){
 					$logo =ShowLogo(array($places[$i]['shop_id']),70,70);
 					$logo =$logo[0]['logo'];
 
@@ -57,7 +66,7 @@ switch(@$_POST['type']){
 			</div>
 			'.($places[$i]['user_wp']==$_SESSION['WP_USER']['user_wp']?'
 			<script>
-				var ihere='.$places[$i]['id'].';
+				ihere='.$places[$i]['id'].';
 			</script>
             <div class="action current fl_r" id="shop-'.$places[$i]['id'].'">
                 <a href="javascript:;" onclick="checkIn('.$places[$i]['id'].')" class="big-circle-icon circle-icon-check-in active"></a>

@@ -11,9 +11,7 @@
             transition: background-color 0.5s ease;
 }
 
-.subscr_block:hover {
-	background-color: #f3f9fd;
-}
+.subscr_block:hover {background-color: #f3f9fd;}
 
 .subscr_content {
 	position: relative;

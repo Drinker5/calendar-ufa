@@ -1702,14 +1702,78 @@ input[type="search"]::-webkit-search-results-decoration {
  color: #0d86d5;
 }
 
-.hint.avatar {
+.upload-avatar {
+ clear: both;
+ display: block;
+}
+
+.upload-avatar .hint {
  margin-top: 12px;
+ margin-bottom: 10px;
+}
+
+.upload-avatar .btn {
+ margin-right: 10px;
+ border: none;
+}
+
+.upload-avatar .small-icon {
+ margin-right: 5px;
+ position: relative;
+ top: 1px;
+}
+
+.upload-avatar .arrow-next-step {
+ background: url(../pic/arrow-next_step.png);
+ width: 30px;
+ height: 22px;
+ display: inline-block;
+ position: relative;
+ right: 45px;
+ margin-top: -7px;
+ margin-right: -32px;
+}
+
+.upload-avatar .separator {
+ margin: 25px 0 35px 0;
+}
+
+.avatar-actions {
+ text-align: justify;
+ float: left;
+ margin-right: 35px;
+}
+
+.avatar-actions img {
+ height: 75px;
+ clear: both;
+ display: block;
+}
+
+.avatar-actions a {
+ margin-top: 5px;
+ display: block;
+ color: #3373ac;
+ font: normal 11px Tahoma, sans-serif;
+ padding: 0;
+}
+
+.avatar-actions label {
+ font: normal 11px Tahoma, sans-serif;
+ color: #3373ac;
+ margin-top: 5px;
+ padding: 0;
+}
+
+.avatar-actions a:hover, .avatar-actions label:hover {
+ text-decoration: underline;
+ cursor: pointer;
 }
 
 #notifier-box {
  position: fixed;
- bottom: 50px;
- left: 10px;
+ bottom: 5px;
+ right: 10px;
  z-index: 99;
 }
 
@@ -1771,9 +1835,8 @@ div.message-box div.message-body {
 
 .pin {
  display: block;
- width: 26px;
- height: 31px;
- padding: 14px 11px 11px 11px;
+ width: 48px;
+ height: 56px;
 }
 
 .pin.blue {
@@ -1788,4 +1851,5 @@ div.message-box div.message-body {
  height: 25px;
  width: 25px;
  border-radius: 2px;
+ margin: 14px 0 0 11px;
 }

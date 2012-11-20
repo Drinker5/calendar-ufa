@@ -90,7 +90,8 @@
                         rows    = <?=$rows?>,
                         begin   = rows,
                         category= 0,
-                        currency= 2;
+                        currency= 2,
+                        wait    = 0;
 
                     function choosenGifts(type){
                         var name      = $('#giftName').val(),
@@ -102,6 +103,9 @@
                             myPlace   = $('#giftMyPlace').prop('checked'),
                             onlyAction= $('#giftOnlyAction').prop('checked'),
                             idGifts   = $('#idGifts');
+
+                        if(wait==1)return;
+                        wait=1;
 
                         if(type=='n'){
                         	max=0;
