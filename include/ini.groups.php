@@ -141,31 +141,33 @@
 		global $MYSQL, $AKCIANAME;
 
 		$GLOBALS['PHP_FILE'] = __FILE__;
-	    $GLOBALS['FUNCTION'] = __FUNCTION__;
+		$GLOBALS['FUNCTION'] = __FUNCTION__;
 
-	    $type_id  = varr_int($type_id);
-	    $group_id = varr_int($group_id);
+		$type_id  = varr_int($type_id);
+		$group_id = varr_int($group_id);
 
-	    $tbgroups      = "pfx_categories";
+		$tbgroups      = "pfx_categories";
 		$tbskgr        = "pfx_cat_to_shop";
 		$tbakcia       = "pfx_akcia";
 		$tbcountryshop = "pfx_country_shops";
 		$tbtype        = "pfx_type";
 
-		$akcia = $MYSQL->query("SELECT name_".LANG_SITE." name FROM $tbtype WHERE id = $type_id");
+		$akcia     = $MYSQL->query("SELECT name_".LANG_SITE." name FROM $tbtype WHERE id = $type_id");
 		$AKCIANAME = $akcia[0]['name'];
 
 		if(isset($_SESSION['KLIENT'])){
 			$where = " AND $tbakcia.klient_id = ".$_SESSION['KLIENT']['id'];
 		} else $where = " AND $tbakcia.moderator=1";
 
-	    return $MYSQL->query("SELECT DISTINCT $tbgroups.menu_id gr_id, $tbgroups.name_".LANG_SITE." gr_name, $tbgroups.img gr_img, $tbgroups.classhtml
-	                                FROM $tbgroups
-	                               INNER JOIN $tbskgr ON $tbskgr.cat_id = $tbgroups.menu_id
-	                               INNER JOIN $tbakcia ON $tbakcia.shop_id = $tbskgr.shop_id
-	                               INNER JOIN $tbcountryshop ON $tbcountryshop.shop_id = $tbskgr.shop_id
-	                             WHERE $tbgroups.menu_level=$group_id AND $tbcountryshop.country_id=".(int)$_SESSION['TOWN_ID']." AND $tbakcia.idtype = $type_id $where
-	                             ORDER BY $tbgroups.name_".LANG_SITE."");
+		return $MYSQL->query("
+			SELECT DISTINCT $tbgroups.menu_id gr_id, $tbgroups.name_".LANG_SITE." gr_name, $tbgroups.img gr_img, $tbgroups.classhtml
+			FROM $tbgroups
+			INNER JOIN $tbskgr ON $tbskgr.cat_id = $tbgroups.menu_id
+			INNER JOIN $tbakcia ON $tbakcia.shop_id = $tbskgr.shop_id
+			INNER JOIN $tbcountryshop ON $tbcountryshop.shop_id = $tbskgr.shop_id
+			WHERE $tbgroups.menu_level=$group_id AND $tbakcia.idtype = $type_id $where
+			ORDER BY $tbgroups.name_".LANG_SITE."
+		");
 	}
 
 

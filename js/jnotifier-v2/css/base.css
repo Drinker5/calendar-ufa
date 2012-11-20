@@ -1,0 +1,62 @@
+body {
+	background: #fff url('../images/bg.png');
+	margin: 0;
+	padding: 0;
+	font-size: 13px;
+	font-family: Ubuntu, Tahoma, Arial, sans-serif;
+}
+
+input, textarea, select {
+	font-size: 13px;
+	font-family: Ubuntu, Tahoma, Arial, sans-serif;
+	border: 1px solid #dcdcdc;
+	padding: 3px 5px;
+}
+
+#wrap {
+	width: 313px;
+	margin: 30px auto;
+	background: #fff;
+	padding: 20px;
+	box-shadow: 0px 0px 10px #dcdcdc;
+	border-radius: 2px;
+}
+
+h1 {
+	color: #66c;
+	font-size: 21px; 
+	font-family: 'PT Sans Narrow', Ubuntu, Tahoma, Arial, sans-serif; 
+	font-weight: normal;
+	margin: 0 0 15px 0;
+}
+
+.form .field {
+	overflow: hidden;
+	margin: 0 0 15px 0;
+}
+
+.form .field label {
+	display: block;
+	padding: 0px 0px 3px;
+}
+
+.form .field input, .form .field select, .form .field textarea {
+	width: 300px;
+}
+
+.form .field input[type="checkbox"] {
+	width: auto;
+}
+
+.form .field-button input {
+	background: #66c;
+	width: 100%;
+	color: #fff;
+	border: 0;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.form .field-button input:hover {
+	background: #669;
+}

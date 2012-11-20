@@ -109,9 +109,12 @@
 					max    = <?=ceil($subs_count/$rows)?>,
 					rows   = <?=$rows?>,
 					begin  = rows,
-					cToggle= 1;
+					cToggle= 1,
+					wait   = 0;
 
 				function myFeed(){
+					if(wait==1)return;
+					wait=1;
 					if(max>page)$('div#loadmoreajaxloader').show();
 					$.ajax({
 						url:'/jquery-feed',
@@ -136,6 +139,7 @@
 										.popover('setOption', 'position', 'bottom')
 									page =page+1;
 									begin=begin+rows;
+									wait =0;
 									//alert(page+' '+begin);
 								}
 								else{

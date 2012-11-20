@@ -951,7 +951,7 @@ WHERE  `id` =  `country_id`
 			//$friends = $MYSQL->query("SELECT friend_wp FROM pfx_friends WHERE user_wp = $user_wp AND good=1");
 			//if(is_array($friends)){
 				//foreach($friends as $key=>$value){
-					$MYSQL->query("INSERT INTO `pfx_uvedomlenie` (`data_add`, `user_wp`, `deystvie_id`) VALUES (now(), ".$user_to.", ".$id.")");
+					$MYSQL->query("INSERT INTO `pfx_uvedomlenie` (`data_add`, `user_wp`, `deystvie_id`, `tiny`) VALUES (now(), ".$user_to.", ".$id.", 0)");
 				//}
 			//}
 		}
@@ -1922,6 +1922,13 @@ WHERE  `id` =  `country_id`
 			//$MYSQL->query("INSERT INTO $tbusers_deystvie (data_add,user_wp,deystvie,id_deystvie) VALUES (now(),$friend_wp,1,".varr_int($_SESSION['WP_USER']['user_wp']).")");
 			$this->AddDeystvie($friend_wp,0,1,varr_int($my_wp));
 
+			//Удаляем уведомление о новом друге
+			$deystvie_id=$MYSQL->query("SELECT `pfx_users_deystvie`.`id` FROM `pfx_users_deystvie`
+										INNER JOIN `".$tbfriends."` ON `pfx_users_deystvie`.`id_deystvie`=`".$tbfriends."`.`id`
+										WHERE `pfx_users_deystvie`.`deystvie`=9 AND ((`".$tbfriends."`.`user_wp`=".$friend_wp." AND `".$tbfriends."`.`friend_wp`=".varr_int($my_wp).") OR (`".$tbfriends."`.`user_wp`=".varr_int($my_wp)." AND `".$tbfriends."`.`friend_wp`=".$friend_wp."))");
+			if(is_array($deystvie_id))
+				$MYSQL->query("DELETE FROM `pfx_uvedomlenie` WHERE `deystvie_id`=".$deystvie_id[0]['id']);
+
 			$friend=$this->Info_min($friend_wp,0,0);
 			if(is_array($friend)){
 				$Msg ='Здравствуйте, '.trim($friend['firstname'].' '.$friend['lastname']).'<br /><br />';
@@ -1953,15 +1960,21 @@ WHERE  `id` =  `country_id`
 	                                 OR (user_wp = $friend_wp AND friend_wp = ".varr_int($_SESSION['WP_USER']['user_wp']).")");
 
 	    if(is_array($friend_id)){
-	       foreach($friend_id as $key=>$value){
-	       	  $MYSQL->query("DELETE FROM $tbfriendscircles WHERE friends_id = ".$value['id']); // Удаляем круги
-	       	  $MYSQL->query("DELETE FROM $tbfriends WHERE id = ".$value['id']); // Удаляем дружбу
-	       }
-           // Удаляем с ленты событий информацию о дружбе
-	       $MYSQL->query("DELETE FROM $tbusers_deystvie WHERE (user_wp = ".varr_int($_SESSION['WP_USER']['user_wp'])." AND id_deystvie = $friend_wp)
+			//Удаляем уведомление о новом друге
+			$deystvie_id=$MYSQL->query("SELECT `id` FROM `pfx_users_deystvie`
+										WHERE `deystvie`=9 AND `id_deystvie`=".$friend_id[0]['id']);
+			if(is_array($deystvie_id))
+				$MYSQL->query("DELETE FROM `pfx_uvedomlenie` WHERE `deystvie_id`=".$deystvie_id[0]['id']);
+
+	       	foreach($friend_id as $key=>$value){
+	       		$MYSQL->query("DELETE FROM $tbfriendscircles WHERE friends_id = ".$value['id']); // Удаляем круги
+	       		$MYSQL->query("DELETE FROM $tbfriends WHERE id = ".$value['id']); // Удаляем дружбу
+	       	}
+           	// Удаляем с ленты событий информацию о дружбе
+	       	$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE (user_wp = ".varr_int($_SESSION['WP_USER']['user_wp'])." AND id_deystvie = $friend_wp)
 	                        OR (id_deystvie = ".varr_int($_SESSION['WP_USER']['user_wp'])." AND user_wp = $friend_wp)
 	                        AND deystvie = 1");
-	       return true;
+	       	return true;
 	    }
 	    return false;
 	}
@@ -2275,31 +2288,35 @@ WHERE  `id` =  `country_id`
 	    				                            FROM $tbakcia
 	    			                              WHERE id = ".(int)$value['id_deystvie']);
 	    			  else
-	    			  $result = $MYSQL->query("SELECT $tbakcia.id, $tbakcia.header, $tbakcia.shop_id, $tbshops.name, $tbshops.logo
+	    			  $result = $MYSQL->query("SELECT $tbakcia.id, $tbakcia.header, $tbakcia.shop_id, $tbshops.name, $tbshops.logo, $tbhochu.reason, $tbshopadres.adress
 	    				                            FROM $tbakcia
 	    			                               INNER JOIN $tbhochu ON $tbhochu.akcia_id = $tbakcia.id
 	    			                               INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
+	    			                               INNER JOIN $tbshopadres ON $tbshopadres.shop_id = $tbakcia.shop_id
 	    			                              WHERE $tbhochu.id = ".varr_int($value['id_deystvie']));
 
 	    			  if(is_array($result)){
 
-	    			  	$logo = ShowLogo(array(@$result[0]['shop_id']),188,101);
-	    			  	if(is_array($logo)) $logo = $logo[0]['logo'];
+	    			  	//Отключаем, пока не требуется
+	    			  	//$logo = ShowLogo(array(@$result[0]['shop_id']),188,101);
+	    			  	//if(is_array($logo)) $logo = $logo[0]['logo'];
 
 	    			  	$photo = ShowFotoAkcia(array(@$result[0]['id']),130,91);
 	    			  	if(is_array($photo)) $photo = $photo[0]['foto'];
 
 	    			  $array[] = array(
-	    			    'id'         => $value['id'],
-	    			    'deystvie'   => $value['deystvie'],
-	    			    'data'       => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			    'akcia_id'   => $result[0]['id'],
-	    			    'akcia_photo'=> $photo,
-	    			    'user'       => $this->Info_min($value['user_wp'],40,40),
-	    			    'header'     => htmlspecialchars(stripslashes(trim($result[0]['header']))),
-	    			    'shop_name'  => htmlspecialchars(stripslashes(trim(@$result[0]['name']))),
-	    			    'shop_id'    => @$result[0]['shop_id'],
-	    			    'shop_logo'  => $logo,
+	    			    'id'          => $value['id'],
+	    			    'deystvie'    => $value['deystvie'],
+	    			    'data'        => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+	    			    'akcia_id'    => $result[0]['id'],
+	    			    'akcia_photo' => $photo,
+	    			    'reason'      => $result[0]['reason'],
+	    			    'user'        => $this->Info_min($value['user_wp'],40,40),
+	    			    'header'      => htmlspecialchars(stripslashes(trim($result[0]['header']))),
+	    			    'shop_name'   => htmlspecialchars(stripslashes(trim(@$result[0]['name']))),
+	    			    'shop_address'=> str_replace("::",", ",$result[0]['adress']),
+	    			    'shop_id'     => @$result[0]['shop_id'],
+	    			    //'shop_logo'   => $logo,
 	    			  );
 	    			  } else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);
@@ -2469,6 +2486,7 @@ WHERE  `id` =  `country_id`
 		$tbpodpiska       = "pfx_podpiska";
 		$tbcountry        = "pfx_country";
 		$tbshops          = "pfx_shops";
+		$tbshopadres      = "pfx_shops_adress";
 		$tbusers          = "pfx_users";
 		$tbhistorypay     = "pfx_historypay";
 		$tbakcia          = "pfx_akcia";
@@ -2658,31 +2676,35 @@ WHERE  `id` =  `country_id`
 	    				                            FROM $tbakcia
 	    			                              WHERE id = ".(int)$value['id_deystvie']);
 	    			  else
-	    			  $result = $MYSQL->query("SELECT $tbakcia.id, $tbakcia.header, $tbakcia.shop_id, $tbshops.name, $tbshops.logo
+	    			  $result = $MYSQL->query("SELECT $tbakcia.id, $tbakcia.header, $tbakcia.shop_id, $tbshops.name, $tbshops.logo, $tbhochu.reason, $tbshopadres.adress
 	    				                            FROM $tbakcia
 	    			                               INNER JOIN $tbhochu ON $tbhochu.akcia_id = $tbakcia.id
 	    			                               INNER JOIN $tbshops ON $tbshops.id = $tbakcia.shop_id
+	    			                               INNER JOIN $tbshopadres ON $tbshopadres.shop_id = $tbakcia.shop_id
 	    			                              WHERE $tbhochu.id = ".varr_int($value['id_deystvie']));
 
 	    			  if(is_array($result)){
 
-	    			  	$logo = ShowLogo(array(@$result[0]['shop_id']),188,101);
-	    			  	if(is_array($logo)) $logo = $logo[0]['logo'];
+	    			  	//Отключаем, пока не требуется
+	    			  	//$logo = ShowLogo(array(@$result[0]['shop_id']),188,101);
+	    			  	//if(is_array($logo)) $logo = $logo[0]['logo'];
 
 	    			  	$photo = ShowFotoAkcia(array(@$result[0]['id']),130,91);
 	    			  	if(is_array($photo)) $photo = $photo[0]['foto'];
 
 	    			  $array[] = array(
-	    			    'id'         => $value['id'],
-	    			    'deystvie'   => $value['deystvie'],
-	    			    'data'       => $value['data_add'], //MyDataTime($value['data_add'],'date'),
-	    			    'akcia_id'   => $result[0]['id'],
-	    			    'akcia_photo'=> $photo,
-	    			    'user'       => $this->Info_min($value['user_wp'],40,40),
-	    			    'header'     => htmlspecialchars(stripslashes(trim($result[0]['header']))),
-	    			    'shop_name'  => htmlspecialchars(stripslashes(trim(@$result[0]['name']))),
-	    			    'shop_id'    => @$result[0]['shop_id'],
-	    			    'shop_logo'  => $logo,
+	    			    'id'          => $value['id'],
+	    			    'deystvie'    => $value['deystvie'],
+	    			    'data'        => $value['data_add'], //MyDataTime($value['data_add'],'date'),
+	    			    'akcia_id'    => $result[0]['id'],
+	    			    'akcia_photo' => $photo,
+	    			    'reason'      => $result[0]['reason'],
+	    			    'user'        => $this->Info_min($value['user_wp'],40,40),
+	    			    'header'      => htmlspecialchars(stripslashes(trim($result[0]['header']))),
+	    			    'shop_name'   => htmlspecialchars(stripslashes(trim(@$result[0]['name']))),
+	    			    'shop_address'=> str_replace("::",", ",$result[0]['adress']),
+	    			    'shop_id'     => @$result[0]['shop_id'],
+	    			    //'shop_logo'   => $logo,
 	    			  );
 	    			  } else {
 	    					$MYSQL->query("DELETE FROM $tbusers_deystvie WHERE id=".$value['id']);

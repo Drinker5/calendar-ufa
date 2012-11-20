@@ -16,7 +16,7 @@ function getAvatarView()
         if ($value['avatar'] == $default_avatar)
             $output .= getSimpleAvatarHtml($value['avatar'],$value['photo_id'],true);
         else
-            $tmp_output .= getSimpleAvatarHtml($value['avatar'],$value['photo_id']);
+            $output .= getSimpleAvatarHtml($value['avatar'],$value['photo_id']);
         $count_of_avatar += 1;
     }
     $output .= $tmp_output;
@@ -25,10 +25,10 @@ function getAvatarView()
 }
 function getSimpleAvatarHtml($path,$id,$main=false)
 {
-    $output = "<div class='simple_old_avatar'><img src=$path /> <input type='hidden' name='photo_id' value='$id'/>
-        <a href='javascript:void(null)' class='delete_avatar'>Удалить</a>";
-    if (! $main)
-        $output .= "<a href='javascript:void(null)' class='set_to_default_avatar'>Сделать основной</a>";
+    $output = "<div class='avatar-actions'><img src=$path /> <input type='hidden' name='photo_id' value='$id'/>";
+    $output .= "<a href='javascript:void(null)' class='delete_avatar'><i class='small-icon icon-delete'></i>Удалить</a>";
+    $checked = ($main)?'checked=checked':'';
+    $output .= "<label class='set_to_default_avatar'><input type='radio' name='radio' $checked>Сделать основной</label>";
     $output .= "</div>";
     return $output;
 }
@@ -42,7 +42,7 @@ function getSimpleAvatarHtml($path,$id,$main=false)
         <li class="opacity_link"><a href="/my-phones">Телефон</a></li>
         <!--<li class="opacity_link"><a href="/my-wallets">Счет</a></li>-->
         <li class="opacity_link"><a href="/my-alerts">Оповещения</a></li>
-        <li class="opacity_link active"><a href="/my-avatar">Изменить аватар</a></li>
+        <li class="opacity_link"><a class="active" href="/my-avatar">Изменить аватар</a></li>
         <li class="opacity_link"><a href="/my-password">Изменить пароль</a></li>
         <!--<li class="opacity_link"><a href="/my-subscribes">Подписки</a></li>-->
     </ul>
@@ -64,28 +64,20 @@ function getSimpleAvatarHtml($path,$id,$main=false)
             
         </div>
     </div>
+</div>
+<div class="upload-avatar center">
+    <p class="hint px28">Загрузи свои фотографии на страницу в качестве аватара (5 штук)</p>
+    <span class="arrow-next-step"></span>
+    <span class="btn btn-green" id='add-photo-but'><i class="small-icon icon-to-me white"></i>Загрузить с компьютера</span>
+    <span class="btn btn-green"><i class="small-icon icon-photo white"></i>Добавить фото в альбом</span>
+    <div id='files'></div>
+    <div class='error_messages'>Нельзя загрузить больше 5 аватар</div>
+    <div class="separator"></div>
 
-
-    <div class="tools">
-        <div id="avatar_tools">
-            <div class="left_sidebar">
-                <div id="area_to_drop_file">
-                <span>Перетащи фотографию сюда</span>
-                <div id="photus"></div></div>
-            </div>
-            <div class="right_sidebar">
-                <span class="clr-but clr-but-green" id="add-photo-but"><sub></sub><a href="#">Загрузить фото</a><sup></sup></span><br />
-                <a href="#">Выбрать фотографию из моих альбомов</a>
-                <div id="files"></div>
-                <div class='error_messages'>
-                    <span class='error_message'>Нельзя загрузить больше 5 аватар</span>
-                </div>
-            </div>
-            <div class="cleared"></div>
-        </div>
-    </div>
+<div class='cleared'></div>
     <!--<div class="btn btn-green" id="save_buttonus">Сохранить</div>-->
     <div class='old_avatars'><?=getAvatarView()?></div>
+</div>
 </div>
 <input type="hidden" id="x" value="0" /><input type="hidden" id="y" value="0" />
 <input type="hidden" id="w" value="190" /><input type="hidden" id="h" value="190" />
@@ -95,7 +87,8 @@ function getSimpleAvatarHtml($path,$id,$main=false)
 var count_of_avatar = <?=$count_of_avatar?>;
 $(document).ready(function(){
     $('a.delete_avatar').click(delete_avatar);
-    $('a.set_to_default_avatar').click(set_to_default_avatar);
+    $('label.set_to_default_avatar').click(set_to_default_avatar);
+    $('input[type=radio]').uniform();
     if (count_of_avatar >= 5)
     {
         delete createUploader;
@@ -120,10 +113,9 @@ function set_to_default_avatar()
 }
 function action_to_avatar(element,action)
 {
-    var block = $(element).parent();
+    var block = $(element).closest('.avatar-actions');
     var photo_id = $('input[name=photo_id]',block).val();
     var action = action;
-    console.log('action='+action+' photo_id='+photo_id);
     $.ajax({
           url:'/jquery-avatar',
           cache:false,
@@ -136,7 +128,7 @@ function action_to_avatar(element,action)
 }
     $("#close_but").click(function(){
         $(".modal_page_img").hide();
-        $(".tools").show();
+        $(".upload-avatar").show();
     });
 	function createUploader(){
 		var uploader=new webimg.FileUploader({
@@ -149,7 +141,7 @@ function action_to_avatar(element,action)
 					multiple         :false,
 					onComplete       :function(id, fileName, responseJSON){
                                             $(".modal_page_img").show();
-                                            $(".tools").hide();
+                                            $(".upload-avatar").hide();
 						$('.webimg-upload-list').html('');
 						if(responseJSON.success){
 							CropAndSave(responseJSON);
@@ -183,6 +175,7 @@ function updateCoords(c){
 }
 
 //Загрузка файла, Drug and Drop
+
 var dropbox = $("#area_to_drop_file");
 dropbox.bind(
     {
@@ -218,7 +211,7 @@ function CropAndSave(response)
 {
     $('#img').width(response.w);
     $(".modal_page_img").show();
-    $(".tools").hide();
+    $(".upload-avatar").hide();
     $('#image_container').html('<img src="'+response.photo+'" width="'+response.w+'" height="'+response.h+'" id="target">');
     $('#avatar_orig').val(response.photo);
     $("#preview").remove();

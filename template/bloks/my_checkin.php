@@ -1,12 +1,15 @@
+<?php
+	$avka=ShowAvatar(array($_SESSION['WP_USER']['user_wp']),25,25,false);
+?>
                 <div class="title margin">
                     <h2>Check-in</h2>    
                 </div> <!-- /.title -->
 
-                <div class="nav-panel group top-border">
-                    <span class="category-select">Выберите место в котором находитесь или укажите заведение в радиусе 2км, что бы ваши друзья могли подарить подарки:</span>
+                <div class="nav-panel group geo">
+                	<span class="geo_icon"><span class="geo_rotate"></span></span>
+                	<span class="geo_arrow"></span>
+                	<span class="hint">Определи свое местоположение на карте и твои друзья смогут видеть тебя!</span>
                 </div> <!-- /.nav-panel -->
-
-                <div class="separator"></div>
 
                 <div class="edit-places-container">
                     <div class="map fl_l">
@@ -19,6 +22,8 @@
                         </div>
                     </div> <!-- /.map -->
 					<script>
+						var ihere=0;
+
 						$('.place').live('mouseover', function(){
 							var that=$(this), id=that.attr('rel');
 							$('.place').removeClass('active');
@@ -62,13 +67,19 @@
 										var markersLayer=mapbox.markers.layer().features(html.map).factory(function(f){
 											var img=document.createElement('img');
 											img.className='marker-image';
-											img.setAttribute('src', f.properties.image);
 											img.setAttribute('id', f.properties.id);
+											//if(f.geometry.coordinates[1]==position.coords.latitude && position.coords.longitude==f.geometry.coordinates[0])
+											//	img.setAttribute('src', '<?=$avka[0]['avatar']?>');
+											//else
+												img.setAttribute('src', f.properties.image);
 
 											mrkSearch[f.properties.id]=new Object();
 											mrkSearch[f.properties.id]['lat']=f.geometry.coordinates[1];
 											mrkSearch[f.properties.id]['lon']=f.geometry.coordinates[0];
-											mrkSearch[f.properties.id]['img']=f.properties.image;
+											//if(f.geometry.coordinates[1]==position.coords.latitude && position.coords.longitude==f.geometry.coordinates[0])
+											//	mrkSearch[f.properties.id]['img']='<?=$avka[0]['avatar']?>';
+											//else
+												mrkSearch[f.properties.id]['img']=f.properties.image;
 
 											//Смещение к координатам маркера
 											MM.addEvent(img, 'click', function(e){
@@ -92,7 +103,7 @@
 												});
 											});
 											return img;
-										});
+										});console.log(markersLayer);
 										map.addLayer(markersLayer);
 										mapbox.markers.interaction(markersLayer).formatter(function(feature){
 											var o='<b>'+feature.properties.name+'</b><br />'+feature.properties.address;
@@ -192,8 +203,10 @@
 								cache:false,
 								success: function(data){
 									if(data){
-										$('#shop-' + ihere).removeClass('current');
-										$('#shop-' + ihere +' a').removeClass('active');
+										if(ihere>0){
+											$('#shop-' + ihere).removeClass('current');
+											$('#shop-' + ihere +' a').removeClass('active');
+										}
 										$('#shop-' + id).addClass('current');
 										$('#shop-' + id +' a').addClass('active');
 										ihere=id;

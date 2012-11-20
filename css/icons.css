@@ -31,7 +31,7 @@
  background-position: -15px -15px;
 }
 
-.icon-certificate, .icon-6{
+.icon-certificate, .icon-6 {
  background-position: 0 -30px;
 }
 
@@ -204,6 +204,10 @@
  background-position: -15px -330px;
 }
 
+.icon-photo.white {
+ background-position: -30px -330px;
+}
+
 .icon-add-photo {
  background-position: 0 -345px;
 }
@@ -335,6 +339,10 @@
 .icon-to-me.active {
  background-position: -15px -570px;
 }
+
+.icon-to-me.white {
+ background-position: -30px -570px;	
+} 
 
 .icon-action {
  background-position: 0 -585px;
